@@ -6,6 +6,13 @@
         <item name="android:textSize">42sp</item>
     </style>
 
+    <style name="HeadLine3.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="HeadLine3.Black.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
     //23px
 
     <style name="HeadLine5" parent="TextAppearance.MaterialComponents.Headline5">
@@ -25,11 +32,21 @@
 
     <style name="Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2" />
 
+    <style name="Subtitle2.Primary">
+        <item name="android:textColor">@color/skyBlue</item>
+    </style>
+
+    <style name="Subtitle2.Primary.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
     //12px
 
-    <style name="Caption" parent="TextAppearance.MaterialComponents.Caption">
+    <style name="Caption" parent="TextAppearance.MaterialComponents.Caption"/>
 
+    <style name="Caption.Grey">
+        <item name="android:textColor">@color/grey2</item>
     </style>
+
     
     //10px
 

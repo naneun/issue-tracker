@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/bnv_issue"
+    <item android:id="@+id/navigation_issue"
         android:title="이슈"
         android:icon="@drawable/ic_issue"/>
-    <item android:id="@+id/bnv_label"
+    <item android:id="@+id/navigation_label"
         android:title="레이블"
         android:icon="@drawable/ic_label"/>
-    <item android:id="@+id/bnv_milestone"
+    <item android:id="@+id/navigation_milestone"
         android:title="마일스톤"
         android:icon="@drawable/ic_milestone"/>
-    <item android:id="@+id/bnv_account"
+    <item android:id="@+id/navigation_my_account"
         android:title="내 계정"
         android:icon="@drawable/ic_account"/>
 </menu>

@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.logging.log4j.util.Strings;
 
 @Entity
 @Getter
@@ -55,10 +56,10 @@ public class Milestone {
 	}
 
 	public void update(MilestoneUpdateRequest request) {
-		if (request.getTitle() != null) {
+		if (Strings.isNotBlank(request.getTitle())) {
 			this.title = request.getTitle();
 		}
-		if (request.getDescription() != null) {
+		if (Strings.isNotBlank(request.getDescription())) {
 			this.description = request.getDescription();
 		}
 		if (request.getDueDate() != null) {

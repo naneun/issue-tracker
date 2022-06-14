@@ -11,4 +11,13 @@
     <string name="tool_bar_title">이슈</string>
     <string name="appbar_filter_icon">appBar_filter_icon</string>
     <string name="appbar_search_icon">appBar_search_icon</string>
+    <string name="label_milestone_item_title">제목</string>
+    <string name="label_milestone_item_progress">진행률%</string>
+    <string name="label_milestone_item_content">마일스톤에 대한 설명 (생략가능) (최대한줄)</string>
+    <string name="label_milestone_item_complete_day">완료일(생략가능)</string>
+    <string name="label_milestone_item_open_issue">열린 이슈</string>
+    <string name="label_milestone_item_close_issue">닫힌 이슈</string>
+    <string name="milestone_item_open_issue_count">열린 이슈 %d개</string>
+    <string name="milestone_item_close_issue_count">닫힌 이슈 %d개</string>
+    <string name="milestone_item_progress">%d 퍼센트</string>
 </resources>

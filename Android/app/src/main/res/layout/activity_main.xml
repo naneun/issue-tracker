@@ -29,6 +29,9 @@
             android:id="@+id/bottom_navigation_view"
             android:layout_width="match_parent"
             app:menu="@menu/bottom_nav"
+            app:itemIconTint="@color/tab_selector_color"
+            app:itemTextColor="@color/tab_selector_color"
+            app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_height="wrap_content"/>
 

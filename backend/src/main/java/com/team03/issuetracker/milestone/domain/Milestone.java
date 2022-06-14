@@ -11,14 +11,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString(exclude = "issues")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Milestone {
 
 	@Id
@@ -30,6 +32,27 @@ public class Milestone {
 
 	@OneToMany(mappedBy = "milestone", cascade = CascadeType.PERSIST)
 	private List<Issue> issues = new ArrayList<>();
+
+	@Builder
+	private Milestone(Long id, String title, String description, LocalDate dueDate,
+		List<Issue> issues) {
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.dueDate = dueDate;
+		this.issues = issues;
+	}
+
+	public static Milestone of(Long id, String title, String description, LocalDate dueDate,
+		List<Issue> issues) {
+		return Milestone.builder()
+			.id(id)
+			.title(title)
+			.description(description)
+			.dueDate(dueDate)
+			.issues(issues)
+			.build();
+	}
 
 	public void update(MilestoneUpdateRequest request) {
 		if (request.getTitle() != null) {

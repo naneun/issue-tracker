@@ -5,14 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class Label {
 
 	@Id
@@ -20,7 +21,24 @@ public class Label {
 	private Long id;
 	private String title;
 	private String description;
-	private String BackgroundColor;
+	private String backgroundColor;
+
+	@Builder
+	private Label(Long id, String title, String description, String backgroundColor) {
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.backgroundColor = backgroundColor;
+	}
+
+	public static Label of(Long id, String title, String description, String backgroundColor) {
+		return Label.builder()
+			.id(id)
+			.title(title)
+			.description(description)
+			.backgroundColor(backgroundColor)
+			.build();
+	}
 
 	public void update(LabelUpdateRequest request) {
 		if (request.getTitle() != null) {
@@ -32,7 +50,7 @@ public class Label {
 		}
 
 		if (request.getBackgroundColor() != null) {
-			this.BackgroundColor = request.getBackgroundColor();
+			this.backgroundColor = request.getBackgroundColor();
 		}
 	}
 }

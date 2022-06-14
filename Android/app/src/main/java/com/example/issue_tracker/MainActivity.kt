@@ -2,6 +2,8 @@ package com.example.issue_tracker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -25,5 +27,19 @@ class MainActivity : AppCompatActivity() {
         navController?.let {
             binding.bottomNavigationView.setupWithNavController(it)
         }
+
+        navController?.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+              //  R.id.issueWriteFragment -> binding.bottomNavigationView.menu[0].isChecked=true
+            }
+        }
+    }
+
+    private fun showBottomNav() {
+        binding.bottomNavigationView.isVisible = true
+    }
+
+    private fun hideBottomNav() {
+        binding.bottomNavigationView.isVisible = false
     }
 }

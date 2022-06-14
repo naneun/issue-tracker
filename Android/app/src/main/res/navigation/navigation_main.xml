@@ -6,10 +6,11 @@
     app:startDestination="@id/navigation_issue">
 
     <fragment
-        android:id="@+id/navigation_issue"
-        android:name="com.example.issue_tracker.ui.issue.IssueFragment"
-        android:label="fragment_issue"
-        tools:layout="@layout/fragment_issue" />
+        android:id="@id/navigation_issue"
+        android:name="com.example.issue_tracker.ui.issue.home.IssueHomeFragment"
+        android:label="fragment_issue_home"
+        tools:layout="@layout/fragment_issue_home" >
+    </fragment>
     <fragment
         android:id="@id/navigation_label"
         android:name="com.example.issue_tracker.ui.label.LabelFragment"

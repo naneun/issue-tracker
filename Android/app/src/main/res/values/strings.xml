@@ -8,4 +8,7 @@
     <string name="label_string_register_title">회원가입</string>
     <string name="label_string_github_login_title">깃헙 계정으로 로그인</string>
     <string name="label_string_google_login_title">구글 계정으로 로그인</string>
+    <string name="tool_bar_title">이슈</string>
+    <string name="appbar_filter_icon">appBar_filter_icon</string>
+    <string name="appbar_search_icon">appBar_search_icon</string>
 </resources>

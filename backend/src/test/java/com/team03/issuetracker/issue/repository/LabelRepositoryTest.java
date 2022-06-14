@@ -19,17 +19,16 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class LabelRepositoryTest {
 
-	private final LabelRepository labelRepository;
+	LabelRepository labelRepository;
 	@PersistenceContext
-	private EntityManager em;
+	EntityManager em;
 
-	@Autowired
-	private LabelRepositoryTest(LabelRepository labelRepository) {
+	@Autowired LabelRepositoryTest(LabelRepository labelRepository) {
 		this.labelRepository = labelRepository;
 	}
 
 	@Test
-	public void 라벨을_생성한다() {
+	void 라벨을_생성한다() {
 		// given
 		Label label = new Label(null, "제목", "설명", "#000000");
 
@@ -38,14 +37,12 @@ class LabelRepositoryTest {
 
 		// then
 		Label foundLabel = labelRepository.findById(id).get();
-		assertThat(foundLabel.getId()).isEqualTo(id);
-		assertThat(foundLabel.getTitle()).isEqualTo("제목");
-		assertThat(foundLabel.getDescription()).isEqualTo("설명");
-		assertThat(foundLabel.getBackgroundColor()).isEqualTo("#000000");
+		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label);
+
 	}
 
 	@Test
-	public void 라벨_목록을_조회한다() {
+	void 라벨_목록을_조회한다() {
 		// given
 		Label label1 = new Label(null, "제목1", "설명1", "#111111");
 		Label label2 = new Label(null, "제목2", "설명2", "#222222");
@@ -60,14 +57,11 @@ class LabelRepositoryTest {
 
 		// then
 		assertThat(labels.size()).isEqualTo(3);
-		assertThat(foundLabel.getId()).isEqualTo(id);
-		assertThat(foundLabel.getTitle()).isEqualTo("제목3");
-		assertThat(foundLabel.getDescription()).isEqualTo("설명3");
-		assertThat(foundLabel.getBackgroundColor()).isEqualTo("#333333");
+		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label3);
 	}
 
 	@Test
-	public void 라벨을_수정한다_모든필드() {
+	void 라벨을_수정한다_모든필드() {
 		// given
 		Label label = new Label(null, "제목1", "설명1", "#111111");
 		Label savedLabel = labelRepository.save(label);
@@ -79,33 +73,28 @@ class LabelRepositoryTest {
 
 		// then
 		Label foundLabel = labelRepository.findById(id).get();
-		assertThat(foundLabel.getId()).isEqualTo(id);
-		assertThat(foundLabel.getTitle()).isEqualTo("수정된 제목1");
-		assertThat(foundLabel.getDescription()).isEqualTo("수정된 설명1");
-		assertThat(foundLabel.getBackgroundColor()).isEqualTo("#ffffff");
+		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label);
 	}
 
 	@Test
-	public void 라벨을_수정한다_일부필드() {
+	void 라벨을_수정한다_일부필드() {
 		// given
 		Label label = new Label(null, "제목1", "설명1", "#111111");
-		Label savedLabel = labelRepository.save(label);
+		labelRepository.save(label);
 		LabelUpdateRequest request = new LabelUpdateRequest(null, "수정된 설명1", null);
 
 		// when
-		savedLabel.update(request);
-		Long id = labelRepository.save(savedLabel).getId();
+		label.update(request);
+		Long id = labelRepository.save(label).getId();
 
 		// then
 		Label foundLabel = labelRepository.findById(id).get();
-		assertThat(foundLabel.getId()).isEqualTo(id);
-		assertThat(foundLabel.getTitle()).isEqualTo("제목1");
-		assertThat(foundLabel.getDescription()).isEqualTo("수정된 설명1");
-		assertThat(foundLabel.getBackgroundColor()).isEqualTo("#111111");
+		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label);
+
 	}
 
 	@Test
-	public void 라벨을_일괄적으로_삭제한다() {
+	void 라벨을_일괄적으로_삭제한다() {
 		// given
 		Label label1 = new Label(null, "제목1", "설명1", "#111111");
 		Label label2 = new Label(null, "제목2", "설명2", "#222222");
@@ -127,14 +116,14 @@ class LabelRepositoryTest {
 		List<Label> labels = labelRepository.findAll();
 		Label foundLabel = labels.get(0);
 		assertThat(labels).hasSize(1);
-		assertThat(foundLabel.getId()).isEqualTo(id2);
+		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label2);
 		assertThat(labelRepository.findById(id1)).isEmpty();
 		assertThat(labelRepository.findById(id3)).isEmpty();
 	}
 
 	// Todo : 라벨 삭제시 해당 라벨이 등록되어 있던 Issue에서도 라벨이 삭제되어야한다
 	@Test
-	public void 라벨을_삭제하면_관련된_이슈에서도_라벨이_삭제된다() {
+	void 라벨을_삭제하면_관련된_이슈에서도_라벨이_삭제된다() {
 		// given
 
 		// when

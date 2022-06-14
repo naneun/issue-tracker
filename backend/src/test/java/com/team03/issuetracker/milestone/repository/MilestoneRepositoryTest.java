@@ -19,17 +19,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class MilestoneRepositoryTest {
 
-	private final MilestoneRepository milestoneRepository;
+	MilestoneRepository milestoneRepository;
 	@PersistenceContext
-	private EntityManager em;
+	EntityManager em;
 
-	@Autowired
-	public MilestoneRepositoryTest(MilestoneRepository milestoneRepository) {
+	@Autowired MilestoneRepositoryTest(MilestoneRepository milestoneRepository) {
 		this.milestoneRepository = milestoneRepository;
 	}
 
 	@Test
-	public void 마일스톤을_생성한다() {
+	void 마일스톤을_생성한다() {
 		// given
 		Milestone milestone = new Milestone(null, "제목", "설명", LocalDate.of(2022, 6, 30));
 
@@ -38,14 +37,12 @@ class MilestoneRepositoryTest {
 
 		// then
 		Milestone foundMilestone = milestoneRepository.findById(id).get();
-		assertThat(foundMilestone.getTitle()).isEqualTo("제목");
-		assertThat(foundMilestone.getDescription()).isEqualTo("설명");
-		assertThat(foundMilestone.getDueDate()).isEqualTo("2022-06-30");
+		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone);
 
 	}
 
 	@Test
-	public void 마일스톤_목록을_조회한다() {
+	void 마일스톤_목록을_조회한다() {
 		// given
 		Milestone milestone1 = new Milestone(null, "제목1", "설명1", LocalDate.of(2022, 7, 10));
 		Milestone milestone2 = new Milestone(null, "제목2", "설명2", LocalDate.of(2022, 8, 20));
@@ -60,52 +57,50 @@ class MilestoneRepositoryTest {
 
 		// then
 		assertThat(milestones).hasSize(3);
-		assertThat(milestoneRepository.findById(id1).get().getTitle()).isEqualTo("제목1");
-		assertThat(milestoneRepository.findById(id2).get().getTitle()).isEqualTo("제목2");
-		assertThat(milestoneRepository.findById(id3).get().getTitle()).isEqualTo("제목3");
+		assertThat(milestones.get(0)).usingRecursiveComparison()
+			.isEqualTo(milestone1);
+		assertThat(milestones.get(1)).usingRecursiveComparison()
+			.isEqualTo(milestone2);
+		assertThat(milestones.get(2)).usingRecursiveComparison()
+			.isEqualTo(milestone3);
 	}
 
 	@Test
-	public void 마일스톤을_수정한다_모든필드() {
+	void 마일스톤을_수정한다_모든필드() {
 		// given
 		Milestone milestone1 = new Milestone(null, "제목1", "설명1", LocalDate.of(2022, 7, 10));
-		Milestone savedMileStone = milestoneRepository.save(milestone1);
+		milestoneRepository.save(milestone1);
 		MilestoneUpdateRequest request = new MilestoneUpdateRequest("수정된 제목1", "수정된 설명1",
 			LocalDate.of(2022, 7, 25));
 
 		// when
-		savedMileStone.update(request);
-		Long id = milestoneRepository.save(savedMileStone).getId();
+		milestone1.update(request);
+		Long id = milestoneRepository.save(milestone1).getId();
 
 		// then
 		Milestone foundMilestone = milestoneRepository.findById(id).get();
-		assertThat(foundMilestone.getId()).isEqualTo(id);
-		assertThat(foundMilestone.getTitle()).isEqualTo("수정된 제목1");
-		assertThat(foundMilestone.getDescription()).isEqualTo("수정된 설명1");
-		assertThat(foundMilestone.getDueDate()).isEqualTo("2022-07-25");
+		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone1);
 	}
 
 	@Test
-	public void 마일스톤을_수정한다_일부필드() {
+	void 마일스톤을_수정한다_일부필드() {
 		// given
 		Milestone milestone1 = new Milestone(null, "제목1", "설명1", LocalDate.of(2022, 7, 10));
-		Milestone savedMileStone = milestoneRepository.save(milestone1);
+		milestoneRepository.save(milestone1);
 		MilestoneUpdateRequest request = new MilestoneUpdateRequest(null, "수정된 설명1", null);
 
 		// when
-		savedMileStone.update(request);
-		Long id = milestoneRepository.save(savedMileStone).getId();
+		milestone1.update(request);
+		Long id = milestoneRepository.save(milestone1).getId();
 
 		// then
 		Milestone foundMilestone = milestoneRepository.findById(id).get();
-		assertThat(foundMilestone.getId()).isEqualTo(id);
-		assertThat(foundMilestone.getTitle()).isEqualTo("제목1");
-		assertThat(foundMilestone.getDescription()).isEqualTo("수정된 설명1");
-		assertThat(foundMilestone.getDueDate()).isEqualTo("2022-07-10");
+		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone1);
+
 	}
 
 	@Test
-	public void 마일스톤을_일괄적으로_삭제한다() {
+	void 마일스톤을_일괄적으로_삭제한다() {
 		// given
 		Milestone milestone1 = new Milestone(null, "제목1", "설명1", LocalDate.of(2022, 7, 10));
 		Milestone milestone2 = new Milestone(null, "제목2", "설명2", LocalDate.of(2022, 8, 20));
@@ -129,7 +124,7 @@ class MilestoneRepositoryTest {
 		Milestone foundMilestone = milestones.get(0);
 
 		assertThat(milestones).hasSize(1);
-		assertThat(foundMilestone.getId()).isEqualTo(id2);
+		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone2);
 		assertThat(milestoneRepository.findById(id1)).isEmpty();
 		assertThat(milestoneRepository.findById(id3)).isEmpty();
 	}

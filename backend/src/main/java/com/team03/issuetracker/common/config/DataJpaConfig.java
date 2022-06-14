@@ -14,5 +14,4 @@ public class DataJpaConfig {
 	public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
 		return new JPAQueryFactory(entityManager);
 	}
-
 }

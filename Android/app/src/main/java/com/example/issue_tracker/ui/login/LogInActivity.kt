@@ -1,7 +1,7 @@
 package com.example.issue_tracker.ui.login
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.issue_tracker.R
 
 class LogInActivity : AppCompatActivity() {

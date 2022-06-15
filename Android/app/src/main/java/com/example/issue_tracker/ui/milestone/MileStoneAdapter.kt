@@ -10,33 +10,33 @@ import com.example.issue_tracker.databinding.ItemMilestoneBinding
 import com.example.issue_tracker.domain.model.MileStone
 
 
-class MilestoneAdapter()  : ListAdapter<MileStone, MilestoneAdapter.ViewHolder>(MilestoneDiffUtil) {
+class MilestoneAdapter() : ListAdapter<MileStone, MilestoneAdapter.ViewHolder>(MilestoneDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(ItemMilestoneBinding.inflate(inflater, parent, false))
     }
 
-    override fun onBindViewHolder(holder:MilestoneAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MilestoneAdapter.ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
     class ViewHolder(private val binding: ItemMilestoneBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item:MileStone) {
-            binding.milestone= item
-            binding.totalCount= item.closeIssueCount+ item.openIssueCount
+        fun bind(item: MileStone) {
+            binding.milestone = item
+            binding.totalCount = item.closeIssueCount + item.openIssueCount
         }
     }
 
     companion object MilestoneDiffUtil : DiffUtil.ItemCallback<MileStone>() {
         override fun areItemsTheSame(oldItem: MileStone, newItem: MileStone): Boolean {
-            return oldItem.id==newItem.id
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: MileStone, newItem: MileStone): Boolean {
-            return oldItem==newItem
+            return oldItem == newItem
         }
 
     }

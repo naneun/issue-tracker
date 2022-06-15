@@ -6,7 +6,7 @@ import com.example.issue_tracker.R
 
 @BindingAdapter("totalCount", "finishCount")
 fun calculateProgress(view: TextView, totalCount: Int, finishCount: Int) {
-    val progress = (100/(totalCount / finishCount))
+    val progress = (100 / (totalCount / finishCount))
     view.text = view.context.getString(R.string.milestone_item_progress, progress)
 }
 

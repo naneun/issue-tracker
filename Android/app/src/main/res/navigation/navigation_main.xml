@@ -25,5 +25,14 @@
         android:id="@+id/navigation_milestone"
         android:name="com.example.issue_tracker.ui.milestone.MileStoneFragment"
         android:label="fragment_mile_stone"
-        tools:layout="@layout/fragment_mile_stone" />
+        tools:layout="@layout/fragment_mile_stone" >
+        <action
+            android:id="@+id/action_navigation_milestone_to_mileStoneWriteFragment"
+            app:destination="@id/mileStoneWriteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mileStoneWriteFragment"
+        android:name="com.example.issue_tracker.ui.milestone.MileStoneWriteFragment"
+        android:label="fragment_mile_stone_write"
+        tools:layout="@layout/fragment_mile_stone_write" />
 </navigation>

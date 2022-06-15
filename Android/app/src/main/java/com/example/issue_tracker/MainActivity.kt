@@ -1,7 +1,7 @@
 package com.example.issue_tracker
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.lifecycleOwner= this
+        binding.lifecycleOwner = this
         setContentView(binding.root)
         setupNav()
     }
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         navController?.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-              //  R.id.issueWriteFragment -> binding.bottomNavigationView.menu[0].isChecked=true
+                R.id.mileStoneWriteFragment -> binding.bottomNavigationView.menu[2].isChecked = true
             }
         }
     }

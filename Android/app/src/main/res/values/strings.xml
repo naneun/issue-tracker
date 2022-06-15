@@ -11,6 +11,7 @@
     <string name="tool_bar_title">이슈</string>
     <string name="appbar_filter_icon">appBar_filter_icon</string>
     <string name="appbar_search_icon">appBar_search_icon</string>
+
     <string name="label_milestone_item_title">제목</string>
     <string name="label_milestone_item_progress">진행률%</string>
     <string name="label_milestone_item_content">마일스톤에 대한 설명 (생략가능) (최대한줄)</string>
@@ -30,4 +31,8 @@
     <string name="milestone_write_title_hint">필수 입력</string>
     <string name="milestone_write_title_title">제목</string>
     <string name="milestone_write_compleday_error">잘못된 입력양식</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="item_milestone_text">마일스톤</string>
+    <string name="item_title">제목</string>
 </resources>

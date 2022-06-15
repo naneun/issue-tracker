@@ -18,13 +18,22 @@ class IssueHomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_issue_home, container, false)
         return  binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tempList = listOf<Issue>(
+            Issue("마일스톤", "제목", "설명", "label"),
+            Issue("마스터즈 코스1", "이슈트래커1", "6월 13일에서 20일까지", "ABCDEF"),
+            Issue("마스터즈 코스2", "이슈트래커2", "7월 9일에서 12일까지", "asdfef")
+        )
+
+        val adapter = IssueAdapter()
+        binding.rvIssue.adapter = adapter
+        adapter.submitList(tempList)
     }
 
 }

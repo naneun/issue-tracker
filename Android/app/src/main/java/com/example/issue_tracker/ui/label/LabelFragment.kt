@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentLabelBinding
 import com.example.issue_tracker.domain.model.Label
@@ -15,6 +17,7 @@ class LabelFragment : Fragment() {
 
     private lateinit var binding:FragmentLabelBinding
     private lateinit var adapter: LabelAdapter
+    private lateinit var navigator: NavController
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,6 +29,8 @@ class LabelFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter= LabelAdapter()
+        navigator= Navigation.findNavController(view)
+        moveToMakeLabel()
         binding.rvLabel.adapter= adapter
         adapter.submitList(makeDummyLabel())
 
@@ -54,4 +59,9 @@ class LabelFragment : Fragment() {
         }
     }
 
+    private fun moveToMakeLabel(){
+        binding.iBtnLabelAdd.setOnClickListener {
+            navigator.navigate(R.id.action_navigation_label_to_labelWriteFragment)
+        }
+    }
 }

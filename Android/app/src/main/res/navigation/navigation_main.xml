@@ -15,7 +15,11 @@
         android:id="@id/navigation_label"
         android:name="com.example.issue_tracker.ui.label.LabelFragment"
         android:label="fragment_label"
-        tools:layout="@layout/fragment_label" />
+        tools:layout="@layout/fragment_label" >
+        <action
+            android:id="@+id/action_navigation_label_to_labelWriteFragment"
+            app:destination="@id/labelWriteFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_my_account"
         android:name="com.example.issue_tracker.ui.myaccount.MyAccountFragment"
@@ -35,4 +39,8 @@
         android:name="com.example.issue_tracker.ui.milestone.MileStoneWriteFragment"
         android:label="fragment_mile_stone_write"
         tools:layout="@layout/fragment_mile_stone_write" />
+    <fragment
+        android:id="@+id/labelWriteFragment"
+        android:name="com.example.issue_tracker.ui.label.LabelWriteFragment"
+        android:label="LabelWriteFragment" />
 </navigation>

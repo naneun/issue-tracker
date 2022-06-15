@@ -1,10 +1,9 @@
 package com.team03.issuetracker.milestone.repository;
 
 import com.team03.issuetracker.common.config.DataJpaConfig;
-import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.milestone.domain.Milestone;
-import com.team03.issuetracker.milestone.domain.dto.MilestoneData;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneUpdateRequest;
+import com.team03.issuetracker.milestone.exception.MilestoneException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,8 @@ class MilestoneRepositoryTest {
 	@PersistenceContext
 	EntityManager em;
 
-	@Autowired MilestoneRepositoryTest(MilestoneRepository milestoneRepository) {
+	@Autowired
+	public MilestoneRepositoryTest(MilestoneRepository milestoneRepository) {
 		this.milestoneRepository = milestoneRepository;
 	}
 
@@ -98,8 +98,9 @@ class MilestoneRepositoryTest {
 	@Test
 	void 마일스톤을_수정한다_일부필드() {
 		// given
-		Milestone milestone1 = Milestone.of(null, "제목1", "설명1", LocalDate.of(2022, 7, 10),
+		Milestone milestone1 = Milestone.of(1L, "제목1", "설명1", LocalDate.of(2022, 7, 10),
 			new ArrayList<>());
+
 		milestoneRepository.save(milestone1);
 		MilestoneUpdateRequest request = new MilestoneUpdateRequest(null, "수정된 설명1", null);
 
@@ -108,7 +109,8 @@ class MilestoneRepositoryTest {
 		Long id = milestoneRepository.save(milestone1).getId();
 
 		// then
-		Milestone foundMilestone = milestoneRepository.findById(id).get();
+		Milestone foundMilestone = milestoneRepository.findById(1L)
+			.orElseThrow(MilestoneException::new);
 		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone1);
 
 	}
@@ -144,24 +146,4 @@ class MilestoneRepositoryTest {
 		assertThat(milestoneRepository.findById(id3)).isEmpty();
 	}
 
-	@Test
-	void 마일스톤_목록_조회_시_해당_마일스톤에_등록된_열린이슈_및_닫힌이슈_개수가_표시된다() {
-		// given
-		Milestone milestone = Milestone.of(null, "제목1", "설명1",
-			LocalDate.of(2022, 7, 10), new ArrayList<>());
-		Issue closedIssue = new Issue();
-		closedIssue.setStatus(IssueStatus.CLOSED);
-		Issue openIssue = new Issue();
-
-		milestone.addIssue(closedIssue);
-		milestone.addIssue(openIssue);
-		milestoneRepository.save(milestone);
-
-		// when
-		MilestoneData milestoneResponse = milestoneRepository.findAllMilestones().get(0);
-
-		// then
-		assertThat(milestoneResponse.getClosedIssueCount()).isEqualTo(1);
-		assertThat(milestoneResponse.getOpenIssueCount()).isEqualTo(1);
-	}
 }

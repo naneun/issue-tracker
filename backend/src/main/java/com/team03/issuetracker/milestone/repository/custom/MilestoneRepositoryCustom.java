@@ -1,4 +1,4 @@
-package com.team03.issuetracker.milestone.repository;
+package com.team03.issuetracker.milestone.repository.custom;
 
 import com.team03.issuetracker.milestone.domain.dto.MilestoneData;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.team03.issuetracker.milestone.dto;
+package com.team03.issuetracker.milestone.domain.dto;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;

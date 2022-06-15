@@ -1,4 +1,4 @@
-package com.team03.issuetracker.milestone.dto;
+package com.team03.issuetracker.milestone.domain.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDate;

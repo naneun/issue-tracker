@@ -1,4 +1,4 @@
-package com.team03.issuetracker.milestone.domain.exception;
+package com.team03.issuetracker.milestone.exception;
 
 public class MilestoneException extends RuntimeException {
 

@@ -1,7 +1,7 @@
 package com.team03.issuetracker.milestone.domain;
 
 import com.team03.issuetracker.issue.domain.Issue;
-import com.team03.issuetracker.milestone.dto.MilestoneUpdateRequest;
+import com.team03.issuetracker.milestone.domain.dto.MilestoneUpdateRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

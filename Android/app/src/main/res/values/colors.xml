@@ -20,5 +20,7 @@
     <color name="grey3">#FFB9B9BF</color>
     <color name="grey4">#FFF2F2F7</color>
     <color name="grey5">#FFE5E5EA</color>
+    <color name="grey6">#D9D9D9</color>
+    <color name="grey7">#D5D5DB</color>
     <color name="green">#FF00A028</color>
 </resources>

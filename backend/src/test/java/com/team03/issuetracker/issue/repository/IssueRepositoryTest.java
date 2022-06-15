@@ -1,5 +1,6 @@
 package com.team03.issuetracker.issue.repository;
 
+import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
 import com.team03.issuetracker.issue.domain.Label;
@@ -227,8 +228,14 @@ class IssueRepositoryTest {
 
         // given
         String title = "title" + registeredIssues.size();
-        String description = "description" + registeredIssues.size();
-        Issue newIssue = Issue.of(title, description, creator, label, milestone, assignee);
+        String content = "content" + registeredIssues.size();
+
+        Label label = null;
+        Milestone milestone = null;
+        Member assignee = null;
+
+        // TODO 'creator' 등록 검증
+        Issue newIssue = Issue.of(null, title, content, label, milestone, assignee);
 
         // when
         issueRepository.save(newIssue);
@@ -247,7 +254,7 @@ class IssueRepositoryTest {
     @Transactional
     void 등록된_이슈를_수정한다() {
 
-        // TODO '수정자', '수정시간' @LastModifiedBy, @LastModifiedDate
+        // TODO '수정자', '수정시간' (@LastModifiedBy, @LastModifiedDate)
 
         // given
         Long id = 1L;
@@ -255,9 +262,20 @@ class IssueRepositoryTest {
                 .orElseThrow(IssueException::new);
 
         // when
-        // TODO 이슈 변경
+        String otherTitle = "otherTitle";
+        String otherContent = "otherContent";
+        Label otherLabel = null;
+        Milestone otherMilestone = null;
+        Member otherAssignee = null;
 
-        Issue changedIssue = issueRepository.save(foundIssue);
+        foundIssue.changeTitle(otherTitle);
+        foundIssue.changeContent(otherContent);
+        foundIssue.changeLabel(otherLabel);
+        foundIssue.changeMilestone(otherMilestone);
+        foundIssue.changeAssignee(otherAssignee);
+
+        Issue changedIssue = issueRepository.findById(foundIssue.getId())
+                .orElseThrow(IssueException::new);
 
         // then
         assertThat(changedIssue).usingRecursiveComparison().isEqualTo(foundIssue);

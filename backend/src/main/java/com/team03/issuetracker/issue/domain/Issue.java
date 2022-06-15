@@ -11,6 +11,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 import static com.team03.issuetracker.issue.domain.IssueState.*;
 
@@ -23,8 +24,10 @@ public class Issue extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String title;
 
+    @NotBlank
     private String content;
 
     @Enumerated(EnumType.STRING)
@@ -56,7 +59,7 @@ public class Issue extends BaseTimeEntity {
     private Issue(Long id, String title, String content, Label label, Milestone milestone, Member assignee) {
         this.title = title;
         this.content = content;
-        this.state = OPEN; /* Default */
+        this.state = OPEN;
         this.label = label;
         this.milestone = milestone;
         this.assignee = assignee;
@@ -72,7 +75,27 @@ public class Issue extends BaseTimeEntity {
                 .build();
     }
 
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
     public void changeState() {
-        state = IssueState.values()[state.ordinal() + 1 % values().length];
+        this.state = IssueState.values()[this.state.ordinal() + 1 % values().length];
+    }
+
+    public void changeLabel(Label label) {
+        this.label = label;
+    }
+
+    public void changeMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public void changeAssignee(Member assignee) {
+        this.assignee = assignee;
     }
 }

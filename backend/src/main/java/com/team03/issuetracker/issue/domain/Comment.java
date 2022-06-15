@@ -25,7 +25,12 @@ public class Comment {
     @JoinColumn(updatable = false)
     private Member writer;
 
+    @Lob/
     private String content;
+
+    @OneToOne
+    @JoinColumn
+    private Emoji emoji;
 
     @CreatedDate
     @Column(updatable = false)
@@ -44,5 +49,13 @@ public class Comment {
                 .writer(writer)
                 .content(content)
                 .build();
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    public void addEmoji(Emoji emoji) {
+        this.emoji = emoji;
     }
 }

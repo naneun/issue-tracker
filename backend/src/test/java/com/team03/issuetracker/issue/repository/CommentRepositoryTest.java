@@ -91,7 +91,6 @@ class CommentRepositoryTest {
         // when
         String otherContent = "otherContent";
         foundComment.changeContent(otherContent);
-        commentRepository.save(foundComment);
 
         Comment changedComment = commentRepository.findById(foundComment.getId())
                 .orElseThrow(CommentException::new);
@@ -134,7 +133,6 @@ class CommentRepositoryTest {
 
         // when
         foundComment.addEmoji(emoji);
-        commentRepository.save(foundComment);
         Comment changedComment = commentRepository.findById(foundComment.getId())
                 .orElseThrow(CommentException::new);
 

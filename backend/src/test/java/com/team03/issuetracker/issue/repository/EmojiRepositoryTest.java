@@ -78,4 +78,6 @@ class EmojiRepositoryTest {
         assertThat(foundEmoji).usingRecursiveComparison()
                 .isEqualTo(registeredEmojis.get(id.intValue() - 1));
     }
+
+    // TODO 특정 이모지를 삭제하면 해당 이모지가 등록된 댓글에서도 표기되지 않도록 한다.
 }

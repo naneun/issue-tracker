@@ -41,8 +41,12 @@ public class Comment {
 	private String content;
 
 	@OneToOne
-	@JoinColumn
+	@JoinColumn(updatable = false)
 	private Emoji emoji;
+
+	@ManyToOne
+	@JoinColumn(updatable = false)
+	private Issue issue;
 
 	@CreatedDate
 	@Column(updatable = false)

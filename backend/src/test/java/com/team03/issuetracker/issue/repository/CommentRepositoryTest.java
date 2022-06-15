@@ -4,6 +4,7 @@ import com.team03.issuetracker.common.config.DataJpaConfig;
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.issue.domain.Comment;
 import com.team03.issuetracker.issue.domain.Emoji;
+import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.exception.CommentException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +46,11 @@ class CommentRepositoryTest {
 
         // given
         Long issueId = 1L;
+        Issue issue = Issue.of(issueId, null, null, null, null, null);
 
         // when
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Comment> comments = commentRepository.findByIssueId(issueId, pageable);
+        Page<Comment> comments = commentRepository.findByIssue(issue, pageable);
 
         // then
         // TODO 'page 속성' 및 'content' 검증
@@ -125,10 +127,10 @@ class CommentRepositoryTest {
     void 현재_코멘트에_이모지를_등록한다() {
 
         // given
-        Emoji emoji = Emoji.of(1L, "좋아요", "❤");
+        Emoji emoji = Emoji.of(1L, null, null);
 
         Long commentId = 1L;
-        Comment foundComment = commentRepository.findById(1L)
+        Comment foundComment = commentRepository.findById(commentId)
                 .orElseThrow(CommentException::new);
 
         // when

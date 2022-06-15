@@ -4,6 +4,7 @@ import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
 import com.team03.issuetracker.issue.domain.Label;
+import com.team03.issuetracker.issue.domain.dto.IssueSearchCondition;
 import com.team03.issuetracker.issue.exception.IssueException;
 import com.team03.issuetracker.milestone.domain.Milestone;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,15 +32,15 @@ class IssueRepositoryTest {
     final IssueRepository issueRepository;
 
     static List<Issue> registeredOpenedIssues = List.of(
-            Issue.of(1, "title1", "description1", label1, milestone1, assignee1),
-            Issue.of(2, "title2", "description2", label2, milestone2, assignee2),
-            Issue.of(3, "title3", "description3", label3, milestone3, assignee3)
+            Issue.of(1L, "title1", "description1", null, null, null),
+            Issue.of(2L, "title2", "description2", null, null, null),
+            Issue.of(3L, "title3", "description3", null, null, null)
     );
 
     static List<Issue> registeredClosedIssues = List.of(
-            Issue.of(4, "title4", "description4", label4, milestone4, assignee4),
-            Issue.of(5, "title5", "description5", label5, milestone5, assignee5),
-            Issue.of(6, "title6", "description6", label6, milestone6, assignee6)
+            Issue.of(4L, "title4", "description4", null, null, null),
+            Issue.of(5L, "title5", "description5", null, null, null),
+            Issue.of(6L, "title6", "description6", null, null, null)
     );
 
     static List<Issue> registeredIssues;
@@ -58,6 +59,7 @@ class IssueRepositoryTest {
     }
 
     /**
+     *
      * @implNote
      * - 사용자에게 '오픈'되어있는 이슈를 보여준다.
      * - IssueSimpleResponse { Milestone, title, description, Label }
@@ -142,7 +144,7 @@ class IssueRepositoryTest {
         Long labelId = 1L;
         Long milestoneId = 1L;
 
-        IssueSearchCondition issueSearchCondition = issueSearchCondition.of(state, creatorId, labelId, milestoneId);
+        IssueSearchCondition issueSearchCondition = IssueSearchCondition.of(state, creatorId, labelId, milestoneId);
 
         // when
         List<Issue> foundIssues = issueRepository.findBySearchCondition(issueSearchCondition);
@@ -246,15 +248,11 @@ class IssueRepositoryTest {
         assertAll(() -> assertThat(foundIssue).usingRecursiveComparison().isEqualTo(newIssue));
     }
 
-    /**
-     * @implNote
-     *
-     */
     @Test
     @Transactional
     void 등록된_이슈를_수정한다() {
 
-        // TODO '수정자', '수정시간' (@LastModifiedBy, @LastModifiedDate)
+        // TODO '수정자', '수정시간' (@LastModifiedBy, @LastModifiedDate) 검증
 
         // given
         Long id = 1L;

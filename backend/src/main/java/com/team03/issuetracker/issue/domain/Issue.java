@@ -27,6 +27,7 @@ public class Issue extends BaseTimeEntity {
 
     private String content;
 
+    @Enumerated(EnumType.STRING)
     private IssueState state;
 
     @ManyToOne
@@ -55,13 +56,23 @@ public class Issue extends BaseTimeEntity {
     private Issue(Long id, String title, String content, Label label, Milestone milestone, Member assignee) {
         this.title = title;
         this.content = content;
-        this.state = OPEN;
+        this.state = OPEN; /* Default */
         this.label = label;
         this.milestone = milestone;
         this.assignee = assignee;
     }
 
-    public void close() {
-        state = CLOSE;
+    public static Issue of(Long id, String title, String content, Label label, Milestone milestone, Member assignee) {
+        return Issue.builder()
+                .title(title)
+                .content(content)
+                .label(label)
+                .milestone(milestone)
+                .assignee(assignee)
+                .build();
+    }
+
+    public void changeState() {
+        state = IssueState.values()[state.ordinal() + 1 % values().length];
     }
 }

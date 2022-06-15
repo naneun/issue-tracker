@@ -2,7 +2,6 @@ package com.team03.issuetracker.issue.repository;
 
 import com.team03.issuetracker.common.config.DataJpaConfig;
 import com.team03.issuetracker.issue.domain.Emoji;
-import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.exception.EmojiException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,13 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.*;
 
 @Import(DataJpaConfig.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Transactional
 class EmojiRepositoryTest {
 
     static List<Emoji> registeredEmojis = List.of(
@@ -40,10 +37,14 @@ class EmojiRepositoryTest {
     }
 
     /**
-     * @implNote 다른 사람의 코멘트에 등록할 수 있는 이모지 리스트를 출력한다.
+     * @implNote
+     * - 다른 사람의 코멘트에 등록할 수 있는 이모지 리스트를 출력한다.
+     *
      */
     @Test
+    @Transactional
     void 등록된_모든_이모지를_조회한다() {
+
         // given
 
         // when
@@ -56,12 +57,17 @@ class EmojiRepositoryTest {
     }
 
     /**
-     * @implNote  출력된 이모지 리스트에서 선택한 이모지를 코멘트에 등록하기 위해 해당하는 이모지를 조회한다.
+     * @implNote
+     * - 출력된 이모지 리스트에서 선택한 이모지를 코멘트에 등록하기 위해 해당하는 이모지를 조회한다.
+     *
      * @param id
+     *
      */
     @ParameterizedTest
     @ValueSource(longs = { 1, 2, 3, 4 })
+    @Transactional
     void 해당하는_ID를_가진_이모지를_조회한다(Long id) {
+
         // given
         
         // when

@@ -31,8 +31,13 @@
     <string name="milestone_write_title_hint">필수 입력</string>
     <string name="milestone_write_title_title">제목</string>
     <string name="milestone_write_compleday_error">잘못된 입력양식</string>
+    <string name="milestone_title">마일스톤</string>
+    <string name="label_title">레이블</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_write_title">새로운 레이블</string>
+    <string name="label_wrtie_color_hint">#3DDCFF</string>
+    <string name="label_write_base_color">FFFFFFFF</string>
     <string name="item_milestone_text">마일스톤</string>
     <string name="item_title">제목</string>
+
 </resources>

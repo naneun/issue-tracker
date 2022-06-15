@@ -5,56 +5,63 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.issue_tracker.R
+import com.example.issue_tracker.databinding.FragmentLabelBinding
+import com.example.issue_tracker.domain.model.Label
+import kotlin.random.Random
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LabelFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LabelFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+    private lateinit var binding:FragmentLabelBinding
+    private lateinit var adapter: LabelAdapter
+    private lateinit var navigator: NavController
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_label, container, false)
+        binding= DataBindingUtil.inflate(inflater, R.layout.fragment_label, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LabelFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LabelFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adapter= LabelAdapter()
+        navigator= Navigation.findNavController(view)
+        moveToMakeLabel()
+        binding.rvLabel.adapter= adapter
+        adapter.submitList(makeDummyLabel())
+
+    }
+
+    private fun makeDummyLabel(): MutableList<Label> {
+        val labels= mutableListOf<Label>()
+        for(i in 0 .. 10){
+            labels.add(Label(i,"제목", "내용입니다", randomHexColor()))
+        }
+        return labels
+    }
+
+    private fun randomHexColor(): String {
+        val redValue= Random.nextInt(256).toString(16)
+        val greenValue= Random.nextInt(256).toString(16)
+        val blueValue = Random.nextInt(256).toString(16)
+        return "FF${checkHexLength(redValue)}${checkHexLength(greenValue)}${checkHexLength(blueValue)}"
+    }
+
+    private fun checkHexLength(RGBValue:String):String{
+        return if(RGBValue.length<2){
+            "0${RGBValue}"
+        } else{
+            RGBValue
+        }
+    }
+
+    private fun moveToMakeLabel(){
+        binding.iBtnLabelAdd.setOnClickListener {
+            navigator.navigate(R.id.action_navigation_label_to_labelWriteFragment)
+        }
     }
 }

@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             style="@style/HeadLine6.Black.Bold"
-            android:text="마일스톤" />
+            android:text="@string/milestone_title" />
 
         <ImageButton
             android:id="@+id/iBtn_milestone_add"

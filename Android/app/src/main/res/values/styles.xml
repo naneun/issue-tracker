@@ -24,11 +24,37 @@
 
     <style name="HeadLine6" parent="TextAppearance.MaterialComponents.Headline6" />
 
+    <style name="HeadLine6.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
 
+    <style name="HeadLine6.Black.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="HeadLine6.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
     //16px
 
     <style name="Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1" />
 
+    <style name="Subtitle1.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Subtitle1.Black.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Subtitle1.Green">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="Subtitle1.Green.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
     //14px
 
     <style name="Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2" />

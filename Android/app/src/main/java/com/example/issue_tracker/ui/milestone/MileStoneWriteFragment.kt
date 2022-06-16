@@ -1,12 +1,11 @@
 package com.example.issue_tracker.ui.milestone
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -44,42 +43,28 @@ class MileStoneWriteFragment : Fragment() {
     }
 
     private fun validateCompleteDayFormat() {
-        binding.etMilestoneWriteCompleteDay.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(inputDate: Editable?) {
-                try {
-                    val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
-                    dateFormatter.isLenient = true
-                    dateFormatter.parse(inputDate.toString())
-                    completeDayFlag = true
-                } catch (e: Exception) {
-                    binding.etMilestoneWriteCompleteDay.error =
-                        getString(R.string.milestone_write_compleday_error)
-                    completeDayFlag = false
-                } finally {
-                    setCompleteDayLabelBackground()
-                }
+        binding.etMilestoneWriteCompleteDay.doAfterTextChanged { inputDate ->
+            try {
+                val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+                dateFormatter.isLenient = true
+                dateFormatter.parse(inputDate.toString())
+                completeDayFlag = true
+            } catch (e: Exception) {
+                binding.etMilestoneWriteCompleteDay.error = getString(R.string.milestone_write_compleday_error)
+                completeDayFlag = false
+            } finally {
+                setCompleteDayLabelBackground()
             }
+
         }
-        )
     }
 
     private fun validateMileStoneTitle() {
-        binding.etMilestoneWriteTitle.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(inputTitle: Editable?) {
-                val title = inputTitle.toString()
-                titleFlag = title.isNotEmpty()
-                setSaveTitleColor()
-            }
+        binding.etMilestoneWriteTitle.doAfterTextChanged { inputTitle ->
+            val title = inputTitle.toString()
+            titleFlag = title.isNotEmpty()
+            setSaveTitleColor()
         }
-        )
     }
 
     private fun setSaveMilestoneBtn() {
@@ -100,30 +85,15 @@ class MileStoneWriteFragment : Fragment() {
             )
         } else {
             binding.etMilestoneWriteTitle.error = "필수입력값입니다"
-            binding.tvMilestoneWriteSaveTitle.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.grey1
-                )
-            )
+            binding.tvMilestoneWriteSaveTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey1))
         }
     }
 
     private fun setCompleteDayLabelBackground() {
         if (completeDayFlag) {
-            binding.tvMilestoneWriteContentCompleteDay.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.black
-                )
-            )
+            binding.tvMilestoneWriteContentCompleteDay.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         } else {
-            binding.tvMilestoneWriteContentCompleteDay.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.red
-                )
-            )
+            binding.tvMilestoneWriteContentCompleteDay.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
         }
     }
 
@@ -135,7 +105,6 @@ class MileStoneWriteFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        requireActivity().window.statusBarColor =
-            ContextCompat.getColor(requireContext(), R.color.white)
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.white)
     }
 }

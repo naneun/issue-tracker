@@ -18,8 +18,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_black_center"
-
         android:text="copy" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_paste"
+        style="@style/Subtitle2.White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_black_center"
+        android:text="paste" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_insert_photo"

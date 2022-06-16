@@ -5,15 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import lombok.*;
 
 @Entity
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Label {
 
 	@Id
@@ -26,7 +24,7 @@ public class Label {
 
 	private String backgroundColor;
 
-	/****************************************************************/
+	/********************************************************************/
 
 	@Builder
 	private Label(Long id, String title, String description, String backgroundColor) {
@@ -45,7 +43,7 @@ public class Label {
 			.build();
 	}
 
-	/****************************************************************/
+	/********************************************************************/
 
 	public void update(LabelUpdateRequest request) {
 		this.title = request.getTitle();

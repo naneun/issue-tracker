@@ -43,9 +43,6 @@ class CommentRepositoryTest {
     @Test
     void 특정_이슈에_등록된_댓글을_페이징처리하여_조회한다() {
 
-        System.out.println(entityManager.find(Milestone.class, 1L).getIssues());
-
-
         // given
         Long issueId = 1L;
         Issue issue = entityManager.find(Issue.class, issueId);

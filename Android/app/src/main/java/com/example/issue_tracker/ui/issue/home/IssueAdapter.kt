@@ -45,4 +45,7 @@ class IssueAdapter : RecyclerView.Adapter<IssueAdapter.ViewHolder>() {
         items.removeAt(position)
         return tempIssue
     }
+
+    fun visibleIssue() {
+    }
 }

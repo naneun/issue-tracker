@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
+import com.example.issue_tracker.databinding.ItemIssuesBinding
 
 
 class IssueHomeFragment : Fragment() {
@@ -41,6 +42,12 @@ class IssueHomeFragment : Fragment() {
             setClamp(resources.displayMetrics.widthPixels.toFloat() / 4)    // 1080 / 4 = 270
         }
         ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvIssue)
+
+
+
+        binding.rvIssue.setOnClickListener {
+            binding.rvIssue
+        }
     }
 
 }

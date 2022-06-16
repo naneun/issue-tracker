@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.apache.logging.log4j.util.Strings;
 
 @Entity
 @Getter
@@ -42,16 +41,8 @@ public class Label {
 	}
 
 	public void update(LabelUpdateRequest request) {
-		if (Strings.isNotBlank(request.getTitle())) {
-			this.title = request.getTitle();
-		}
-
-		if (Strings.isNotBlank(request.getDescription())) {
-			this.description = request.getDescription();
-		}
-
-		if (Strings.isNotBlank(request.getBackgroundColor())) {
-			this.backgroundColor = request.getBackgroundColor();
-		}
+		this.title = request.getTitle();
+		this.description = request.getDescription();
+		this.backgroundColor = request.getBackgroundColor();
 	}
 }

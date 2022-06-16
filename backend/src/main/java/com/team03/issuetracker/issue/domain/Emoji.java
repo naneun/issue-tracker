@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @ToString
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Emoji {
 
@@ -14,7 +15,7 @@ public class Emoji {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String unicode;
 
     private String description;

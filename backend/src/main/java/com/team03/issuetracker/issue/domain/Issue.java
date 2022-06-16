@@ -1,5 +1,6 @@
 package com.team03.issuetracker.issue.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.team03.issuetracker.common.domain.BaseTimeEntity;
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.milestone.domain.Milestone;
@@ -37,40 +38,42 @@ public class Issue extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private IssueState state;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    @ToString.Exclude
+    @ManyToOne // (fetch = FetchType.LAZY)
+    @JoinColumn(updatable = false)
+//    @ToString.Exclude
     private Label label;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @ManyToOne // (fetch = FetchType.LAZY)
+    @JoinColumn(updatable = false)
+//    @JsonBackReference
     @ToString.Exclude
     private Milestone milestone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    @ToString.Exclude
+    @ManyToOne // (fetch = FetchType.LAZY)
+    @JoinColumn(updatable = false)
+//    @ToString.Exclude
     private Member assignee;
 
     @CreatedBy
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne // (fetch = FetchType.LAZY)
     @JoinColumn(updatable = false)
-    @ToString.Exclude
+//    @ToString.Exclude
     private Member creator;
 
     @LastModifiedBy
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne // (fetch = FetchType.LAZY)
     @JoinColumn
-    @ToString.Exclude
+//    @ToString.Exclude
     private Member modifier;
 
-    @OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "issue", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//    @ToString.Exclude
     private final List<Comment> comments = new ArrayList<>();
 
     /********************************************************************/
 
     @Builder
-    private Issue(Long id, String title, String content, Label label, Milestone milestone, Member assignee) {
+    private Issue(Long id, String title, String content, Label label, Milestone milestone, Member assignee, List<Comment> comments) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -78,9 +81,10 @@ public class Issue extends BaseTimeEntity {
         this.label = label;
         this.milestone = milestone;
         this.assignee = assignee;
+        this.comments.addAll(comments);
     }
 
-    public static Issue of(Long id, String title, String content, Label label, Milestone milestone, Member assignee) {
+    public static Issue of(Long id, String title, String content, Label label, Milestone milestone, Member assignee, List<Comment> comments) {
         return Issue.builder()
                 .id(id)
                 .title(title)
@@ -88,6 +92,7 @@ public class Issue extends BaseTimeEntity {
                 .label(label)
                 .milestone(milestone)
                 .assignee(assignee)
+                .comments(comments)
                 .build();
     }
 

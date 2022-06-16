@@ -2,6 +2,7 @@ package com.team03.issuetracker.issue.repository;
 
 import com.team03.issuetracker.common.config.DataJpaConfig;
 import com.team03.issuetracker.common.domain.Member;
+import com.team03.issuetracker.issue.domain.Comment;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
 import com.team03.issuetracker.issue.domain.Label;
@@ -43,17 +44,20 @@ class IssueRepositoryTest {
         this.entityManager = entityManager;
         this.issueRepository = issueRepository;
 
-        List<Label> labels = entityManager.createQuery("select l from Label l", Label.class).getResultList();
-        List<Milestone> milestones = entityManager.createQuery("select m from Milestone m", Milestone.class).getResultList();
-        List<Member> assignees = entityManager.createQuery("select m from Member m", Member.class).getResultList();
-
         registeredOpenedIssues = List.of(
-                Issue.of(1L, "제목", "이슈에 대한 설명(최대 두 줄까지 보여줄 수 있다)", labels.get(0), milestones.get(0), assignees.get(0)),
-                Issue.of(2L, "안드로이드 이슈트래커", "2022년 6월 13일 월요일 부터 7월 1일 금요일 까지", labels.get(1), milestones.get(1), assignees.get(1))
+                Issue.of(1L, "제목", "이슈에 대한 설명(최대 두 줄까지 보여줄 수 있다)",
+                        getLabel(1L), getMilestone(1L), getAssignee(1L), getComments(1L)
+
+                ),
+                Issue.of(2L, "안드로이드 이슈트래커", "2022년 6월 13일 월요일 부터 7월 1일 금요일 까지",
+                        getLabel(2L), getMilestone(2L), getAssignee(2L), getComments(2L)
+                )
         );
 
         registeredClosedIssues = List.of(
-                Issue.of(3L, "닫힌 이슈", "이미 닫힌 이슈입니다.", labels.get(0), milestones.get(1), assignees.get(0))
+                Issue.of(3L, "닫힌 이슈", "이미 닫힌 이슈입니다.",
+                        getLabel(1L), getMilestone(2L), getAssignee(1L), getComments(3L)
+                )
         );
 
         registeredIssues = new ArrayList<>(registeredOpenedIssues);
@@ -62,9 +66,28 @@ class IssueRepositoryTest {
         registeredIssues.addAll(registeredClosedIssues);
     }
 
+    private Label getLabel(Long id) {
+        return entityManager.find(Label.class, id);
+    }
+
+    private Milestone getMilestone(Long id) {
+        return entityManager.find(Milestone.class, id);
+    }
+
+    private Member getAssignee(Long id) {
+        return entityManager.find(Member.class, id);
+    }
+
+    private List<Comment> getComments(Long id) {
+        return entityManager.createQuery("select c from Comment c where c.issue.id = :id", Comment.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
     /**
      * @implNote - 사용자에게 '오픈'되어있는 이슈를 보여준다.
      * - IssueSimpleResponse { Milestone, title, description, Label }
+     * - 'comments' 는 이슈 목록 조회 시 필요하지 않다. - 22/06/16
      */
     @Test
     void 오픈된_모든_이슈를_조회한다() {
@@ -75,9 +98,14 @@ class IssueRepositoryTest {
         List<Issue> foundOpenedIssues = issueRepository.findByState(OPEN);
 
         // then
-        foundOpenedIssues.forEach((issue) -> assertThat(issue)
-                .usingRecursiveComparison()
-                .isEqualTo(registeredOpenedIssues.get(foundOpenedIssues.indexOf(issue))));
+        foundOpenedIssues.forEach(issue -> {
+            Issue comparisonTarget = registeredOpenedIssues.get(foundOpenedIssues.indexOf(issue));
+            assertThat(issue).usingRecursiveComparison()
+                    .comparingOnlyFields()
+                    .ignoringFields("comments")
+                    .ignoringFields("milestone.issues")
+                    .isEqualTo(comparisonTarget);
+        });
     }
 
     /**
@@ -119,8 +147,9 @@ class IssueRepositoryTest {
 
         // then
         assertThat(foundIssue).usingRecursiveComparison()
+                .ignoringFields("comments")
+                .ignoringFields("milestone.issues")
                 .isEqualTo(registeredIssues.get(id.intValue() - 1));
-
     }
 
     /**
@@ -210,11 +239,11 @@ class IssueRepositoryTest {
         String title = "title" + registeredIssues.size();
         String content = "content" + registeredIssues.size();
 
-        Label label = entityManager.find(Label.class, 1L);
-        Milestone milestone = entityManager.find(Milestone.class, 2L);
-        Member assignee = entityManager.find(Member.class, 1L);
+        Label label = getLabel(1L);
+        Milestone milestone = getMilestone(2L);
+        Member assignee = getAssignee(1L);
 
-        Issue newIssue = Issue.of(null, title, content, label, milestone, assignee);
+        Issue newIssue = Issue.of(null, title, content, label, milestone, assignee, List.of());
 
         // when
         issueRepository.save(newIssue);

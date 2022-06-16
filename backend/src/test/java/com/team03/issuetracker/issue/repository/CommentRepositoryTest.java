@@ -6,6 +6,7 @@ import com.team03.issuetracker.issue.domain.Comment;
 import com.team03.issuetracker.issue.domain.Emoji;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.exception.CommentException;
+import com.team03.issuetracker.milestone.domain.Milestone;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -37,12 +38,13 @@ class CommentRepositoryTest {
     }
 
     /**
-     * @implNote
-     * - CommentResponse { 작성자, 작성시간, 내용 }
-     *
+     * @implNote - CommentResponse { 작성자, 작성시간, 내용 }
      */
     @Test
     void 특정_이슈에_등록된_댓글을_페이징처리하여_조회한다() {
+
+        System.out.println(entityManager.find(Milestone.class, 1L).getIssues());
+
 
         // given
         Long issueId = 1L;
@@ -57,9 +59,7 @@ class CommentRepositoryTest {
     }
 
     /**
-     * @implNote
-     * - Comment { 작성자, 작성시간, 내용 }
-     *
+     * @implNote - Comment { 작성자, 작성시간, 내용 }
      */
     @Test
     void 댓글을_등록한다() {

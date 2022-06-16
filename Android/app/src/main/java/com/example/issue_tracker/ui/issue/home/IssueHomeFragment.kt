@@ -16,7 +16,7 @@ import com.example.issue_tracker.domain.model.Issue
 class IssueHomeFragment : Fragment() {
 
     private lateinit var binding: FragmentIssueHomeBinding
-    private lateinit var navigator:NavController
+    private lateinit var navigator: NavController
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,7 +28,7 @@ class IssueHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navigator= Navigation.findNavController(view)
+        navigator = Navigation.findNavController(view)
         val tempList = listOf<Issue>(
             Issue(1, "마일스톤", "제목", "설명", "label"),
             Issue(2, "마스터즈 코스1", "이슈트래커1", "6월 13일에서 20일까지", "ABCDEF"),
@@ -38,11 +38,12 @@ class IssueHomeFragment : Fragment() {
         binding.btnFilter.setOnClickListener {
             navigator.navigate(R.id.action_navigation_issue_to_issueWriteFragment)
 
-        binding.rvIssue.apply {
-            this.adapter = IssueAdapter().apply {
-                this.submitList(tempList)
-            }
+            binding.rvIssue.apply {
+                this.adapter = IssueAdapter().apply {
+                    this.submitList(tempList)
+                }
 
+            }
         }
     }
 }

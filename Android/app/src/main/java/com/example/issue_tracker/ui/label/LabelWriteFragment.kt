@@ -1,17 +1,17 @@
 package com.example.issue_tracker.ui.label
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
+import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentLabelWriteBinding
 import kotlin.random.Random
 
@@ -69,34 +69,19 @@ class LabelWriteFragment : Fragment() {
     }
 
     private fun validateLabelColor() {
-        binding.etLabelWriteColor.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(inputColor: Editable?) {
-                val title = inputColor.toString()
-                colorFlag= title.isNotEmpty()
-                setSaveTitleColor()
-            }
+        binding.etLabelWriteColor.doAfterTextChanged {inputColor->
+            val title = inputColor.toString()
+            colorFlag= title.isNotEmpty()
+            setSaveTitleColor()
         }
-        )
     }
 
-
     private fun validateLabelTitle() {
-        binding.etLabelWriteTitle.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(inputTitle: Editable?) {
-                val title = inputTitle.toString()
-                titleFlag = title.isNotEmpty()
-                setSaveTitleColor()
-            }
+        binding.etLabelWriteTitle.doAfterTextChanged {inputTitle->
+            val title = inputTitle.toString()
+            titleFlag = title.isNotEmpty()
+            setSaveTitleColor()
         }
-        )
     }
 
     private fun setSaveTitleColor() {
@@ -106,11 +91,11 @@ class LabelWriteFragment : Fragment() {
         }
         else if(!titleFlag&&colorFlag){
             binding.etLabelWriteColor.error = null
-            binding.etLabelWriteTitle.error = "필수입력값입니다"
+            binding.etLabelWriteTitle.error = Constants.INPUT_ERROR_MESSAGE
             binding.tvLabelWriteSaveTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey1))
         }
         else  if(!colorFlag&&titleFlag){
-            binding.etLabelWriteColor.error = "필수입력값입니다"
+            binding.etLabelWriteColor.error = Constants.INPUT_ERROR_MESSAGE
             binding.tvLabelWriteSaveTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey1))
         }
         else{

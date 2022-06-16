@@ -34,4 +34,15 @@ class IssueAdapter : RecyclerView.Adapter<IssueAdapter.ViewHolder>() {
         this.items.addAll(items)
         notifyDataSetChanged()
     }
+
+    fun removeData(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun closeIssue(position: Int): Issue {
+        val tempIssue = items[position]
+        items.removeAt(position)
+        return tempIssue
+    }
 }

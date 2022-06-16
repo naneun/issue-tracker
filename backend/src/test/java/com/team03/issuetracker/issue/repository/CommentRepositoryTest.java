@@ -14,9 +14,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,13 +24,15 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @Import(DataJpaConfig.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Transactional
 class CommentRepositoryTest {
+
+    final EntityManager entityManager;
 
     final CommentRepository commentRepository;
 
     @Autowired
-    CommentRepositoryTest(CommentRepository commentRepository) {
+    CommentRepositoryTest(EntityManager entityManager, CommentRepository commentRepository) {
+        this.entityManager = entityManager;
         this.commentRepository = commentRepository;
     }
 
@@ -41,12 +42,11 @@ class CommentRepositoryTest {
      *
      */
     @Test
-    @Transactional
     void 특정_이슈에_등록된_댓글을_페이징처리하여_조회한다() {
 
         // given
         Long issueId = 1L;
-        Issue issue = Issue.of(issueId, null, null, null, null, null);
+        Issue issue = entityManager.find(Issue.class, issueId);
 
         // when
         Pageable pageable = PageRequest.of(0, 10);
@@ -62,27 +62,23 @@ class CommentRepositoryTest {
      *
      */
     @Test
-    @Transactional
     void 댓글을_등록한다() {
 
         // given
-        Long memberId = 1L;
-        String email = "yhsep7@gmail.com";
-        Member writer = Member.of(memberId, email);
+        Long writerId = 1L;
+        Member writer = entityManager.find(Member.class, writerId);
         Comment newComment = Comment.of(null, writer, "content");
+        commentRepository.save(newComment);
 
         // when
-        commentRepository.save(newComment);
         Comment foundComment = commentRepository.findById(newComment.getId())
                 .orElseThrow(CommentException::new);
 
         // then
-        LocalDateTime currentDateTime = LocalDateTime.now();
         assertThat(foundComment).usingRecursiveComparison().isEqualTo(newComment);
     }
 
     @Test
-    @Transactional
     void 댓글을_수정한다() {
 
         // given
@@ -104,7 +100,6 @@ class CommentRepositoryTest {
     }
 
     @Test
-    @Transactional
     void 해당하는_ID를_가진_댓글을_삭제한다() {
 
         // given
@@ -123,11 +118,10 @@ class CommentRepositoryTest {
     }
 
     @Test
-    @Transactional
     void 현재_코멘트에_이모지를_등록한다() {
 
         // given
-        Emoji emoji = Emoji.of(1L, null, null);
+        Emoji emoji = entityManager.find(Emoji.class, 1L);
 
         Long commentId = 1L;
         Comment foundComment = commentRepository.findById(commentId)

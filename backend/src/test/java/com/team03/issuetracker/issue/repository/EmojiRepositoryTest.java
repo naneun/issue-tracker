@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,18 +21,19 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class EmojiRepositoryTest {
 
-    static List<Emoji> registeredEmojis = List.of(
-            Emoji.of(1L, "❤", "좋아요"),
-            Emoji.of(2L, "👍", "최고에요"),
-            Emoji.of(3L, "👎", "싫어요"),
-            Emoji.of(4L, "✅", "확인했어요")
-    );
-
     final EmojiRepository emojiRepository;
+
+    final List<Emoji> registeredEmojis;
 
     @Autowired
     EmojiRepositoryTest(EmojiRepository emojiRepository) {
         this.emojiRepository = emojiRepository;
+        this.registeredEmojis = List.of(
+                Emoji.of(1L, "❤", "좋아요"),
+                Emoji.of(2L, "👍", "최고에요"),
+                Emoji.of(3L, "👎", "싫어요"),
+                Emoji.of(4L, "✅", "확인했어요")
+        );
     }
 
     /**
@@ -42,7 +42,6 @@ class EmojiRepositoryTest {
      *
      */
     @Test
-    @Transactional
     void 등록된_모든_이모지를_조회한다() {
 
         // given
@@ -65,7 +64,6 @@ class EmojiRepositoryTest {
      */
     @ParameterizedTest
     @ValueSource(longs = { 1, 2, 3, 4 })
-    @Transactional
     void 해당하는_ID를_가진_이모지를_조회한다(Long id) {
 
         // given

@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface IssueRepository extends JpaRepository<Issue, Long>, IssueRepositoryCustom {
 
+    // TODO join fetch
     List<Issue> findByState(@Param("state")IssueState state);
 }

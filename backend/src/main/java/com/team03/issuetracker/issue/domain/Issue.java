@@ -3,20 +3,22 @@ package com.team03.issuetracker.issue.domain;
 import com.team03.issuetracker.common.domain.BaseTimeEntity;
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.milestone.domain.Milestone;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.team03.issuetracker.issue.domain.IssueState.*;
 
 @Entity
 @Getter
+@ToString
+@EqualsAndHashCode(of = "id", callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Issue extends BaseTimeEntity {
 
@@ -25,38 +27,51 @@ public class Issue extends BaseTimeEntity {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false)
     private String title;
 
     @NotBlank
+    @Column(nullable = false)
     private String content;
 
     @Enumerated(EnumType.STRING)
     private IssueState state;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @ToString.Exclude
     private Label label;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @ToString.Exclude
     private Milestone milestone;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @ToString.Exclude
     private Member assignee;
 
     @CreatedBy
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false)
+    @ToString.Exclude
     private Member creator;
 
     @LastModifiedBy
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @ToString.Exclude
     private Member modifier;
+
+    @OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private final List<Comment> comments = new ArrayList<>();
+
+    /********************************************************************/
 
     @Builder
     private Issue(Long id, String title, String content, Label label, Milestone milestone, Member assignee) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.state = OPEN;
@@ -67,6 +82,7 @@ public class Issue extends BaseTimeEntity {
 
     public static Issue of(Long id, String title, String content, Label label, Milestone milestone, Member assignee) {
         return Issue.builder()
+                .id(id)
                 .title(title)
                 .content(content)
                 .label(label)
@@ -74,6 +90,8 @@ public class Issue extends BaseTimeEntity {
                 .assignee(assignee)
                 .build();
     }
+
+    /********************************************************************/
 
     public void changeTitle(String title) {
         this.title = title;

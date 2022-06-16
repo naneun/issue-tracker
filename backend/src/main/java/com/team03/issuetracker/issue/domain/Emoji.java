@@ -2,10 +2,7 @@ package com.team03.issuetracker.issue.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -17,9 +14,12 @@ public class Emoji {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String unicode;
 
     private String description;
+
+    /********************************************************************/
 
     @Builder
     private Emoji(Long id, String unicode, String description) {
@@ -35,4 +35,6 @@ public class Emoji {
                 .description(description)
                 .build();
     }
+
+    /********************************************************************/
 }

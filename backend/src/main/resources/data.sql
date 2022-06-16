@@ -23,7 +23,8 @@ values ('제목', '마일스톤에 대한 설명', '2022-07-01'),
 /* issue */
 insert into issue(title, content, state, label_id, milestone_id, assignee_id)
 values ('제목', '이슈에 대한 설명(최대 두 줄까지 보여줄 수 있다)', 'OPEN', 1, 1, 1),
-       ('안드로이드 이슈트래커', '2022년 6월 13일 월요일 부터 7월 1일 금요일 까지', 'OPEN', 2, 2, 2);
+       ('안드로이드 이슈트래커', '2022년 6월 13일 월요일 부터 7월 1일 금요일 까지', 'OPEN', 2, 2, 2),
+       ('닫힌 이슈', '이미 닫힌 이슈입니다.', 'CLOSE', 1, 2, 1);
 
 /* comment */
 insert into comment(writer_id, content, issue_id)

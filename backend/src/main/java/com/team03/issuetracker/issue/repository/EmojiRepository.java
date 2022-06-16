@@ -1,8 +1,11 @@
 package com.team03.issuetracker.issue.repository;
 
 import com.team03.issuetracker.issue.domain.Emoji;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface EmojiRepository extends JpaRepository<Emoji, Long> {
+import java.util.List;
 
+public interface EmojiRepository extends CrudRepository<Emoji, Long> {
+
+    List<Emoji> findAll();
 }

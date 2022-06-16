@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +17,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.apache.logging.log4j.util.Strings;
 
 @Entity
 @Getter
@@ -24,15 +24,18 @@ import org.apache.logging.log4j.util.Strings;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Milestone {
 
+	@OneToMany(mappedBy = "milestone", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	private final List<Issue> issues = new ArrayList<>();
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String title;
-	private String description;
-	private LocalDate dueDate;
 
-	@OneToMany(mappedBy = "milestone", cascade = CascadeType.PERSIST)
-	private List<Issue> issues = new ArrayList<>();
+	private String title;
+
+	private String description;
+
+	private LocalDate dueDate;
 
 	@Builder
 	private Milestone(Long id, String title, String description, LocalDate dueDate,
@@ -41,7 +44,7 @@ public class Milestone {
 		this.title = title;
 		this.description = description;
 		this.dueDate = dueDate;
-		this.issues = issues;
+		this.issues.addAll(issues);
 	}
 
 	public static Milestone of(Long id, String title, String description, LocalDate dueDate,
@@ -56,16 +59,9 @@ public class Milestone {
 	}
 
 	public void update(MilestoneUpdateRequest request) {
-		if (Strings.isNotBlank(request.getTitle())) {
-			this.title = request.getTitle();
-		}
-		if (Strings.isNotBlank(request.getDescription())) {
-			this.description = request.getDescription();
-		}
-		if (request.getDueDate() != null) {
-			this.dueDate = request.getDueDate();
-		}
-
+		this.title = request.getTitle();
+		this.description = request.getDescription();
+		this.dueDate = request.getDueDate();
 	}
 
 	public void addIssue(Issue issue) {

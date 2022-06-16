@@ -35,15 +35,14 @@ class IssueHomeFragment : Fragment() {
             Issue(3, "마스터즈 코스2", "이슈트래커2", "7월 9일에서 12일까지", "asdfef")
         )
 
+        binding.rvIssue.apply {
+            this.adapter = IssueAdapter().apply {
+                this.submitList(tempList)
+            }
+
+        }
         binding.btnFilter.setOnClickListener {
             navigator.navigate(R.id.action_navigation_issue_to_issueWriteFragment)
-
-            binding.rvIssue.apply {
-                this.adapter = IssueAdapter().apply {
-                    this.submitList(tempList)
-                }
-
-            }
         }
     }
 }

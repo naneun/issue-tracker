@@ -35,9 +35,13 @@
     <string name="label_title">레이블</string>
 
     <string name="label_write_title">새로운 레이블</string>
-    <string name="label_wrtie_color_hint">#3DDCFF</string>
+    <string name="label_wrtie_color_hint">#FFFFFFFF</string>
     <string name="label_write_base_color">FFFFFFFF</string>
     <string name="item_milestone_text">마일스톤</string>
     <string name="item_title">제목</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="issue_write_preview_title">미리보기</string>
+    <string name="issue_wrtie_title">이슈작성</string>
 
 </resources>

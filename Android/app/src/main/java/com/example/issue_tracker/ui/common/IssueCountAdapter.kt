@@ -17,5 +17,5 @@ fun setOpenIssueCount(view: TextView, openIssueCount: Int) {
 
 @BindingAdapter("closedIssueCount")
 fun setClosedIssueCount(view: TextView, closedIssueCount: Int) {
-    view.text = view.context.getString(R.string.milestone_item_open_issue_count, closedIssueCount)
+    view.text = view.context.getString(R.string.milestone_item_close_issue_count, closedIssueCount)
 }

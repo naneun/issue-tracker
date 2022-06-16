@@ -19,9 +19,14 @@ public class Label {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String title;
+
 	private String description;
+
 	private String backgroundColor;
+
+	/****************************************************************/
 
 	@Builder
 	private Label(Long id, String title, String description, String backgroundColor) {
@@ -39,6 +44,8 @@ public class Label {
 			.backgroundColor(backgroundColor)
 			.build();
 	}
+
+	/****************************************************************/
 
 	public void update(LabelUpdateRequest request) {
 		this.title = request.getTitle();

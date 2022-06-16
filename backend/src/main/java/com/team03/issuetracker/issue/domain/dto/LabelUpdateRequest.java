@@ -19,10 +19,10 @@ public class LabelUpdateRequest {
 		if (Strings.isBlank(this.title)) {
 			this.title = label.getTitle();
 		}
-		if (Strings.isNotBlank(this.description)) {
+		if (Strings.isBlank(this.description)) {
 			this.description = label.getDescription();
 		}
-		if (Strings.isNotBlank(this.backgroundColor)) {
+		if (Strings.isBlank(this.backgroundColor)) {
 			this.backgroundColor = label.getBackgroundColor();
 		}
 		return this;

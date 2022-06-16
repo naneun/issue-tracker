@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,11 +19,11 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@ToString(exclude = "issues")
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Milestone {
 
-	@OneToMany(mappedBy = "milestone", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "milestone", cascade = CascadeType.PERSIST)
 	private final List<Issue> issues = new ArrayList<>();
 
 	@Id
@@ -36,6 +35,8 @@ public class Milestone {
 	private String description;
 
 	private LocalDate dueDate;
+
+	/****************************************************************/
 
 	@Builder
 	private Milestone(Long id, String title, String description, LocalDate dueDate,

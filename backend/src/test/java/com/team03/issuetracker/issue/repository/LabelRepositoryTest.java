@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -25,11 +24,17 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 class LabelRepositoryTest {
 
 	final LabelRepository labelRepository;
-	@PersistenceContext
-	EntityManager em;
 
-	@Autowired LabelRepositoryTest(LabelRepository labelRepository) {
+	final EntityManager entityManager;
+
+	@Autowired
+	LabelRepositoryTest(LabelRepository labelRepository, EntityManager entityManager) {
 		this.labelRepository = labelRepository;
+		this.entityManager = entityManager;
+
+		//		List<Label> registeredLabels = List.of(
+		//			Label.of(1L, )
+		//		)
 	}
 
 	@Test
@@ -137,8 +142,8 @@ class LabelRepositoryTest {
 
 		// when
 		labelRepository.deleteAllByIdInBatch(labelIds);
-		em.flush();
-		em.clear();
+		entityManager.flush();
+		entityManager.clear();
 
 		// then
 		List<Label> labels = labelRepository.findAll();

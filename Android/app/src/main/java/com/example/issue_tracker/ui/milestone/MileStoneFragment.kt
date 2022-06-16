@@ -30,9 +30,6 @@ class MileStoneFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = MilestoneAdapter()
         navigator = Navigation.findNavController(view)
-        var window = requireActivity().window
-
-        //window.statusBarColor= ContextCompat.getColor(requireContext(), R.color.skyBlue)
         binding.iBtnMilestoneAdd.setOnClickListener {
             moveToAddMileStone()
         }

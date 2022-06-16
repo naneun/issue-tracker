@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
@@ -14,6 +15,7 @@ import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 class IssueHomeFragment : Fragment() {
 
     private lateinit var binding: FragmentIssueHomeBinding
+    private lateinit var navigator:NavController
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,6 +27,7 @@ class IssueHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navigator= Navigation.findNavController(view)
         val tempList = listOf<Issue>(
             Issue("마일스톤", "제목", "설명", "label"),
             Issue("마스터즈 코스1", "이슈트래커1", "6월 13일에서 20일까지", "ABCDEF"),
@@ -34,6 +37,10 @@ class IssueHomeFragment : Fragment() {
         val adapter = IssueAdapter()
         binding.rvIssue.adapter = adapter
         adapter.submitList(tempList)
+
+        binding.btnFilter.setOnClickListener {
+            navigator.navigate(R.id.action_navigation_issue_to_issueWriteFragment)
+        }
     }
 
 }

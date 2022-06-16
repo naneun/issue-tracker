@@ -6,7 +6,7 @@
 
         <variable
             name="itemIssue"
-            type="com.example.issue_tracker.ui.issue.home.Issue" />
+            type="com.example.issue_tracker.domain.model.Issue" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

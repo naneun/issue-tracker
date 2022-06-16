@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Issue_tracker</string>
+    <string name="label_login_id_hint">아이디</string>
+    <string name="label_login_id_placeholder">Input your ID</string>
+    <string name="label_login_pwd_hint">비밀번호</string>
+    <string name="label_login_pwd_placeholder">Input Your PassWord</string>
+    <string name="label_string_login_title">로그인</string>
+    <string name="label_string_register_title">회원가입</string>
+    <string name="label_string_github_login_title">깃헙 계정으로 로그인</string>
+    <string name="label_string_google_login_title">구글 계정으로 로그인</string>
+    <string name="tool_bar_title">이슈</string>
+    <string name="appbar_filter_icon">appBar_filter_icon</string>
+    <string name="appbar_search_icon">appBar_search_icon</string>
+
+    <string name="label_milestone_item_title">제목</string>
+    <string name="label_milestone_item_progress">진행률%</string>
+    <string name="label_milestone_item_content">마일스톤에 대한 설명 (생략가능) (최대한줄)</string>
+    <string name="label_milestone_item_complete_day">완료일(생략가능)</string>
+    <string name="label_milestone_item_open_issue">열린 이슈</string>
+    <string name="label_milestone_item_close_issue">닫힌 이슈</string>
+    <string name="milestone_item_open_issue_count">열린 이슈 %d개</string>
+    <string name="milestone_item_close_issue_count">닫힌 이슈 %d개</string>
+    <string name="milestone_item_progress">%d 퍼센트</string>
+
+    <string name="milestone_write_title">새로운 마일스톤</string>
+    <string name="milestone_write_save_title">저장</string>
+    <string name="milestone_write_complete_day_hint">선택 사항(YYYY-MM-DD)</string>
+    <string name="milestone_write_complete_day_title">완료일</string>
+    <string name="milestone_write_content_hint">선택 사항</string>
+    <string name="milestone_write_content_title">설명</string>
+    <string name="milestone_write_title_hint">필수 입력</string>
+    <string name="milestone_write_title_title">제목</string>
+    <string name="milestone_write_compleday_error">잘못된 입력양식</string>
+    <string name="milestone_title">마일스톤</string>
+    <string name="label_title">레이블</string>
+
+    <string name="label_write_title">새로운 레이블</string>
+    <string name="label_wrtie_color_hint">#3DDCFF</string>
+    <string name="label_write_base_color">FFFFFFFF</string>
+    <string name="item_milestone_text">마일스톤</string>
+    <string name="item_title">제목</string>
+
+</resources>

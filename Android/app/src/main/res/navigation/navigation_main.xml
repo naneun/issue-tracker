@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_main"
+    app:startDestination="@id/navigation_issue">
+
+    <fragment
+        android:id="@id/navigation_issue"
+        android:name="com.example.issue_tracker.ui.issue.home.IssueHomeFragment"
+        android:label="fragment_issue_home"
+        tools:layout="@layout/fragment_issue_home" >
+    </fragment>
+    <fragment
+        android:id="@id/navigation_label"
+        android:name="com.example.issue_tracker.ui.label.LabelFragment"
+        android:label="fragment_label"
+        tools:layout="@layout/fragment_label" >
+        <action
+            android:id="@+id/action_navigation_label_to_labelWriteFragment"
+            app:destination="@id/labelWriteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_my_account"
+        android:name="com.example.issue_tracker.ui.myaccount.MyAccountFragment"
+        android:label="fragment_my_account"
+        tools:layout="@layout/fragment_my_account" />
+    <fragment
+        android:id="@+id/navigation_milestone"
+        android:name="com.example.issue_tracker.ui.milestone.MileStoneFragment"
+        android:label="fragment_mile_stone"
+        tools:layout="@layout/fragment_mile_stone" >
+        <action
+            android:id="@+id/action_navigation_milestone_to_mileStoneWriteFragment"
+            app:destination="@id/mileStoneWriteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mileStoneWriteFragment"
+        android:name="com.example.issue_tracker.ui.milestone.MileStoneWriteFragment"
+        android:label="fragment_mile_stone_write"
+        tools:layout="@layout/fragment_mile_stone_write" />
+    <fragment
+        android:id="@+id/labelWriteFragment"
+        android:name="com.example.issue_tracker.ui.label.LabelWriteFragment"
+        android:label="LabelWriteFragment" />
+</navigation>

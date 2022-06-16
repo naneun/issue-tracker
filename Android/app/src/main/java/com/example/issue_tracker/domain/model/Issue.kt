@@ -1,6 +1,7 @@
-package com.example.issue_tracker.ui.issue.home
+package com.example.issue_tracker.domain.model
 
 data class Issue(
+    val id: Int,
     val milestone: String,
     val title: String,
     val description: String,

@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: local
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+    properties:
+      hibernate:
+        format_sql: true
+
+        jdbc:
+          batch_size: 1000
+
+    defer-datasource-initialization: true
+
+logging.level:
+  org.hibernate.SQL: debug

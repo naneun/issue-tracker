@@ -6,7 +6,6 @@ import com.team03.issuetracker.issue.domain.Comment;
 import com.team03.issuetracker.issue.domain.Emoji;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.exception.CommentException;
-import com.team03.issuetracker.milestone.domain.Milestone;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

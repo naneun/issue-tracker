@@ -37,36 +37,30 @@ public class Issue extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private IssueState state;
 
-    @ManyToOne // (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-//    @ToString.Exclude
     private Label label;
 
-    @ManyToOne // (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-//    @JsonBackReference
     @ToString.Exclude
     private Milestone milestone;
 
-    @ManyToOne // (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-//    @ToString.Exclude
     private Member assignee;
 
     @CreatedBy
-    @ManyToOne // (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false)
-//    @ToString.Exclude
     private Member creator;
 
     @LastModifiedBy
-    @ManyToOne // (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-//    @ToString.Exclude
     private Member modifier;
 
     @OneToMany(mappedBy = "issue", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    @ToString.Exclude
     private final List<Comment> comments = new ArrayList<>();
 
     /********************************************************************/

@@ -148,7 +148,7 @@ class MilestoneRepositoryTest {
 
 		// given
 		List<Milestone> foundMilestones = milestoneRepository.findAll();
-		List<Long> issueIds = foundMilestones.stream()
+		List<Long> milestoneIds = foundMilestones.stream()
 			.map(Milestone::getId)
 			.collect(Collectors.toList());
 
@@ -156,7 +156,7 @@ class MilestoneRepositoryTest {
 		foundMilestones.forEach(Milestone::truncateIssues);
 		entityManager.flush();
 
-		milestoneRepository.deleteAllByIdInBatch(issueIds);
+		milestoneRepository.deleteAllByIdInBatch(milestoneIds);
 
 		// then
 		assertAll(

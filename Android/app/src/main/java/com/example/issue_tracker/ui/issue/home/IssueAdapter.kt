@@ -37,13 +37,13 @@ class IssueAdapter() : ListAdapter<Issue, IssueAdapter.ViewHolder>(IssueDiffUtil
     }
 
     fun removeData(position: Int) {
-        items.removeAt(position)
+        currentList.removeAt(position)
         notifyItemRemoved(position)
     }
 
     fun closeIssue(position: Int): Issue {
-        val tempIssue = items[position]
-        items.removeAt(position)
+        val tempIssue = currentList[position]
+        currentList.removeAt(position)
         return tempIssue
     }
 

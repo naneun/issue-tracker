@@ -39,8 +39,8 @@ class LabelServiceTest {
 
         // then
         assertThat(createdLabel)
-            .usingRecursiveComparison()
-            .isEqualTo(registeredLabel);
+                .usingRecursiveComparison()
+                .isEqualTo(registeredLabel);
     }
 
     // Todo : 라벨 목록 조회는 컨트롤러에서 바로 Repository.findAll() 호출?
@@ -62,7 +62,7 @@ class LabelServiceTest {
         // then
 
         assertThat(label)
-            .usingRecursiveComparison()
-            .isEqualTo(updatedLabel);
+                .usingRecursiveComparison()
+                .isEqualTo(updatedLabel);
     }
 }

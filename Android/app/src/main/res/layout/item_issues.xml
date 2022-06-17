@@ -9,44 +9,77 @@
             type="com.example.issue_tracker.ui.issue.home.Issue" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_swipe_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="129dp">
 
         <LinearLayout
-            android:layout_width="129dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CCD4FF"
-            android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="parent">
+            android:orientation="horizontal"
+            android:weightSum="4">
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="0dp"
-                android:src="@drawable/ic_issue_close" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#eeeeee" />
 
-            <TextView
-                android:id="@+id/tv"
-                style="@style/Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:text="닫기"
-                android:textColor="@color/blue1" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="#CCD4FF"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="0dp"
+                    android:src="@drawable/ic_issue_close" />
+
+                <TextView
+                    android:id="@+id/tv"
+                    style="@style/Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="닫기"
+                    android:textColor="@color/blue1" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_swipe_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:background="@color/white"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_check"
+                android:layout_width="100dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:visibility="gone"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+
+                android:background="#CCD4FF"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="0dp"
+                    android:src="@drawable/ic_check_on" />
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/iv_issue_milestone"
@@ -55,7 +88,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/ic_milestone"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/ll_check"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/grey6" />
 
@@ -67,7 +100,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/item_milestone_text"
                 android:textColor="@color/grey2"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/ll_check"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -78,7 +111,7 @@
                 android:layout_marginStart="16dp"
                 android:text="@string/item_title"
                 android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/ll_check"
                 app:layout_constraintTop_toBottomOf="@id/iv_issue_milestone" />
 
             <TextView
@@ -90,7 +123,7 @@
                 android:text="description"
                 android:textColor="@color/grey1"
                 android:textSize="14sp"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/ll_check"
                 app:layout_constraintTop_toBottomOf="@id/tv_issue_title" />
 
             <TextView
@@ -104,7 +137,7 @@
                 android:gravity="center"
                 android:text="Label"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/ll_check"
                 app:layout_constraintTop_toBottomOf="@id/tv_issue_description" />
 
             <View
@@ -114,8 +147,7 @@
                 android:background="@color/grey5"
                 app:layout_constraintTop_toBottomOf="@id/tv_issue_label" />
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </FrameLayout>
 </layout>

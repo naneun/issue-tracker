@@ -10,6 +10,9 @@
         android:name="com.example.issue_tracker.ui.issue.home.IssueHomeFragment"
         android:label="fragment_issue_home"
         tools:layout="@layout/fragment_issue_home" >
+        <action
+            android:id="@+id/action_navigation_issue_to_issueWriteFragment"
+            app:destination="@id/issueWriteFragment" />
     </fragment>
     <fragment
         android:id="@id/navigation_label"
@@ -43,4 +46,8 @@
         android:id="@+id/labelWriteFragment"
         android:name="com.example.issue_tracker.ui.label.LabelWriteFragment"
         android:label="LabelWriteFragment" />
+    <fragment
+        android:id="@+id/issueWriteFragment"
+        android:name="com.example.issue_tracker.ui.issue.write.IssueWriteFragment"
+        android:label="IssueWriteFragment" />
 </navigation>

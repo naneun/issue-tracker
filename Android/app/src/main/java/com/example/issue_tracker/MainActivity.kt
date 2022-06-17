@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         navController?.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.mileStoneWriteFragment -> binding.bottomNavigationView.menu[2].isChecked = true
+                R.id.labelWriteFragment -> binding.bottomNavigationView.menu[1].isChecked = true
+                R.id.issueWriteFragment -> binding.bottomNavigationView.menu[0].isChecked = true
             }
         }
     }

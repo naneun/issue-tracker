@@ -35,9 +35,21 @@
     <string name="label_title">레이블</string>
 
     <string name="label_write_title">새로운 레이블</string>
-    <string name="label_wrtie_color_hint">#3DDCFF</string>
+    <string name="label_wrtie_color_hint">#FFFFFFFF</string>
     <string name="label_write_base_color">FFFFFFFF</string>
     <string name="item_milestone_text">마일스톤</string>
     <string name="item_title">제목</string>
+
+    <string name="issue_write_preview_title">미리보기</string>
+    <string name="issue_wrtie_title">이슈작성</string>
+    <string name="my_account_title">내 계정</string>
+    <string name="my_account_account_info">현재 로그인된 게정 정보</string>
+    <string name="my_account_write_issue_count_title">내가 작성한 이슈 개수</string>
+    <string name="my_account_assigned_issue_count_title">나에게 할당된 이슈 개수</string>
+    <string name="my_account_comment_count_title">내가 남긴 댓길 개수</string>
+
+    <string name="my_account_write_issue_count_value">%d개</string>
+    <string name="my_account_assign_issue_count_value">%d개</string>
+    <string name="my_account_write_comment_count_value">%d개</string>
 
 </resources>

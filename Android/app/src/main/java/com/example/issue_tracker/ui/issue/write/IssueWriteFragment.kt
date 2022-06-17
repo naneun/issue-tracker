@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.issue_tracker.R
+import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueWriteBinding
 import com.google.android.material.snackbar.Snackbar
 import io.noties.markwon.AbstractMarkwonPlugin
@@ -35,8 +36,8 @@ import io.noties.markwon.image.file.FileSchemeHandler
 class IssueWriteFragment : Fragment() {
     private var markDownFlag = false
     private lateinit var popupWindow: PopupWindow
-    private var beforeChangedText = ""
-    private var copyText = ""
+    private var beforeChangedText = Constants.EMPTY_INPUT
+    private var copyText = Constants.EMPTY_INPUT
     private lateinit var cutButton: Button
     private lateinit var copyButton: Button
     private lateinit var insertPhotoButton: Button
@@ -57,7 +58,11 @@ class IssueWriteFragment : Fragment() {
             .usePlugin(ImagesPlugin.create())
             .usePlugin(object : AbstractMarkwonPlugin() {
                 override fun configure(registry: MarkwonPlugin.Registry) {
-                    registry.require(ImagesPlugin::class.java) { imagesPlugin -> imagesPlugin.addSchemeHandler(FileSchemeHandler.create()) }
+                    registry.require(ImagesPlugin::class.java) { imagesPlugin ->
+                        imagesPlugin.addSchemeHandler(
+                            FileSchemeHandler.create()
+                        )
+                    }
                 }
             }).build()
         displayMarkDownPreview()
@@ -75,7 +80,7 @@ class IssueWriteFragment : Fragment() {
     private fun addCutAction() {
         cutButton.setOnClickListener {
             copyText = binding.etIssueWriteContent.text.toString()
-            binding.etIssueWriteContent.setText("")
+            binding.etIssueWriteContent.setText(Constants.EMPTY_INPUT)
         }
 
     }
@@ -93,7 +98,11 @@ class IssueWriteFragment : Fragment() {
     }
 
     private fun displayPopup(view: View) {
-        popupWindow = PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        popupWindow = PopupWindow(
+            view,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.issue_popup_window, null)
         findMenuButton(popupView)
@@ -161,29 +170,35 @@ class IssueWriteFragment : Fragment() {
             permissions.entries.forEach { permission ->
                 when {
                     permission.value -> {
-                        Snackbar.make(binding.root, "Permission granted", Snackbar.LENGTH_SHORT)
-                            .show()
+                        Snackbar.make(
+                            binding.root,
+                            Constants.PERMISSION_GRANTED_MESSAGE,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
                     shouldShowRequestPermissionRationale(permission.key) -> {
                         showContextPopupPermission()
                     }
                     else -> {
-                        Snackbar.make(binding.root, "Permission denied", Snackbar.LENGTH_SHORT)
-                            .show()
+                        Snackbar.make(
+                            binding.root,
+                            Constants.PERMISSION_DENIED_MESSAGE,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
         }
 
     private fun showContextPopupPermission() {
-        AlertDialog.Builder(requireContext()).setTitle("권한이 필요합니다")
-            .setMessage("사진을 불러오기 위해 권한설정이 필요합니다")
-            .setPositiveButton("설정하러가기") { _, _ ->
+        AlertDialog.Builder(requireContext()).setTitle(Constants.PERMISSION_NEED_MESSAGE)
+            .setMessage(Constants.PERMISSION_NEED_REASON_MESSAGE)
+            .setPositiveButton(Constants.MOVE_TO_SETTING_MESSAGE) { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     .setData(Uri.parse("package:${requireContext().packageName}"))
                 startActivity(intent)
             }
-            .setNegativeButton("취소하기") { _, _ -> }
+            .setNegativeButton(Constants.CANCEL_MESSAGE) { _, _ -> }
             .create()
             .show()
 
@@ -209,7 +224,7 @@ class IssueWriteFragment : Fragment() {
                 val currentImageUri = it.data?.data
                 println(currentImageUri)
                 try {
-                    currentImageUri?.let {uri->
+                    currentImageUri?.let { uri ->
                         binding.etIssueWriteContent.append(
                             "![alt](file://${getFullPathFromUri(requireContext(), uri)})"
                         )
@@ -241,7 +256,13 @@ class IssueWriteFragment : Fragment() {
                 cursor.close()
                 val projection = arrayOf(column)
                 try {
-                    cursor = ctx.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Images.Media._ID + " = ? ", arrayOf(documentId), null)
+                    cursor = ctx.contentResolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection,
+                        MediaStore.Images.Media._ID + " = ? ",
+                        arrayOf(documentId),
+                        null
+                    )
                     if (cursor != null) {
                         cursor.moveToFirst()
                         fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))

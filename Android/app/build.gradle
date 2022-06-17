@@ -57,8 +57,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
 
+    //MarkWon Library
     implementation "io.noties.markwon:core:4.2.0"
     implementation "io.noties.markwon:image:4.2.0"
 
-
+    //Coil
+    implementation("io.coil-kt:coil:0.10.0")
 }

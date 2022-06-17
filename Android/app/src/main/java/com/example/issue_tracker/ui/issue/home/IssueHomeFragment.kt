@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.fragment.app.Fragment
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 import com.example.issue_tracker.domain.model.Issue
-
 
 class IssueHomeFragment : Fragment() {
 
@@ -28,6 +28,21 @@ class IssueHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val swipeHelperCallback = ItemHelper(adapter).apply {
+            setClamp(resources.displayMetrics.widthPixels.toFloat() / 4)    // 1080 / 4 = 270
+        }
+        ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvIssue)
+
+        binding.btnFilter.setOnClickListener {
+            binding.tbIssues.visibility = View.GONE
+            binding.llFilter.visibility = View.VISIBLE
+        }
+
+        binding.btnFilterClose.setOnClickListener {
+            binding.tbIssues.visibility = View.VISIBLE
+            binding.llFilter.visibility = View.GONE
+        }
+        
         navigator = Navigation.findNavController(view)
         val tempList = listOf<Issue>(
             Issue(1, "마일스톤", "제목", "설명", "label"),

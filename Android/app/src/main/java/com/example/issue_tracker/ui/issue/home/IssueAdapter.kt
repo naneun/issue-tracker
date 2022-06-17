@@ -35,4 +35,18 @@ class IssueAdapter() : ListAdapter<Issue, IssueAdapter.ViewHolder>(IssueDiffUtil
             return oldItem == newItem
         }
     }
+
+    fun removeData(position: Int) {
+        currentList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun closeIssue(position: Int): Issue {
+        val tempIssue = currentList[position]
+        currentList.removeAt(position)
+        return tempIssue
+    }
+
+    fun visibleIssue() {
+    }
 }

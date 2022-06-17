@@ -123,6 +123,8 @@
             android:paddingVertical="16dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_label_write_content_color"
             android:maxLength="10"
+            android:focusable="false"
+            android:clickable="false"
             app:layout_constraintEnd_toStartOf="@id/iBtn_label_write_color_refresh"
             app:layout_constraintStart_toEndOf="@id/tv_label_write_content_color"
             app:layout_constraintTop_toTopOf="@id/tv_label_write_content_color"

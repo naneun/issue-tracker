@@ -77,23 +77,13 @@ class LabelRepositoryTest {
 
 		// then
 		labels.forEach(label -> {
-				Label comparisonTarget = registeredLabels.get(
-					labels.indexOf(label));
-				assertThat(label)
-					.usingRecursiveComparison()
-					.ignoringFields("issues")
-					.isEqualTo(comparisonTarget);
-
-				//				List<Issue> issues = label.getIssues();
-				//				issues.forEach(issue -> {
-				//					assertThat(issue)
-				//						.usingRecursiveComparison()
-				//						.ignoringFields("label", "milestone", "assignee", "creator", "modifier",
-				//							"comments")
-				//						.isEqualTo(comparisonTarget.getIssues().get(issues.indexOf(issue)));
-				//				});
-			}
-		);
+			Label comparisonTarget = registeredLabels.get(
+				labels.indexOf(label));
+			assertThat(label)
+				.usingRecursiveComparison()
+				.ignoringFields("issues")
+				.isEqualTo(comparisonTarget);
+		});
 	}
 
 	@Test

@@ -8,17 +8,19 @@ import lombok.Getter;
 public class MilestoneResponse {
 
 	private String title;
-	private Double progress;
+
 	private String description;
+
 	private LocalDate dueDate;
+
 	private Long openIssueCount;
+
 	private Long closedIssueCount;
 
 	@QueryProjection
-	public MilestoneResponse(String title, Double progress, String description,
+	public MilestoneResponse(String title, String description,
 		LocalDate dueDate, Long openIssueCount, Long closedIssueCount) {
 		this.title = title;
-		this.progress = progress;
 		this.description = description;
 		this.dueDate = dueDate;
 		this.openIssueCount = openIssueCount;

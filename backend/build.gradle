@@ -52,6 +52,12 @@ dependencies {
     // Querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    // Configuration-processor
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    // WebClient
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {

@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: local
+  config:
+    import: classpath:env.yml
 
   mvc:
     pathmatch:
@@ -22,6 +24,7 @@ spring:
           batch_size: 1000
 
     defer-datasource-initialization: true
+
 
 logging.level:
   org.hibernate.SQL: debug

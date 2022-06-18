@@ -1,12 +1,15 @@
 package com.team03.issuetracker.issue.repository;
 
 import com.team03.issuetracker.common.config.DataJpaConfig;
+import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.Label;
 import com.team03.issuetracker.issue.domain.dto.LabelUpdateRequest;
-import java.util.ArrayList;
+import com.team03.issuetracker.issue.exception.LabelException;
+
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,7 +18,7 @@ import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 
 @Import(DataJpaConfig.class)
@@ -23,140 +26,145 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class LabelRepositoryTest {
 
-	final LabelRepository labelRepository;
+    final LabelRepository labelRepository;
 
-	final EntityManager entityManager;
+    final EntityManager entityManager;
 
-	@Autowired
-	LabelRepositoryTest(LabelRepository labelRepository, EntityManager entityManager) {
-		this.labelRepository = labelRepository;
-		this.entityManager = entityManager;
+    final List<Label> registeredLabels;
 
-		//		List<Label> registeredLabels = List.of(
-		//			Label.of(1L, )
-		//		)
-	}
+    @Autowired
+    LabelRepositoryTest(LabelRepository labelRepository, EntityManager entityManager) {
+        this.labelRepository = labelRepository;
+        this.entityManager = entityManager;
 
-	@Test
-	void 라벨을_생성한다() {
-		// given
-		Label label = Label.of(null, "제목", "설명", "#000000");
+        registeredLabels = List.of(
+                Label.of(1L, "Label", "레이블에 대한 설명", "#b7bcc4"),
+                Label.of(2L, "Documentation", "개발 내용을 문서화", "#041c42")
+        );
+    }
 
-		// when
-		Long id = labelRepository.save(label).getId();
+    private List<Issue> getIssueByLabelId(Long labelId) {
+        return entityManager.createQuery(
+                        "select i from Issue i where i.label.id = :labelId", Issue.class)
+                .setParameter("labelId", labelId)
+                .getResultList();
+    }
 
-		// then
-		Label foundLabel = labelRepository.findById(id).get();
-		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label);
+    private Issue getIssue(Long id) {
+        return entityManager.find(Issue.class, id);
+    }
 
-	}
+    @Test
+    void 라벨을_생성한다() {
 
-	@Test
-	void 라벨_목록을_조회한다() {
-		// given
-		Label label1 = Label.of(null, "제목1", "설명1", "#111111");
-		Label label2 = Label.of(null, "제목2", "설명2", "#222222");
-		Label label3 = Label.of(null, "제목3", "설명3", "#333333");
-		labelRepository.save(label1);
-		labelRepository.save(label2);
-		Long id = labelRepository.save(label3).getId();
+        // given
+        Label label = Label.of(null, "제목", "설명", "#000000");
 
-		// when
-		List<Label> labels = labelRepository.findAll();
-		Label foundLabel = labels.get(labels.size() - 1);
+        // when
+        labelRepository.save(label);
 
-		// then
-		assertThat(labels.size()).isEqualTo(3);
-		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label3);
-	}
+        // then
+        Label foundLabel = labelRepository.findById(label.getId())
+                .orElseThrow(LabelException::new);
 
-	@Test
-	void 라벨_하나를_조회한다() {
-		// given
-		Label label1 = Label.of(null, "제목1", "설명1", "#111111");
-		Long id = labelRepository.save(label1).getId();
+        assertThat(foundLabel).usingRecursiveComparison()
+                .isEqualTo(label);
+    }
 
-		// when
-		Label foundLabel = labelRepository.findById(id).get();
+    @Test
+    void 라벨_목록을_조회한다() {
 
-		// then
-		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label1);
-	}
+        // given
 
-	@Test
-	void 존재하지_않는_라벨을_조회_시_에러가_발생한다() {
-		// given
-		Label label1 = Label.of(null, "제목1", "설명1", "#111111");
-		Long id = labelRepository.save(label1).getId();
+        // when
+        List<Label> labels = labelRepository.findAll();
 
-		// then
-		assertThatThrownBy(() -> labelRepository.findById(id + 1).get()).isInstanceOf(
-			NoSuchElementException.class);
-	}
+        // then
+        labels.forEach(label -> {
+            Label comparisonTarget = registeredLabels.get(labels.indexOf(label));
+            assertThat(label)
+                    .usingRecursiveComparison()
+                    .ignoringFields("issues")
+                    .isEqualTo(comparisonTarget);
+        });
+    }
 
-	@Test
-	void 라벨을_수정한다_모든필드() {
-		// given
-		Label label = Label.of(null, "제목1", "설명1", "#111111");
-		Label savedLabel = labelRepository.save(label);
-		LabelUpdateRequest request = new LabelUpdateRequest("수정된 제목1", "수정된 설명1", "#ffffff");
+    @Test
+    void 존재하지_않는_라벨을_조회_시_에러가_발생한다() {
 
-		// when
-		savedLabel.update(request);
-		Long id = labelRepository.save(savedLabel).getId();
+        // given
+        Long id = labelRepository.findAll().size() + 1L;
 
-		// then
-		Label foundLabel = labelRepository.findById(id).get();
-		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label);
-	}
+        // then
+        assertThatThrownBy(() -> labelRepository.findById(id)
+                .orElseThrow(LabelException::new))
+                .isInstanceOf(LabelException.class);
+    }
 
-	@Test
-	void 라벨을_수정한다_일부필드() {
-		// given
-		Label label = Label.of(null, "제목1", "설명1", "#111111");
-		labelRepository.save(label);
-		LabelUpdateRequest request = new LabelUpdateRequest(null, "수정된 설명1", null);
+    @Test
+    void 라벨의_모든필드를_수정한다() {
 
-		// when
-		label.update(request);
-		Long id = labelRepository.save(label).getId();
+        // given
+        Long id = 1L;
+        Label label = labelRepository.findById(id)
+                .orElseThrow(LabelException::new);
 
-		// then
-		Label foundLabel = labelRepository.findById(id).get();
-		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label);
+        LabelUpdateRequest request = new LabelUpdateRequest("수정된 제목1", "수정된 설명1", "#ffffff");
 
-	}
+        // when
+        label.update(request);
 
-	@Test
-	void 라벨을_일괄적으로_삭제한다() {
-		// given
-		Label label1 = Label.of(null, "제목1", "설명1", "#111111");
-		Label label2 = Label.of(null, "제목2", "설명2", "#222222");
-		Label label3 = Label.of(null, "제목3", "설명3", "#333333");
+        // then
+        Label foundLabel = labelRepository.findById(id)
+                .orElseThrow(LabelException::new);
 
-		Long id1 = labelRepository.save(label1).getId();
-		Long id2 = labelRepository.save(label2).getId();
-		Long id3 = labelRepository.save(label3).getId();
+        assertThat(foundLabel).usingRecursiveComparison()
+                .isEqualTo(label);
+    }
 
-		List<Long> labelIds = new ArrayList<>(List.of(id1, id3));
+    @Test
+    void 라벨을_수정한다_일부필드() {
 
-		// when
-		labelRepository.deleteAllByIdInBatch(labelIds);
-		entityManager.flush();
-		entityManager.clear();
+        // given
+        Long id = 1L;
+        Label label = labelRepository.findById(id)
+                .orElseThrow(LabelException::new);
 
-		// then
-		List<Label> labels = labelRepository.findAll();
-		Label foundLabel = labels.get(0);
-		assertThat(labels).hasSize(1);
-		assertThat(foundLabel).usingRecursiveComparison().isEqualTo(label2);
-		assertThat(labelRepository.findById(id1)).isEmpty();
-		assertThat(labelRepository.findById(id3)).isEmpty();
-	}
+        LabelUpdateRequest request = new LabelUpdateRequest(null, "수정된 설명1", null);
 
-	// Todo : 라벨 삭제시 해당 라벨이 등록되어 있던 Issue에서도 라벨이 삭제되어야한다
-	@Test
-	void 라벨을_삭제하면_관련된_이슈에서도_라벨이_삭제된다() {
-		assertFalse(true);
-	}
+        // when
+        label.update(request);
+
+        // then
+        Label foundLabel = labelRepository.findById(id)
+                .orElseThrow(LabelException::new);
+
+        assertThat(foundLabel).usingRecursiveComparison()
+                .isEqualTo(label);
+    }
+
+    @Test
+    void 라벨을_일괄적으로_삭제한다() {
+
+        // given
+        List<Label> foundLabels = labelRepository.findAll();
+        List<Long> ids = foundLabels.stream()
+                .map(Label::getId)
+                .collect(Collectors.toList());
+
+        // when
+        foundLabels.forEach(label -> {
+            List<Issue> issues = getIssueByLabelId(label.getId());
+            issues.forEach(issue -> issue.changeLabel(null));
+        });
+        entityManager.flush();
+
+        labelRepository.deleteAllByIdInBatch(ids);
+
+        // then
+        assertAll(
+                () -> assertThat(foundLabels).isNotEmpty(),
+                () -> assertThat(labelRepository.findAll()).isEmpty()
+        );
+    }
 }

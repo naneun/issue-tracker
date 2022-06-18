@@ -6,8 +6,8 @@ import com.team03.issuetracker.milestone.domain.Milestone;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneUpdateRequest;
 import com.team03.issuetracker.milestone.exception.MilestoneException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 
 @Import(DataJpaConfig.class)
@@ -23,72 +24,91 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class MilestoneRepositoryTest {
 
-	final List<Milestone> registeredMilestones;
+	final EntityManager entityManager;
 
 	final MilestoneRepository milestoneRepository;
 
-	final EntityManager entityManager;
+	final List<Milestone> registeredMilestones;
 
 	@Autowired
-	public MilestoneRepositoryTest(
-		MilestoneRepository milestoneRepository, EntityManager entityManager) {
+	public MilestoneRepositoryTest(MilestoneRepository milestoneRepository,
+		EntityManager entityManager) {
 		this.milestoneRepository = milestoneRepository;
 		this.entityManager = entityManager;
 
-		List<Issue> milestone1Issues = entityManager.createQuery(
-			"select i from Issue i where i.milestone.id = 1L", Issue.class).getResultList();
-		List<Issue> milestone2Issues = entityManager.createQuery(
-			"select i from Issue i where i.milestone.id = 2L", Issue.class).getResultList();
-
 		registeredMilestones = List.of(
-			Milestone.of(1L, "제목", "마일스톤에 대한 설명", LocalDate.of(2022, 7, 1),
-				milestone2Issues),
-			Milestone.of(2L, "마일스톤", "코드스쿼드 마일스톤", LocalDate.of(2022, 6, 20),
-				milestone2Issues)
+			Milestone.of(1L, "제목", "마일스톤에 대한 설명",
+				LocalDate.of(2022, 7, 1), getIssuesByMilestoneId(1L)),
+
+			Milestone.of(2L, "마일스톤", "코드스쿼드 마일스톤",
+				LocalDate.of(2022, 6, 20), getIssuesByMilestoneId(2L))
 		);
+	}
+
+	private List<Issue> getIssuesByMilestoneId(Long milestoneId) {
+		return entityManager.createQuery(
+				"select i from Issue i where i.milestone.id = :milestoneId", Issue.class)
+			.setParameter("milestoneId", milestoneId)
+			.getResultList();
+	}
+
+	private Issue getIssue(Long id) {
+		return entityManager.find(Issue.class, id);
 	}
 
 	@Test
 	void 마일스톤을_생성한다() {
+
 		// given
-		Milestone milestone = Milestone.builder()
-			.title("제목")
-			.description("설명")
-			.dueDate(LocalDate.of(2022, 6, 30))
-			.issues(new ArrayList<>())
-			.build();
+		Milestone milestone = Milestone.of(null, "제목", "설명",
+			LocalDate.of(2022, 6, 30), List.of(getIssue(1L), getIssue(2L)));
 
 		// when
-		Long id = milestoneRepository.save(milestone).getId();
+		milestoneRepository.save(milestone);
 
 		// then
-		Milestone foundMilestone = milestoneRepository.findById(id)
+		Milestone foundMilestone = milestoneRepository.findById(milestone.getId())
 			.orElseThrow(MilestoneException::new);
-		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone);
 
+		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone);
 	}
 
 	@Test
 	void 마일스톤_목록을_조회한다() {
+
 		// given
 
 		// when
 		List<Milestone> foundMilestones = milestoneRepository.findAll();
 
 		// then
-		foundMilestones.stream().forEach(milestone ->
-		{
-			assertThat(milestone)
-				.usingRecursiveComparison()
-				.ignoringFieldsMatchingRegexes("issues.*")
-				.isEqualTo(registeredMilestones.get(foundMilestones.indexOf(milestone)));
-		});
+		foundMilestones.forEach(milestone -> {
+				Milestone comparisonTarget = registeredMilestones.get(
+					foundMilestones.indexOf(milestone));
+				assertThat(milestone)
+					.usingRecursiveComparison()
+					.ignoringFields("issues")
+					.isEqualTo(comparisonTarget);
+
+				List<Issue> issues = milestone.getIssues();
+				issues.forEach(issue -> {
+					assertThat(issue)
+						.usingRecursiveComparison()
+						.ignoringFields("label", "milestone", "assignee", "creator", "modifier",
+							"comments")
+						.isEqualTo(comparisonTarget.getIssues().get(issues.indexOf(issue)));
+				});
+			}
+		);
 	}
 
 	@Test
-	void 마일스톤을_수정한다_모든필드() {
+	void 마일스톤_내의_모든_필드를_수정한다() {
+
 		// given
-		Milestone milestone = milestoneRepository.findById(1L).orElseThrow(MilestoneException::new);
+		Milestone milestone = milestoneRepository.findById(1L)
+			.orElseThrow(MilestoneException::new);
+
 		MilestoneUpdateRequest request = new MilestoneUpdateRequest("수정된 제목1", "수정된 설명1",
 			LocalDate.of(2022, 7, 25));
 
@@ -98,16 +118,19 @@ class MilestoneRepositoryTest {
 		// then
 		Milestone foundMilestone = milestoneRepository.findById(milestone.getId())
 			.orElseThrow(MilestoneException::new);
+
 		assertThat(foundMilestone).usingRecursiveComparison()
 			.ignoringFields("issues")
 			.isEqualTo(milestone);
 	}
 
 	@Test
-	void 마일스톤을_수정한다_일부필드() {
+	void 마일스톤_내의_일부_필드를_수정한다() {
+
 		// given
 		Milestone milestone = milestoneRepository.findById(1L)
 			.orElseThrow(MilestoneException::new);
+
 		MilestoneUpdateRequest request = new MilestoneUpdateRequest(null, "수정된 설명1", null);
 
 		// when
@@ -116,32 +139,29 @@ class MilestoneRepositoryTest {
 		// then
 		Milestone foundMilestone = milestoneRepository.findById(milestone.getId())
 			.orElseThrow(MilestoneException::new);
-		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone);
 
+		assertThat(foundMilestone).usingRecursiveComparison().isEqualTo(milestone);
 	}
 
 	@Test
 	void 마일스톤을_일괄적으로_삭제한다() {
+
 		// given
-
-		List<Long> milestoneIds = List.of(1L, 2L);
-
-		List<Issue> resultList = entityManager.createQuery(
-				"select i from Issue i where i.milestone.id in :list", Issue.class)
-			.setParameter("list", milestoneIds)
-			.getResultList();
+		List<Milestone> foundMilestones = milestoneRepository.findAll();
+		List<Long> milestoneIds = foundMilestones.stream()
+			.map(Milestone::getId)
+			.collect(Collectors.toList());
 
 		// when
-		resultList.forEach(i -> i.changeMilestone(null));
+		foundMilestones.forEach(Milestone::truncateIssues);
 		entityManager.flush();
-		milestoneRepository.deleteAllById(milestoneIds);
+
+		milestoneRepository.deleteAllByIdInBatch(milestoneIds);
 
 		// then
-		List<Milestone> milestones = milestoneRepository.findAll();
-
-		assertThat(milestones).hasSize(0);
-		assertThat(milestoneRepository.findById(1L)).isEmpty();
-		assertThat(milestoneRepository.findById(2L)).isEmpty();
+		assertAll(
+			() -> assertThat(foundMilestones).isNotEmpty(),
+			() -> assertThat(milestoneRepository.findAll()).isEmpty()
+		);
 	}
-
 }

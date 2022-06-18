@@ -32,7 +32,7 @@ public class Comment {
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
+    @JoinColumn
     @ToString.Exclude
     private Emoji emoji;
 

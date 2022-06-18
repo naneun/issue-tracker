@@ -1,6 +1,5 @@
 package com.team03.issuetracker.issue.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.team03.issuetracker.common.domain.BaseTimeEntity;
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.milestone.domain.Milestone;
@@ -28,46 +27,40 @@ public class Issue extends BaseTimeEntity {
     private Long id;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column
     private String title;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column
     private String content;
 
     @Enumerated(EnumType.STRING)
     private IssueState state;
 
-    @ManyToOne // (fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
-//    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
     private Label label;
 
-    @ManyToOne // (fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
-//    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
     @ToString.Exclude
     private Milestone milestone;
 
-    @ManyToOne // (fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
-//    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
     private Member assignee;
 
     @CreatedBy
-    @ManyToOne // (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(updatable = false)
-//    @ToString.Exclude
     private Member creator;
 
     @LastModifiedBy
-    @ManyToOne // (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-//    @ToString.Exclude
     private Member modifier;
 
     @OneToMany(mappedBy = "issue", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    @ToString.Exclude
     private final List<Comment> comments = new ArrayList<>();
 
     /********************************************************************/

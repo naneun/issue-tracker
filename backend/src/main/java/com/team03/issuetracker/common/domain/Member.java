@@ -1,38 +1,63 @@
 package com.team03.issuetracker.common.domain;
 
+import com.team03.issuetracker.oauth.common.ResourceServer;
+import javax.persistence.*;
 import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
 @Getter
+@ToString
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String email;
+	@Column(updatable = false)
+	private String serialNumber;
 
-    private String name;
+	@Column(updatable = false)
+	@Enumerated(EnumType.STRING)
+	private ResourceServer resourceServer;
 
-    @Builder
-    private Member(Long id, String email, String name) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-    }
+	private String name;
 
-    public static Member of(Long id, String email, String name) {
-        return Member.builder()
-                .id(id)
-                .email(email)
+	private String email;
+
+	private String profileImage;
+
+	private String oauthAccessToken;
+
+	private String oauthRefreshToken;
+
+	@Builder
+	private Member(Long id, String serialNumber, ResourceServer resourceServer, String name, String email,
+		String profileImage, String oauthAccessToken, String oauthRefreshToken) {
+		this.id = id;
+		this.serialNumber = serialNumber;
+		this.resourceServer = resourceServer;
+		this.name = name;
+		this.email = email;
+		this.profileImage = profileImage;
+		this.oauthAccessToken = oauthAccessToken;
+		this.oauthRefreshToken = oauthRefreshToken;
+	}
+
+	public static Member of(Long id, String email, String name) {
+		return Member.builder()
+			.id(id)
+			.email(email)
                 .name(name)
-                .build();
-    }
+			.build();
+	}
+
+	public void updateLoginInfo(Member member) {
+		this.name = member.getName();
+		this.email = member.getEmail();
+		this.oauthAccessToken = member.getOauthAccessToken();
+		this.oauthRefreshToken = member.getOauthRefreshToken();
+		this.profileImage = member.getProfileImage();
+	}
 }

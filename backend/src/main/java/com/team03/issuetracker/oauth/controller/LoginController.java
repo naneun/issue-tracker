@@ -1,9 +1,9 @@
 package com.team03.issuetracker.oauth.controller;
 
+import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.oauth.application.LoginService;
 import com.team03.issuetracker.oauth.application.OauthService;
 import com.team03.issuetracker.oauth.dto.OauthAccessToken;
-import com.team03.issuetracker.oauth.dto.OauthUserInfo;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +24,8 @@ public class LoginController {
 
 		OauthService oauthService = oauthServicePicker.get(resourceServer);
 		OauthAccessToken accessToken = oauthService.obtainAccessToken(code);
-		System.out.println("======== accessToken : " + accessToken);
-		OauthUserInfo userInfo = oauthService.obtainUserInfo(accessToken);
-		System.out.println("======== userInfo : " + userInfo);
+		Member oauthMember = oauthService.obtainUserInfo(accessToken);
+
+		loginService.login(oauthMember);
 	}
 }

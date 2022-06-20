@@ -6,14 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 import com.example.issue_tracker.domain.model.Issue
 
-
 class IssueHomeFragment : Fragment() {
 
+    private lateinit var adapter: IssueAdapter
     private lateinit var binding: FragmentIssueHomeBinding
+    private lateinit var navigator: NavController
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,6 +28,9 @@ class IssueHomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navigator = Navigation.findNavController(view)
+        adapter = IssueAdapter()
+        binding.rvIssue.adapter = adapter
 
         val tempList = listOf<Issue>(
             Issue(1, "마일스톤", "제목", "설명", "label"),
@@ -31,10 +38,27 @@ class IssueHomeFragment : Fragment() {
             Issue(3, "마스터즈 코스2", "이슈트래커2", "7월 9일에서 12일까지", "asdfef")
         )
 
-        binding.rvIssue.apply {
-            this.adapter = IssueAdapter().apply {
-                this.submitList(tempList)
-            }
+        adapter.submitList(tempList)
+
+
+        binding.btnFilter.setOnClickListener {
+            binding.tbIssues.visibility = View.GONE
+            binding.llFilter.visibility = View.VISIBLE
+        }
+
+        binding.btnFilterClose.setOnClickListener {
+            binding.tbIssues.visibility = View.VISIBLE
+            binding.llFilter.visibility = View.GONE
+        }
+
+        val swipeHelperCallback = ItemHelper(adapter).apply {
+            setClamp(resources.displayMetrics.widthPixels.toFloat() / 4)    // 1080 / 4 = 270
+        }
+        ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(binding.rvIssue)
+
+
+        binding.btnPlusIssue.setOnClickListener {
+            navigator.navigate(R.id.action_navigation_issue_to_issueWriteFragment)
         }
     }
 }

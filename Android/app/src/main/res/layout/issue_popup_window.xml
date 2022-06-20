@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_cut"
+        style="@style/Subtitle2.White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_black_left_radius"
+        android:text="cut" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_copy"
+        style="@style/Subtitle2.White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_black_center"
+        android:text="copy" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_paste"
+        style="@style/Subtitle2.White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_black_center"
+        android:text="paste" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_insert_photo"
+        style="@style/Subtitle2.White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_black_right_radius"
+        android:text="insert Photo" />
+
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.team03.issuetracker.issue.domain.dto;
+package com.team03.issuetracker.issue.domain.dto.issue;
 
 import com.team03.issuetracker.issue.domain.IssueState;
 import lombok.AllArgsConstructor;

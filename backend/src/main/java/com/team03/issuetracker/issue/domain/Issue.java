@@ -100,7 +100,7 @@ public class Issue extends BaseTimeEntity {
     }
 
     public void changeState() {
-        this.state = IssueState.values()[this.state.ordinal() + 1 % values().length];
+        this.state = nextState(this.state);
     }
 
     public void changeLabel(Label label) {

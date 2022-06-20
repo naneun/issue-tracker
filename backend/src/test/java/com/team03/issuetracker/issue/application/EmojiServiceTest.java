@@ -1,13 +1,16 @@
 package com.team03.issuetracker.issue.application;
 
 import com.team03.issuetracker.issue.domain.Emoji;
+import com.team03.issuetracker.issue.domain.dto.emoji.EmojiResponse;
 import com.team03.issuetracker.issue.repository.EmojiRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,33 +22,35 @@ class EmojiServiceTest {
     @MockBean
     EmojiRepository emojiRepository;
 
+    final EntityManager entityManager;
+
     final EmojiService emojiService;
 
-    final List<Emoji> registeredEmojis;
+    final List<EmojiResponse> expectedResults;
 
     @Autowired
-    EmojiServiceTest(EmojiService emojiService) {
+    EmojiServiceTest(EntityManager entityManager, EmojiService emojiService) {
+        this.entityManager = entityManager;
         this.emojiService = emojiService;
-        this.registeredEmojis = List.of(
-                Emoji.of(1L, "❤", "좋아요"),
-                Emoji.of(2L, "👍", "최고에요"),
-                Emoji.of(3L, "👎", "싫어요"),
-                Emoji.of(4L, "✅", "확인했어요")
-        );
+        this.expectedResults = entityManager.createQuery("select e from Emoji e", Emoji.class)
+                .getResultList()
+                .stream()
+                .map(EmojiResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Test
-    void 등록된_모든_이모지를_조회한다() {
+    void 코멘트에_등록_가능한_이모지_리스트를_조회한다() {
 
         // given
-        given(emojiRepository.findAll()).willReturn(registeredEmojis);
+        given(emojiRepository.findAll()).willReturn(expectedResults);
 
         // when
-        List<Emoji> emojis = null; // = emojiService.findAll();
+        List<EmojiResponse> emojiResponses = emojiService.findAll();
 
         // then
-        emojis.forEach((emoji) -> assertThat(emoji)
+        emojiResponses.forEach((response) -> assertThat(response)
                 .usingRecursiveComparison()
-                .isEqualTo(registeredEmojis.get(emojis.indexOf(emoji))));
+                .isEqualTo(expectedResults.get(emojiResponses.indexOf(response))));
     }
 }

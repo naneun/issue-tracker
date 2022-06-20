@@ -19,16 +19,20 @@ public class Member {
 
     private String email;
 
+    private String name;
+
     @Builder
-    private Member(Long id, String email) {
+    private Member(Long id, String email, String name) {
         this.id = id;
         this.email = email;
+        this.name = name;
     }
 
-    public static Member of(Long id, String email) {
+    public static Member of(Long id, String email, String name) {
         return Member.builder()
                 .id(id)
                 .email(email)
+                .name(name)
                 .build();
     }
 }

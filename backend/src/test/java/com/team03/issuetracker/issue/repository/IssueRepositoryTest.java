@@ -6,7 +6,7 @@ import com.team03.issuetracker.issue.domain.Comment;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
 import com.team03.issuetracker.issue.domain.Label;
-import com.team03.issuetracker.issue.domain.dto.IssueSearchCondition;
+import com.team03.issuetracker.issue.domain.dto.issue.IssueSearchCondition;
 import com.team03.issuetracker.issue.exception.IssueException;
 import com.team03.issuetracker.milestone.domain.Milestone;
 import org.junit.jupiter.api.Test;
@@ -120,8 +120,9 @@ class IssueRepositoryTest {
         Issue foundIssue = issueRepository.findById(id)
                 .orElseThrow(IssueException::new);
 
-        // when
         foundIssue.changeState();
+
+        // when
         Issue changedIssue = issueRepository.save(foundIssue);
 
         // then
@@ -247,10 +248,11 @@ class IssueRepositoryTest {
 
         // when
         issueRepository.save(newIssue);
+
+        // then
         Issue foundIssue = issueRepository.findById(newIssue.getId())
                 .orElseThrow(IssueException::new);
 
-        // then
         assertThat(foundIssue).usingRecursiveComparison()
                 .ignoringFields("creator") // TODO 'creator' (@CreatedBy) 등록 검증
                 .isEqualTo(newIssue);
@@ -270,13 +272,13 @@ class IssueRepositoryTest {
         Milestone otherMilestone = entityManager.find(Milestone.class, 2L);
         Member otherAssignee = entityManager.find(Member.class, 2L);
 
-        // when
         foundIssue.changeTitle(otherTitle);
         foundIssue.changeContent(otherContent);
         foundIssue.changeLabel(otherLabel);
         foundIssue.changeMilestone(otherMilestone);
         foundIssue.changeAssignee(otherAssignee);
 
+        // when
         Issue changedIssue = issueRepository.findById(foundIssue.getId())
                 .orElseThrow(IssueException::new);
 

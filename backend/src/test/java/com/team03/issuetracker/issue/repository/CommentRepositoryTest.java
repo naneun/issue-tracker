@@ -45,9 +45,9 @@ class CommentRepositoryTest {
         // given
         Long issueId = 1L;
         Issue issue = entityManager.find(Issue.class, issueId);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        Pageable pageable = PageRequest.of(0, 10);
         Page<Comment> comments = commentRepository.findByIssue(issue, pageable);
 
         // then
@@ -82,17 +82,16 @@ class CommentRepositoryTest {
         Comment foundComment = commentRepository.findById(id)
                 .orElseThrow(CommentException::new);
 
-        // when
         String otherContent = "otherContent";
+
+        // when
         foundComment.changeContent(otherContent);
 
+        // then
         Comment changedComment = commentRepository.findById(foundComment.getId())
                 .orElseThrow(CommentException::new);
 
-        // then
-        assertAll(
-                () -> assertThat(changedComment.getContent()).isEqualTo(otherContent)
-        );
+        assertThat(changedComment.getContent()).isEqualTo(otherContent);
     }
 
     @Test
@@ -123,8 +122,9 @@ class CommentRepositoryTest {
         Comment foundComment = commentRepository.findById(commentId)
                 .orElseThrow(CommentException::new);
 
-        // when
         foundComment.addEmoji(emoji);
+
+        // when
         Comment changedComment = commentRepository.findById(foundComment.getId())
                 .orElseThrow(CommentException::new);
 

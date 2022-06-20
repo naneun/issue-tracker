@@ -3,8 +3,9 @@ package com.team03.issuetracker.milestone.application;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
 import com.team03.issuetracker.milestone.domain.Milestone;
+import com.team03.issuetracker.milestone.domain.dto.MilestoneCreateRequest;
+import com.team03.issuetracker.milestone.domain.dto.MilestoneModifyRequest;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneResponse;
-import com.team03.issuetracker.milestone.domain.dto.MilestoneUpdateRequest;
 import com.team03.issuetracker.milestone.repository.MilestoneRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -61,12 +62,13 @@ class MilestoneServiceTest {
 	void 마일스톤을_생성한다() {
 
 		// given
-		MilestoneCreateRequst createRequst = new MilestoneCreateRequest("제목", "마일스톤에 대한 설명", "2022-07-01");
+		MilestoneCreateRequest createRequest = new MilestoneCreateRequest("제목", "마일스톤에 대한 설명",
+			LocalDate.of(2022, 7, 1));
 		Milestone registeredMilestone = registeredMilestones.get(0);
-		given(milestoneRepository.save(createRequst.toEntity())).willReturn(registeredMilestone);
+		given(milestoneRepository.save(createRequest.toEntity())).willReturn(registeredMilestone);
 
 		// when
-		Milestone milestone = milestoneService.save(createRequst);
+		Milestone milestone = milestoneService.addMilestone(createRequest);
 
 		// then
 		assertThat(milestone).usingRecursiveComparison().isEqualTo(registeredMilestone);
@@ -102,9 +104,10 @@ class MilestoneServiceTest {
 	void 마일스톤을_편집한다() {
 
 		// given
-		MilestoneUpdateRequest request = new MilestoneUpdateRequest("수정 제목", "수정 설명", LocalDate.of(2022, 8, 1));
+		MilestoneModifyRequest request = new MilestoneModifyRequest("수정 제목", "수정 설명", LocalDate.of(2022, 8, 1));
+		Milestone registeredMilestone = registeredMilestones.get(0);
 		Milestone updatedMilestone = Milestone.of(1L, "수정 제목", "수정 설명", LocalDate.of(2022, 8, 1), new ArrayList<>());
-		given(milestoneRepository.save(request.toEntity())).willReturn(updatedMilestone);
+		given(milestoneRepository.save(registeredMilestone.update(request))).willReturn(updatedMilestone);
 
 		// when
 		Milestone milestone = milestoneService.update(request);

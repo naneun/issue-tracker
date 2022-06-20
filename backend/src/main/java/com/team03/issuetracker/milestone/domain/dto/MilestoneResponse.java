@@ -1,6 +1,5 @@
 package com.team03.issuetracker.milestone.domain.dto;
 
-import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDate;
 import lombok.Getter;
 
@@ -17,7 +16,6 @@ public class MilestoneResponse {
 
 	private Long closedIssueCount;
 
-	@QueryProjection
 	public MilestoneResponse(String title, String description,
 		LocalDate dueDate, Long openIssueCount, Long closedIssueCount) {
 		this.title = title;

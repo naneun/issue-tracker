@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import static com.team03.issuetracker.oauth.utils.OAuthUtils.*;
+
 @Service("google")
 public class GoogleOauthService implements OauthService {
 
@@ -33,11 +35,11 @@ public class GoogleOauthService implements OauthService {
 	@Override
 	public OauthAccessToken obtainAccessToken(String code) {
 		Map<String, String> body = new HashMap<>();
-		body.put("client_id", clientId);
-		body.put("client_secret", clientSecret);
-		body.put("code", code);
-		body.put("grant_type", "authorization_code");
-		body.put("redirect_uri", redirectUri);
+		body.put(CLIENT_ID, clientId);
+		body.put(CLIENT_SECRET, clientSecret);
+		body.put(CODE, code);
+		body.put(GRANT_TYPE, AUTHORIZATION_CODE);
+		body.put(REDIRECT_URI, redirectUri);
 
 		return WebClient.create().post()
 			.uri(accessTokenUri)
@@ -59,7 +61,7 @@ public class GoogleOauthService implements OauthService {
 		GoogleUserInfo userInfo = WebClient.create().get()
 			.uri(userInfoUri)
 			.accept(MediaType.APPLICATION_JSON)
-			.header("Authorization", accessToken.getTokenType() + " " + accessToken.getAccessToken())
+			.header(AUTHORIZATION, accessToken.getTokenType() + " " + accessToken.getAccessToken())
 			.retrieve()
 			.bodyToMono(GoogleUserInfo.class)
 			.blockOptional()

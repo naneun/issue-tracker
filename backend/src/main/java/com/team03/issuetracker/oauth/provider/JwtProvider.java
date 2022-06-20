@@ -21,7 +21,6 @@ public class JwtProvider {
 	private final String issuer;
 	private final String secretKey;
 
-	@Autowired
 	public JwtProvider(JwtProperties properties) {
 		this.issuer = properties.getIssuer();
 		this.secretKey = properties.getSecretKey();

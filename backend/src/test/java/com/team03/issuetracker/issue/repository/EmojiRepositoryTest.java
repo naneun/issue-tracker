@@ -23,17 +23,16 @@ class EmojiRepositoryTest {
 
     final EmojiRepository emojiRepository;
 
-    final List<Emoji> registeredEmojis;
+    static List<Emoji> registeredEmojis = List.of(
+            Emoji.of(1L, "❤", "좋아요"),
+            Emoji.of(2L, "👍", "최고에요"),
+            Emoji.of(3L, "👎", "싫어요"),
+            Emoji.of(4L, "✅", "확인했어요")
+    );
 
     @Autowired
     EmojiRepositoryTest(EmojiRepository emojiRepository) {
         this.emojiRepository = emojiRepository;
-        this.registeredEmojis = List.of(
-                Emoji.of(1L, "❤", "좋아요"),
-                Emoji.of(2L, "👍", "최고에요"),
-                Emoji.of(3L, "👎", "싫어요"),
-                Emoji.of(4L, "✅", "확인했어요")
-        );
     }
 
     /**

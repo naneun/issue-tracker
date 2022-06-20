@@ -10,7 +10,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IssueRepositoryImpl implements IssueRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     @Override
     public List<Issue> findBySearchCondition(IssueSearchCondition searchCondition) {

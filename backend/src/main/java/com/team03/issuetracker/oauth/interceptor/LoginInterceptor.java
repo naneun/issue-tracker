@@ -10,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import static com.team03.issuetracker.oauth.utils.OAuthUtils.BEARER;
 
+@Component
 @RequiredArgsConstructor
 public class LoginInterceptor implements HandlerInterceptor {
 

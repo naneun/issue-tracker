@@ -49,15 +49,16 @@ public class Member {
 		return Member.builder()
 			.id(id)
 			.email(email)
-                .name(name)
+			.name(name)
 			.build();
 	}
 
-	public void updateLoginInfo(Member member) {
+	public Member updateLoginInfo(Member member) {
 		this.name = member.getName();
 		this.email = member.getEmail();
 		this.oauthAccessToken = member.getOauthAccessToken();
 		this.oauthRefreshToken = member.getOauthRefreshToken();
 		this.profileImage = member.getProfileImage();
+		return null;
 	}
 }

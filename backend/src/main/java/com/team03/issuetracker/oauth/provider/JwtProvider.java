@@ -1,7 +1,8 @@
 package com.team03.issuetracker.oauth.provider;
 
-import com.team03.issuetracker.common.domain.Member;
+import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.oauth.properties.JwtProperties;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.sql.Timestamp;
@@ -26,18 +27,42 @@ public class JwtProvider {
 		this.secretKey = properties.getSecretKey();
 	}
 
-	public String makeJwtToken(Member member) {
-		// HMAC256
+	public String makeJwtToken(LoginMemberResponse memberDto) {
+
 		return Jwts.builder()
-			//			.setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+			.setAudience(memberDto.getId().toString())
 			.setIssuer(issuer)
 			.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
 			.setExpiration(Timestamp.valueOf(LocalDateTime.now().plusHours(1L)))
-			.claim(SERIAL_NUMBER, member.getSerialNumber())
-			.claim(RESOURCE_SERVER, member.getResourceServer())
+			.claim(SERIAL_NUMBER, memberDto.getSerialNumber())
+			.claim(RESOURCE_SERVER, memberDto.getResourceServer())
 			.claim(TOKEN_TYPE, ACCESS_TOKEN)
 			.signWith(SignatureAlgorithm.HS256, secretKey)
 			.compact();
 
+	}
+
+	// 일반 토큰과 같으나 유효기간만 +2주
+	public String makeJwtRefreshToken(LoginMemberResponse memberDto) {
+
+		return Jwts.builder()
+			.setAudience(memberDto.getId().toString())
+			.setIssuer(issuer)
+			.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+			.setExpiration(Timestamp.valueOf(LocalDateTime.now().plusWeeks(2L)))
+			.claim(SERIAL_NUMBER, memberDto.getSerialNumber())
+			.claim(RESOURCE_SERVER, memberDto.getResourceServer())
+			.claim(TOKEN_TYPE, ACCESS_TOKEN)
+			.signWith(SignatureAlgorithm.HS256, secretKey)
+			.compact();
+
+	}
+
+	public Claims verifyToken(String jwtToken) {
+
+		return Jwts.parser()
+			.setSigningKey(secretKey)
+			.parseClaimsJws(jwtToken)
+			.getBody();
 	}
 }

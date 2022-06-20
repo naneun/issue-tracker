@@ -1,15 +1,11 @@
 package com.team03.issuetracker.issue.domain;
 
-import com.team03.issuetracker.issue.domain.dto.LabelUpdateRequest;
+import com.team03.issuetracker.issue.domain.dto.label.LabelModifyRequest;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
@@ -48,10 +44,11 @@ public class Label {
 
 	/********************************************************************/
 
-	public void update(LabelUpdateRequest request) {
+	public Label update(LabelModifyRequest request) {
 		this.title = request.getTitle();
 		this.description = request.getDescription();
 		this.backgroundColor = request.getBackgroundColor();
+		return this;
 	}
 
 }

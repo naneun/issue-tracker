@@ -1,7 +1,8 @@
 package com.team03.issuetracker.issue.application;
 
 import com.team03.issuetracker.issue.domain.Label;
-import com.team03.issuetracker.issue.domain.dto.LabelUpdateRequest;
+import com.team03.issuetracker.issue.domain.dto.label.LabelCreateRequest;
+import com.team03.issuetracker.issue.domain.dto.label.LabelModifyRequest;
 import com.team03.issuetracker.issue.repository.LabelRepository;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class LabelServiceTest {
 		given(labelRepository.save(createRequest.toEntity())).willReturn(registeredLabel);
 
 		// when
-		Label createdLabel = labelService.save(createRequest);
+		Label createdLabel = labelService.addLabel(createRequest);
 
 		// then
 		assertThat(createdLabel)
@@ -69,14 +70,14 @@ class LabelServiceTest {
 	void 라벨을_편집한다() {
 
 		// given
-		LabelUpdateRequest updateRequest = new LabelUpdateRequest("수정 제목", "수정 설명", "#ffffff");
+		LabelModifyRequest modifyRequest = new LabelModifyRequest("수정 제목", "수정 설명", "#ffffff");
 		Label registeredLabel = registeredLabels.get(0);
 		Label updatedLabel = Label.of(1L, "수정 제목", "수정 설명", "#ffffff");
 
-		given(labelRepository.save(registeredLabel.update(updateRequest))).willReturn(updatedLabel);
+		given(labelRepository.save(registeredLabel.update(modifyRequest))).willReturn(updatedLabel);
 
 		// when
-		Label label = labelService.update(updateRequest);
+		Label label = labelService.update(modifyRequest);
 
 		// then
 		assertThat(label)
@@ -84,17 +85,18 @@ class LabelServiceTest {
 			.isEqualTo(updatedLabel);
 	}
 
+	// TODO
 	@Test
 	void 라벨을_일괄_삭제한다() {
 
-		// given
+/*		// given
 		List<Long> ids = List.of(1L, 2L);
-		given(labelRepository.deleteAllByIdInBatch(ids)).willReturn()
-		// Todo : 삭제는 어떻게 검증해야할까? 그냥 service.delete() 안에 labelRepository.delete()을 호출하는 로직이 포함되어있는 것만 확인되면 되나?
+		given(labelRepository.deleteAllByIdInBatch(ids)).willReturn(ids);
 
 		// when
+		List<Long> deletedLabelIds = labelService.deleteById(ids);
 
 		// then
-
+		assertThat(deletedLabelIds).isEqualTo(ids);*/
 	}
 }

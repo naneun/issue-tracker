@@ -3,7 +3,7 @@ package com.team03.issuetracker.milestone.repository;
 import com.team03.issuetracker.common.config.DataJpaConfig;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.milestone.domain.Milestone;
-import com.team03.issuetracker.milestone.domain.dto.MilestoneUpdateRequest;
+import com.team03.issuetracker.milestone.domain.dto.MilestoneModifyRequest;
 import com.team03.issuetracker.milestone.exception.MilestoneException;
 import java.time.LocalDate;
 import java.util.List;
@@ -109,7 +109,7 @@ class MilestoneRepositoryTest {
 		Milestone milestone = milestoneRepository.findById(1L)
 			.orElseThrow(MilestoneException::new);
 
-		MilestoneUpdateRequest request = new MilestoneUpdateRequest("수정된 제목1", "수정된 설명1",
+		MilestoneModifyRequest request = new MilestoneModifyRequest("수정된 제목1", "수정된 설명1",
 			LocalDate.of(2022, 7, 25));
 
 		// when
@@ -131,7 +131,7 @@ class MilestoneRepositoryTest {
 		Milestone milestone = milestoneRepository.findById(1L)
 			.orElseThrow(MilestoneException::new);
 
-		MilestoneUpdateRequest request = new MilestoneUpdateRequest(null, "수정된 설명1", null);
+		MilestoneModifyRequest request = new MilestoneModifyRequest(null, "수정된 설명1", null);
 
 		// when
 		milestone.update(request);

@@ -2,7 +2,7 @@ package com.team03.issuetracker.oauth.application;
 
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
-import com.team03.issuetracker.common.domain.repository.MemberRepository;
+import com.team03.issuetracker.common.repository.MemberRepository;
 import com.team03.issuetracker.oauth.common.ResourceServer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

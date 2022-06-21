@@ -1,4 +1,4 @@
-package com.team03.issuetracker.common.domain.repository;
+package com.team03.issuetracker.common.repository;
 
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.oauth.common.ResourceServer;

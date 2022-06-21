@@ -5,6 +5,7 @@ import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.oauth.application.LoginService;
 import com.team03.issuetracker.oauth.application.OAuthService;
 import com.team03.issuetracker.oauth.common.AccessTokenHeader;
+import com.team03.issuetracker.oauth.common.LoginMember;
 import com.team03.issuetracker.oauth.common.RefreshTokenHeader;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 import com.team03.issuetracker.oauth.dto.OAuthUser;

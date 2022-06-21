@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import static com.team03.issuetracker.oauth.utils.OAuthUtils.BEARER;
+import static com.team03.issuetracker.oauth.utils.OAuthUtils.LOGIN_ID;
 
 @Component
 @RequiredArgsConstructor
@@ -26,19 +27,20 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        return validateJwtToken(response, header);
+        return validateJwtToken(request, response, header);
     }
 
-    private boolean validateJwtToken(HttpServletResponse response, String header) {
+    private boolean validateJwtToken(HttpServletRequest request, HttpServletResponse response, String header) {
         if (header.isBlank() || !header.startsWith(BEARER)) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return false;
         }
 
         String jwtToken = header.replaceFirst(BEARER, Strings.EMPTY).trim();
+        Claims claims = null;
 
         try {
-            Claims claims = jwtProvider.verifyToken(jwtToken);
+            claims = jwtProvider.verifyToken(jwtToken);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return false;
@@ -47,7 +49,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        request.setAttribute(LOGIN_ID, claims.getAudience());
+
         return true;
     }
-
 }

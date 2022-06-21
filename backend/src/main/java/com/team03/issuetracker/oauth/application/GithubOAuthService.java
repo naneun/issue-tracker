@@ -1,9 +1,6 @@
 package com.team03.issuetracker.oauth.application;
 
-import com.team03.issuetracker.oauth.dto.GithubAccessTokenRequest;
-import com.team03.issuetracker.oauth.dto.GithubUserInfo;
-import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
-import com.team03.issuetracker.oauth.dto.OAuthUser;
+import com.team03.issuetracker.oauth.dto.*;
 import com.team03.issuetracker.oauth.exception.OAuthException;
 import com.team03.issuetracker.oauth.properties.OAuthProperties;
 import com.team03.issuetracker.oauth.properties.VendorProperties;
@@ -55,6 +52,15 @@ public class GithubOAuthService implements OAuthService {
                 .blockOptional()
                 .orElseThrow(OAuthException::new);
 
-        return githubUserInfo.toOAuthUser(accessToken);
+        GithubEmailInfo[] githubEmailInfos = WebClient.create().get()
+                .uri(vendorProperties.getUserEmailInfoUri())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, accessToken.fullInfo())
+                .retrieve()
+                .bodyToMono(GithubEmailInfo[].class)
+                .blockOptional()
+                .orElseThrow(OAuthException::new);
+
+        return githubUserInfo.toOAuthUser(accessToken, githubEmailInfos[0].getEmail());
     }
 }

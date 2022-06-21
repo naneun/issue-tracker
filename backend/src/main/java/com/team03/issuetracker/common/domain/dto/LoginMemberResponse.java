@@ -10,12 +10,17 @@ import lombok.Getter;
 public class LoginMemberResponse {
 
 	private final Long id;
+
 	private final String name;
+
 	private final String serialNumber;
+
 	private final ResourceServer resourceServer;
+
 	private final String profileImage;
 
 	public static LoginMemberResponse from(Member member) {
+
 		return new LoginMemberResponse(member.getId(), member.getName(), member.getSerialNumber(),
 				member.getResourceServer(), member.getProfileImage());
 	}

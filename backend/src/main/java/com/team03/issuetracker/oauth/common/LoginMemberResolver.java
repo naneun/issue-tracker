@@ -1,7 +1,7 @@
 package com.team03.issuetracker.oauth.common;
 
+import com.team03.issuetracker.common.exception.MemberException;
 import com.team03.issuetracker.common.repository.MemberRepository;
-import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -12,13 +12,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.REFRESH_TOKEN;
+import static com.team03.issuetracker.oauth.utils.OAuthUtils.LOGIN_ID;
 
 @Component
 @RequiredArgsConstructor
 public class LoginMemberResolver implements HandlerMethodArgumentResolver {
-
-    private final JwtTokenProvider jwtTokenProvider;
 
     private final MemberRepository memberRepository;
 
@@ -32,8 +30,8 @@ public class LoginMemberResolver implements HandlerMethodArgumentResolver {
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String refreshTokenValue = request.getHeader(REFRESH_TOKEN);
+        Long loginId = Long.parseLong((String) request.getAttribute(LOGIN_ID));
 
-        return null;
+        return memberRepository.findById(loginId).orElseThrow(MemberException::new);
     }
 }

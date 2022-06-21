@@ -13,7 +13,8 @@ oauth:
       client_secret: ${GITHUB_CLIENT_SECRET}
       access_token_uri: https://github.com/login/oauth/access_token
       user_info_uri: https://api.github.com/user
-      # github_code_request_uri: https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}
+      user_email_info_uri: https://api.github.com/user/emails
+      # github_code_request_uri: https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&scope=read:user,user:email
 
 jwt:
   issuer: ${JWT_ISSUER}

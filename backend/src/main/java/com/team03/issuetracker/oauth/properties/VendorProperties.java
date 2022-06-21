@@ -16,4 +16,6 @@ public class VendorProperties {
     private final String userInfoUri;
 
     private final String redirectUri;
+
+    private final String userEmailInfoUri;
 }

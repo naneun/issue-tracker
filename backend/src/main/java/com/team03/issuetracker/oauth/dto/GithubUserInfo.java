@@ -7,12 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 import static com.team03.issuetracker.oauth.common.ResourceServer.*;
 
 @Setter
-@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class GithubUserInfo{
 
     @JsonProperty(value = "id")
@@ -31,7 +30,7 @@ public class GithubUserInfo{
 
     private String oAuthAccessToken;
 
-    public OAuthUser toOAuthUser(OAuthAccessToken oAuthAccessToken) {
+    public OAuthUser toOAuthUser(OAuthAccessToken oAuthAccessToken, String email) {
         return new OAuthUser(serialNumber, GITHUB, name, email, profileImage, oAuthAccessToken);
     }
 }

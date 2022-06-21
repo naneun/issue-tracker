@@ -9,7 +9,6 @@ import lombok.Setter;
 import static com.team03.issuetracker.oauth.common.ResourceServer.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class GoogleUserInfo{
 

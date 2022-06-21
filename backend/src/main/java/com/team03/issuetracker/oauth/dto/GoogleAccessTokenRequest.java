@@ -6,14 +6,17 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @RequiredArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GoogleAccessTokenRequest {
 
     private final String clientId;
-    private final String clientSecret;
-    private final String code;
-    private final String grantType;
-    private final String redirectUri;
 
+    private final String clientSecret;
+
+    private final String code;
+
+    private final String grantType;
+
+    private final String redirectUri;
 }

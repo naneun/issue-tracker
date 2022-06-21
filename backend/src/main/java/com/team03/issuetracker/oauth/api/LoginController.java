@@ -1,5 +1,6 @@
 package com.team03.issuetracker.oauth.api;
 
+import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.oauth.application.LoginService;
 import com.team03.issuetracker.oauth.application.OAuthService;
@@ -10,6 +11,7 @@ import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
 
 import java.util.Map;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,7 @@ import static com.team03.issuetracker.oauth.utils.OAuthUtils.REFRESH_TOKEN;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final JwtTokenProvider jwtProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final Map<String, OAuthService> oAuthServiceMapper;
 
@@ -38,8 +40,8 @@ public class LoginController {
         LoginMemberResponse loginMemberResponse = oAuthService.obtainUserInfo(accessToken);
 
         return ResponseEntity.ok()
-                .header(ACCESS_TOKEN, jwtProvider.makeJwtAccessToken(loginMemberResponse))
-                .header(REFRESH_TOKEN, jwtProvider.makeJwtRefreshToken(loginMemberResponse))
+                .header(ACCESS_TOKEN, jwtTokenProvider.makeJwtAccessToken(loginMemberResponse))
+                .header(REFRESH_TOKEN, jwtTokenProvider.makeJwtRefreshToken(loginMemberResponse))
                 .body(loginMemberResponse);
     }
 
@@ -47,6 +49,13 @@ public class LoginController {
     public ResponseEntity<Void> renewJwtAccessToken(@AccessTokenHeader String accessToken,
                                                     @RefreshTokenHeader String refreshToken) {
 
-        return null;
+        try {
+            jwtTokenProvider.verifyToken(accessToken);
+        } catch (ExpiredJwtException e) {
+            Long userId = Long.parseLong(e.getClaims().getAudience());
+            Member member = null;
+        }
+
+        return ResponseEntity.ok().header(ACCESS_TOKEN, jwtTokenProvider.makeJwtRefreshToken(member));
     }
 }

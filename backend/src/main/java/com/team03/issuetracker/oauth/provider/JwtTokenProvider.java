@@ -43,15 +43,15 @@ public class JwtTokenProvider {
 
     }
 
-    public String makeJwtRefreshToken(LoginMemberResponse memberDto) {
+    public String makeJwtRefreshToken(LoginMemberResponse loginMemberResponse) {
 
         return Jwts.builder()
-                .setAudience(memberDto.getId().toString())
+                .setAudience(loginMemberResponse.getId().toString())
                 .setIssuer(issuer)
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusWeeks(2L)))
-                .claim(SERIAL_NUMBER, memberDto.getSerialNumber())
-                .claim(RESOURCE_SERVER, memberDto.getResourceServer())
+                .claim(SERIAL_NUMBER, loginMemberResponse.getSerialNumber())
+                .claim(RESOURCE_SERVER, loginMemberResponse.getResourceServer())
                 .claim(TOKEN_TYPE, ACCESS_TOKEN)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();

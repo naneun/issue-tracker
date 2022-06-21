@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @RequiredArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GithubAccessTokenRequest {
 
     private final String clientId;
-    private final String clientSecret;
-    private final String code;
 
+    private final String clientSecret;
+
+    private final String code;
 }

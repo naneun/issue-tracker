@@ -20,7 +20,7 @@ public class GithubUserInfo {
 	@JsonProperty(value = "avatar_url")
 	private String profileImage;
 
-	public Member toEntity(OauthAccessToken accessToken) {
+	public Member toEntity(OAuthAccessToken accessToken) {
 		return Member.builder()
 			.serialNumber(serialNumber)
 			.name(name)

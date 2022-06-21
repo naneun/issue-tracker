@@ -1,10 +1,10 @@
-package com.team03.issuetracker.oauth.controller;
+package com.team03.issuetracker.oauth.api;
 
 import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.oauth.application.LoginService;
-import com.team03.issuetracker.oauth.application.OauthService;
-import com.team03.issuetracker.oauth.dto.OauthAccessToken;
-import com.team03.issuetracker.oauth.provider.JwtProvider;
+import com.team03.issuetracker.oauth.application.OAuthService;
+import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
+import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +20,16 @@ import static com.team03.issuetracker.oauth.utils.OAuthUtils.REFRESH_TOKEN;
 public class LoginController {
 
 	private final LoginService loginService;
-	private final JwtProvider jwtProvider;
+	private final JwtTokenProvider jwtProvider;
 
-	private final Map<String, OauthService> oauthServicePicker;
+	private final Map<String, OAuthService> oauthServicePicker;
 
 	@GetMapping("/{resource-server}/login")
 	public ResponseEntity<LoginMemberResponse> login(@PathVariable(name = "resource-server") String resourceServer,
 		String code) {
 
-		OauthService oauthService = oauthServicePicker.get(resourceServer);
-		OauthAccessToken accessToken = oauthService.obtainAccessToken(code);
+		OAuthService oauthService = oauthServicePicker.get(resourceServer);
+		OAuthAccessToken accessToken = oauthService.obtainAccessToken(code);
 		LoginMemberResponse memberDto = oauthService.obtainUserInfo(accessToken);
 
 		return ResponseEntity.ok()

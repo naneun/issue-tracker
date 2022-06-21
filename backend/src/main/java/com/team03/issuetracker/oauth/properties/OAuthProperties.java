@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @RequiredArgsConstructor
 @ConstructorBinding
 @ConfigurationProperties(prefix = "oauth")
-public class OauthProperties {
+public class OAuthProperties {
 
 	private final String githubClientId;
 	private final String githubClientSecret;

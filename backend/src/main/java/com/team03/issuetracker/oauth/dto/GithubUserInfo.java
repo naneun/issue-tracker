@@ -8,26 +8,26 @@ import lombok.Getter;
 @Getter
 public class GithubUserInfo {
 
-	@JsonProperty(value = "id")
-	private String serialNumber;
+    @JsonProperty(value = "id")
+    private String serialNumber;
 
-	@JsonProperty(value = "login")
-	private String name;
+    @JsonProperty(value = "login")
+    private String name;
 
-	@JsonProperty(value = "email")
-	private String email;
+    @JsonProperty(value = "email")
+    private String email;
 
-	@JsonProperty(value = "avatar_url")
-	private String profileImage;
+    @JsonProperty(value = "avatar_url")
+    private String profileImage;
 
-	public Member toEntity(OAuthAccessToken accessToken) {
-		return Member.builder()
-			.serialNumber(serialNumber)
-			.name(name)
-			.email(email)
-			.profileImage(profileImage)
-			.oAuthAccessToken(accessToken.getAccessToken())
-			.resourceServer(ResourceServer.GITHUB)
-			.build();
-	}
+    public Member toEntity(OAuthAccessToken accessToken) {
+        return Member.builder()
+                .serialNumber(serialNumber)
+                .name(name)
+                .email(email)
+                .profileImage(profileImage)
+                .oAuthAccessToken(accessToken.getAccessToken())
+                .resourceServer(ResourceServer.GITHUB)
+                .build();
+    }
 }

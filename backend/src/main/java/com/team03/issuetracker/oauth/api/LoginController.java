@@ -7,7 +7,9 @@ import com.team03.issuetracker.oauth.common.AccessTokenHeader;
 import com.team03.issuetracker.oauth.common.RefreshTokenHeader;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
+
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,30 +23,30 @@ import static com.team03.issuetracker.oauth.utils.OAuthUtils.REFRESH_TOKEN;
 @RequiredArgsConstructor
 public class LoginController {
 
-	private final JwtTokenProvider jwtProvider;
+    private final JwtTokenProvider jwtProvider;
 
-	private final LoginService loginService;
+    private final Map<String, OAuthService> oAuthServiceMapper;
 
-	private final Map<String, OAuthService> oAuthServiceMapper;
+    private final LoginService loginService;
 
-	@GetMapping("/{resource-server}/login")
-	public ResponseEntity<LoginMemberResponse> login(@PathVariable(name = "resource-server") String resourceServer,
-													 String code) {
+    @GetMapping("/{resource-server}/login")
+    public ResponseEntity<LoginMemberResponse> login(@PathVariable(name = "resource-server") String resourceServer,
+                                                     String code) {
 
-		OAuthService oAuthService = oAuthServiceMapper.get(resourceServer);
-		OAuthAccessToken accessToken = oAuthService.obtainAccessToken(code);
-		LoginMemberResponse loginMemberResponse = oAuthService.obtainUserInfo(accessToken);
+        OAuthService oAuthService = oAuthServiceMapper.get(resourceServer);
+        OAuthAccessToken accessToken = oAuthService.obtainAccessToken(code);
+        LoginMemberResponse loginMemberResponse = oAuthService.obtainUserInfo(accessToken);
 
-		return ResponseEntity.ok()
-			.header(ACCESS_TOKEN, jwtProvider.makeJwtAccessToken(loginMemberResponse))
-			.header(REFRESH_TOKEN, jwtProvider.makeJwtRefreshToken(loginMemberResponse))
-			.body(loginMemberResponse);
-	}
+        return ResponseEntity.ok()
+                .header(ACCESS_TOKEN, jwtProvider.makeJwtAccessToken(loginMemberResponse))
+                .header(REFRESH_TOKEN, jwtProvider.makeJwtRefreshToken(loginMemberResponse))
+                .body(loginMemberResponse);
+    }
 
-	@GetMapping
-	public ResponseEntity<Void> renewJwtAccessToken(@AccessTokenHeader String accessToken,
-													 @RefreshTokenHeader String refreshToken) {
+    @GetMapping
+    public ResponseEntity<Void> renewJwtAccessToken(@AccessTokenHeader String accessToken,
+                                                    @RefreshTokenHeader String refreshToken) {
 
-		return null;
-	}
+        return null;
+    }
 }

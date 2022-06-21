@@ -8,26 +8,26 @@ import lombok.Getter;
 @Getter
 public class GoogleUserInfo {
 
-	@JsonProperty(value = "sub")
-	private String serialNumber;
+    @JsonProperty(value = "sub")
+    private String serialNumber;
 
-	@JsonProperty(value = "name")
-	private String name;
+    @JsonProperty(value = "name")
+    private String name;
 
-	@JsonProperty(value = "email")
-	private String email;
+    @JsonProperty(value = "email")
+    private String email;
 
-	@JsonProperty(value = "picture")
-	private String profileImage;
+    @JsonProperty(value = "picture")
+    private String profileImage;
 
-	public Member toEntity(OAuthAccessToken accessToken) {
-		return Member.builder()
-			.serialNumber(serialNumber)
-			.name(name)
-			.email(email)
-			.profileImage(profileImage)
-			.oAuthAccessToken(accessToken.getAccessToken())
-			.resourceServer(ResourceServer.GOOGLE)
-			.build();
-	}
+    public Member toEntity(OAuthAccessToken accessToken) {
+        return Member.builder()
+                .serialNumber(serialNumber)
+                .name(name)
+                .email(email)
+                .profileImage(profileImage)
+                .oAuthAccessToken(accessToken.getAccessToken())
+                .resourceServer(ResourceServer.GOOGLE)
+                .build();
+    }
 }

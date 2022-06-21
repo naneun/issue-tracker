@@ -6,6 +6,7 @@ import com.team03.issuetracker.oauth.dto.GithubUserInfo;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 import com.team03.issuetracker.oauth.exception.OAuthException;
 import com.team03.issuetracker.oauth.properties.OAuthProperties;
+import com.team03.issuetracker.oauth.properties.VendorProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -16,50 +17,47 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Service("github")
 public class GithubOAuthService implements OAuthService {
 
-	private final String clientId;
-	private final String clientSecret;
-	private final String accessTokenUri;
-	private final String userInfoUri;
-	private final LoginService loginService;
+    private final LoginService loginService;
 
-	@Autowired
-	public GithubOAuthService(OAuthProperties properties, LoginService loginService) {
-		this.clientId = properties.getGithubClientId();
-		this.clientSecret = properties.getGithubClientSecret();
-		this.accessTokenUri = properties.getGithubAccessTokenUri();
-		this.userInfoUri = properties.getGithubUserInfoUri();
-		this.loginService = loginService;
-	}
+    private final VendorProperties vendorProperties;
 
-	// Todo: state을 검증하는 과정을 넣으려면 애초에 code에 대한 요청도 서버에서 해야하는건가?
-	@Override
-	public OAuthAccessToken obtainAccessToken(String code) {
+    @Autowired
+    public GithubOAuthService(OAuthProperties oAuthProperties, LoginService loginService) {
+        this.loginService = loginService;
+        this.vendorProperties = oAuthProperties.getVendorProperties("github");
+    }
 
-		return WebClient.create().post()
-			.uri(accessTokenUri)
-			.accept(MediaType.APPLICATION_JSON)
-			.bodyValue(new GithubAccessTokenRequest(
-				clientId,
-				clientSecret,
-				code))
-			.retrieve()
-			.bodyToMono(OAuthAccessToken.class)
-			.blockOptional()
-			.orElseThrow(OAuthException::new);
-	}
+    @Override
+    public OAuthAccessToken obtainAccessToken(String code) {
 
-	@Override
-	public LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken) {
+        return WebClient.create().post()
+                .uri(vendorProperties.getAccessTokenUri())
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(
+                        new GithubAccessTokenRequest(
+                                vendorProperties.getClientId(),
+                                vendorProperties.getClientSecret(),
+                                code
+                        )
+                )
+                .retrieve()
+                .bodyToMono(OAuthAccessToken.class)
+                .blockOptional()
+                .orElseThrow(OAuthException::new);
+    }
 
-		GithubUserInfo userInfo = WebClient.create().get()
-			.uri(userInfoUri)
-			.accept(MediaType.APPLICATION_JSON)
-			.header(AUTHORIZATION, accessToken.fullInfo())
-			.retrieve()
-			.bodyToMono(GithubUserInfo.class)
-			.blockOptional()
-			.orElseThrow(OAuthException::new);
+    @Override
+    public LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken) {
 
-		return loginService.login(userInfo.toEntity(accessToken));
-	}
+        GithubUserInfo userInfo = WebClient.create().get()
+                .uri(vendorProperties.getUserInfoUri())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, accessToken.fullInfo())
+                .retrieve()
+                .bodyToMono(GithubUserInfo.class)
+                .blockOptional()
+                .orElseThrow(OAuthException::new);
+
+        return loginService.login(userInfo.toEntity(accessToken));
+    }
 }

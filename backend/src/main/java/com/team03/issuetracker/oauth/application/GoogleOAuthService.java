@@ -6,6 +6,8 @@ import com.team03.issuetracker.oauth.dto.GoogleUserInfo;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 import com.team03.issuetracker.oauth.exception.OAuthException;
 import com.team03.issuetracker.oauth.properties.OAuthProperties;
+import com.team03.issuetracker.oauth.properties.VendorProperties;
+import net.bytebuddy.implementation.bind.annotation.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -17,53 +19,48 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Service("google")
 public class GoogleOAuthService implements OAuthService {
 
-	private final String clientId;
-	private final String clientSecret;
-	private final String accessTokenUri;
-	private final String userInfoUri;
-	private final String redirectUri;
-	private final LoginService loginService;
+    private final LoginService loginService;
 
-	@Autowired
-	public GoogleOAuthService(OAuthProperties properties, LoginService loginService) {
-		this.clientId = properties.getGoogleClientId();
-		this.clientSecret = properties.getGoogleClientSecret();
-		this.accessTokenUri = properties.getGoogleAccessTokenUri();
-		this.userInfoUri = properties.getGoogleUserInfoUri();
-		this.redirectUri = properties.getGoogleRedirectUri();
-		this.loginService = loginService;
-	}
+    private final VendorProperties vendorProperties;
 
-	@Override
-	public OAuthAccessToken obtainAccessToken(String code) {
+    @Autowired
+    public GoogleOAuthService(OAuthProperties oAuthProperties, LoginService loginService) {
+        this.loginService = loginService;
+        this.vendorProperties = oAuthProperties.getVendorProperties("google");
+    }
 
-		return WebClient.create().post()
-			.uri(accessTokenUri)
-			.accept(MediaType.APPLICATION_JSON)
-			.bodyValue(new GoogleAccessTokenRequest(
-				clientId,
-				clientSecret,
-				code,
-				AUTHORIZATION_CODE,
-				redirectUri
-			))
-			.retrieve()
-			.bodyToMono(OAuthAccessToken.class)
-			.blockOptional()
-			.orElseThrow(OAuthException::new);
-	}
+    @Override
+    public OAuthAccessToken obtainAccessToken(String code) {
 
-	@Override
-	public LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken) {
-		GoogleUserInfo userInfo = WebClient.create().get()
-			.uri(userInfoUri)
-			.accept(MediaType.APPLICATION_JSON)
-			.header(AUTHORIZATION, accessToken.fullInfo())
-			.retrieve()
-			.bodyToMono(GoogleUserInfo.class)
-			.blockOptional()
-			.orElseThrow(OAuthException::new);
+        return WebClient.create().post()
+                .uri(vendorProperties.getAccessTokenUri())
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(
+                        new GoogleAccessTokenRequest(
+                                vendorProperties.getClientId(),
+                                vendorProperties.getClientSecret(),
+                                code,
+                                AUTHORIZATION_CODE,
+                                vendorProperties.getRedirectUri()
+                        )
+                )
+                .retrieve()
+                .bodyToMono(OAuthAccessToken.class)
+                .blockOptional()
+                .orElseThrow(OAuthException::new);
+    }
 
-		return loginService.login(userInfo.toEntity(accessToken));
-	}
+    @Override
+    public LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken) {
+        GoogleUserInfo userInfo = WebClient.create().get()
+                .uri(vendorProperties.getUserInfoUri())
+                .accept(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, accessToken.fullInfo())
+                .retrieve()
+                .bodyToMono(GoogleUserInfo.class)
+                .blockOptional()
+                .orElseThrow(OAuthException::new);
+
+        return loginService.login(userInfo.toEntity(accessToken));
+    }
 }

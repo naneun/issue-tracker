@@ -5,7 +5,7 @@ import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 
 public interface OAuthService {
 
-	OAuthAccessToken obtainAccessToken(String code);
+    OAuthAccessToken obtainAccessToken(String code);
 
-	LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken);
+    LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken);
 }

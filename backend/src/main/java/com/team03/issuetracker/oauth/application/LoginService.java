@@ -12,17 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LoginService {
 
-	private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-	@Transactional
-	public LoginMemberResponse login(Member oAuthMember) {
-		String serialNumber = oAuthMember.getSerialNumber();
-		ResourceServer resourceServer = oAuthMember.getResourceServer();
+    @Transactional
+    public LoginMemberResponse login(Member oAuthMember) {
+        String serialNumber = oAuthMember.getSerialNumber();
+        ResourceServer resourceServer = oAuthMember.getResourceServer();
 
-		Member loginMember = memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
-			.map(member -> member.updateLoginInfo(oAuthMember))
-			.orElseGet(() -> memberRepository.save(oAuthMember));
+        Member loginMember = memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
+                .map(member -> member.updateLoginInfo(oAuthMember))
+                .orElseGet(() -> memberRepository.save(oAuthMember));
 
-		return new LoginMemberResponse(loginMember);
-	}
+        return new LoginMemberResponse(loginMember);
+    }
 }

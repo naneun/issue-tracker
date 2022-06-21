@@ -4,8 +4,10 @@ import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
@@ -19,33 +21,33 @@ import static com.team03.issuetracker.oauth.utils.OAuthUtils.BEARER;
 @RequiredArgsConstructor
 public class LoginInterceptor implements HandlerInterceptor {
 
-	private final JwtTokenProvider jwtProvider;
+    private final JwtTokenProvider jwtProvider;
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-		return validateJwtToken(response, header);
-	}
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return validateJwtToken(response, header);
+    }
 
-	private boolean validateJwtToken(HttpServletResponse response, String header) {
-		if (header.isBlank() || !header.startsWith(BEARER)) {
-			response.setStatus(HttpStatus.FORBIDDEN.value());
-			return false;
-		}
+    private boolean validateJwtToken(HttpServletResponse response, String header) {
+        if (header.isBlank() || !header.startsWith(BEARER)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return false;
+        }
 
-		String jwtToken = header.replaceFirst(BEARER, Strings.EMPTY).trim();
+        String jwtToken = header.replaceFirst(BEARER, Strings.EMPTY).trim();
 
-		try {
-			Claims claims = jwtProvider.verifyToken(jwtToken);
-		} catch (ExpiredJwtException e) {
-			response.setStatus(HttpStatus.UNAUTHORIZED.value());
-			return false;
-		} catch (JwtException e) {
-			response.setStatus(HttpStatus.FORBIDDEN.value());
-			return false;
-		}
+        try {
+            Claims claims = jwtProvider.verifyToken(jwtToken);
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return false;
+        } catch (JwtException e) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

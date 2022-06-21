@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GithubAccessTokenRequest {
 
-	private final String clientId;
-	private final String clientSecret;
-	private final String code;
+    private final String clientId;
+    private final String clientSecret;
+    private final String code;
 
 }

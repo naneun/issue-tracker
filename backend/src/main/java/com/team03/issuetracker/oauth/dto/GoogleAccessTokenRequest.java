@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GoogleAccessTokenRequest {
 
-	private final String clientId;
-	private final String clientSecret;
-	private final String code;
-	private final String grantType;
-	private final String redirectUri;
+    private final String clientId;
+    private final String clientSecret;
+    private final String code;
+    private final String grantType;
+    private final String redirectUri;
 
 }

@@ -49,17 +49,12 @@ public class GithubOAuthService implements OAuthService {
 	}
 
 	@Override
-	public OAuthAccessToken renewAccessToken() {
-		return null;
-	}
-
-	@Override
 	public LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken) {
 
 		GithubUserInfo userInfo = WebClient.create().get()
 			.uri(userInfoUri)
 			.accept(MediaType.APPLICATION_JSON)
-			.header(AUTHORIZATION, accessToken.getTokenType() + " " + accessToken.getAccessToken())
+			.header(AUTHORIZATION, accessToken.fullInfo())
 			.retrieve()
 			.bodyToMono(GithubUserInfo.class)
 			.blockOptional()

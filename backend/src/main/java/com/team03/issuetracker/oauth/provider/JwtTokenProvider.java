@@ -26,7 +26,7 @@ public class JwtTokenProvider {
 		this.secretKey = properties.getSecretKey();
 	}
 
-	public String makeJwtToken(LoginMemberResponse loginMemberResponse) {
+	public String makeJwtAccessToken(LoginMemberResponse loginMemberResponse) {
 
 		return Jwts.builder()
 			.setAudience(loginMemberResponse.getId().toString())

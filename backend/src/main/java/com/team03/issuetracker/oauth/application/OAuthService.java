@@ -7,7 +7,5 @@ public interface OAuthService {
 
 	OAuthAccessToken obtainAccessToken(String code);
 
-	OAuthAccessToken renewAccessToken();
-
 	LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken);
 }

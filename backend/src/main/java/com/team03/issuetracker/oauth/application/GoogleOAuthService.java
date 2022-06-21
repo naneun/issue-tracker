@@ -54,16 +54,11 @@ public class GoogleOAuthService implements OAuthService {
 	}
 
 	@Override
-	public OAuthAccessToken renewAccessToken() {
-		return null;
-	}
-
-	@Override
 	public LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken) {
 		GoogleUserInfo userInfo = WebClient.create().get()
 			.uri(userInfoUri)
 			.accept(MediaType.APPLICATION_JSON)
-			.header(AUTHORIZATION, accessToken.getTokenType() + " " + accessToken.getAccessToken())
+			.header(AUTHORIZATION, accessToken.fullInfo())
 			.retrieve()
 			.bodyToMono(GoogleUserInfo.class)
 			.blockOptional()

@@ -3,6 +3,8 @@ package com.team03.issuetracker.oauth.api;
 import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.oauth.application.LoginService;
 import com.team03.issuetracker.oauth.application.OAuthService;
+import com.team03.issuetracker.oauth.common.AccessTokenHeader;
+import com.team03.issuetracker.oauth.common.RefreshTokenHeader;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
 import java.util.Map;
@@ -19,28 +21,30 @@ import static com.team03.issuetracker.oauth.utils.OAuthUtils.REFRESH_TOKEN;
 @RequiredArgsConstructor
 public class LoginController {
 
-	private final LoginService loginService;
 	private final JwtTokenProvider jwtProvider;
 
-	private final Map<String, OAuthService> oAuthServicePicker;
+	private final LoginService loginService;
+
+	private final Map<String, OAuthService> oAuthServiceMapper;
 
 	@GetMapping("/{resource-server}/login")
 	public ResponseEntity<LoginMemberResponse> login(@PathVariable(name = "resource-server") String resourceServer,
-		String code) {
+													 String code) {
 
-		OAuthService oAuthService = oAuthServicePicker.get(resourceServer);
+		OAuthService oAuthService = oAuthServiceMapper.get(resourceServer);
 		OAuthAccessToken accessToken = oAuthService.obtainAccessToken(code);
-		LoginMemberResponse memberDto = oAuthService.obtainUserInfo(accessToken);
+		LoginMemberResponse loginMemberResponse = oAuthService.obtainUserInfo(accessToken);
 
 		return ResponseEntity.ok()
-			.header(ACCESS_TOKEN, jwtProvider.makeJwtToken(memberDto))
-			.header(REFRESH_TOKEN, jwtProvider.makeJwtRefreshToken(memberDto))
-			.body(memberDto);
+			.header(ACCESS_TOKEN, jwtProvider.makeJwtAccessToken(loginMemberResponse))
+			.header(REFRESH_TOKEN, jwtProvider.makeJwtRefreshToken(loginMemberResponse))
+			.body(loginMemberResponse);
 	}
 
-	// TODO
 	@GetMapping
-	public ResponseEntity<Void> updateJwtAccessToken(String refreshToken) {
+	public ResponseEntity<Void> renewJwtAccessToken(@AccessTokenHeader String accessToken,
+													 @RefreshTokenHeader String refreshToken) {
+
 		return null;
 	}
 }

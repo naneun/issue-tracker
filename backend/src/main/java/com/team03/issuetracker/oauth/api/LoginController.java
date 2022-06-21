@@ -7,6 +7,7 @@ import com.team03.issuetracker.oauth.application.OAuthService;
 import com.team03.issuetracker.oauth.common.AccessTokenHeader;
 import com.team03.issuetracker.oauth.common.RefreshTokenHeader;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
+import com.team03.issuetracker.oauth.dto.OAuthUser;
 import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
 
 import java.util.Map;
@@ -37,12 +38,14 @@ public class LoginController {
 
         OAuthService oAuthService = oAuthServiceMapper.get(resourceServer);
         OAuthAccessToken accessToken = oAuthService.obtainAccessToken(code);
-        LoginMemberResponse loginMemberResponse = oAuthService.obtainUserInfo(accessToken);
+        OAuthUser oAuthUser = oAuthService.obtainUserInfo(accessToken);
+
+        Member member = loginService.login(oAuthUser);
 
         return ResponseEntity.ok()
-                .header(ACCESS_TOKEN, jwtTokenProvider.makeJwtAccessToken(loginMemberResponse))
-                .header(REFRESH_TOKEN, jwtTokenProvider.makeJwtRefreshToken(loginMemberResponse))
-                .body(loginMemberResponse);
+                .header(ACCESS_TOKEN, jwtTokenProvider.makeJwtAccessToken(member))
+                .header(REFRESH_TOKEN, jwtTokenProvider.makeJwtRefreshToken(member))
+                .body(LoginMemberResponse.from(member));
     }
 
     @GetMapping
@@ -56,6 +59,7 @@ public class LoginController {
             Member member = null;
         }
 
-        return ResponseEntity.ok().header(ACCESS_TOKEN, jwtTokenProvider.makeJwtRefreshToken(member));
+//        return ResponseEntity.ok().header(ACCESS_TOKEN, jwtTokenProvider.makeJwtRefreshToken(member));
+        return null;
     }
 }

@@ -1,9 +1,9 @@
 package com.team03.issuetracker.oauth.application;
 
-import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.oauth.dto.GithubAccessTokenRequest;
 import com.team03.issuetracker.oauth.dto.GithubUserInfo;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
+import com.team03.issuetracker.oauth.dto.OAuthUser;
 import com.team03.issuetracker.oauth.exception.OAuthException;
 import com.team03.issuetracker.oauth.properties.OAuthProperties;
 import com.team03.issuetracker.oauth.properties.VendorProperties;
@@ -17,13 +17,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Service("github")
 public class GithubOAuthService implements OAuthService {
 
-    private final LoginService loginService;
-
     private final VendorProperties vendorProperties;
 
     @Autowired
-    public GithubOAuthService(OAuthProperties oAuthProperties, LoginService loginService) {
-        this.loginService = loginService;
+    public GithubOAuthService(OAuthProperties oAuthProperties) {
         this.vendorProperties = oAuthProperties.getVendorProperties("github");
     }
 
@@ -47,9 +44,9 @@ public class GithubOAuthService implements OAuthService {
     }
 
     @Override
-    public LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken) {
+    public OAuthUser obtainUserInfo(OAuthAccessToken accessToken) {
 
-        GithubUserInfo userInfo = WebClient.create().get()
+        GithubUserInfo githubUserInfo = WebClient.create().get()
                 .uri(vendorProperties.getUserInfoUri())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(AUTHORIZATION, accessToken.fullInfo())
@@ -58,6 +55,6 @@ public class GithubOAuthService implements OAuthService {
                 .blockOptional()
                 .orElseThrow(OAuthException::new);
 
-        return loginService.login(userInfo.toEntity(accessToken));
+        return githubUserInfo.toOAuthUser(accessToken);
     }
 }

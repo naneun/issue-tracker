@@ -1,9 +1,9 @@
 package com.team03.issuetracker.oauth.application;
 
 import com.team03.issuetracker.common.domain.Member;
-import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.common.repository.MemberRepository;
 import com.team03.issuetracker.oauth.common.ResourceServer;
+import com.team03.issuetracker.oauth.dto.OAuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,14 +15,14 @@ public class LoginService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public LoginMemberResponse login(Member oAuthMember) {
-        String serialNumber = oAuthMember.getSerialNumber();
-        ResourceServer resourceServer = oAuthMember.getResourceServer();
+    public Member login(OAuthUser oAuthUser) {
+        String serialNumber = oAuthUser.getSerialNumber();
+        ResourceServer resourceServer = oAuthUser.getResourceServer();
 
-        Member loginMember = memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
-                .map(member -> member.updateLoginInfo(oAuthMember))
-                .orElseGet(() -> memberRepository.save(oAuthMember));
-
-        return new LoginMemberResponse(loginMember);
+        Member loginMember = oAuthUser.toEntity();
+        
+        return memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
+                .map(member -> member.updateLoginInfo(loginMember))
+                .orElseGet(() -> memberRepository.save(loginMember));
     }
 }

@@ -1,15 +1,22 @@
 package com.team03.issuetracker.oauth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.oauth.common.ResourceServer;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import static com.team03.issuetracker.oauth.common.ResourceServer.*;
 
 @Getter
-public class GoogleUserInfo {
+@Setter
+@NoArgsConstructor
+public class GoogleUserInfo{
 
     @JsonProperty(value = "sub")
     private String serialNumber;
+
+    private ResourceServer resourceServer;
 
     @JsonProperty(value = "name")
     private String name;
@@ -20,14 +27,9 @@ public class GoogleUserInfo {
     @JsonProperty(value = "picture")
     private String profileImage;
 
-    public Member toEntity(OAuthAccessToken accessToken) {
-        return Member.builder()
-                .serialNumber(serialNumber)
-                .name(name)
-                .email(email)
-                .profileImage(profileImage)
-                .oAuthAccessToken(accessToken.getAccessToken())
-                .resourceServer(ResourceServer.GOOGLE)
-                .build();
+    private OAuthAccessToken oAuthAccessToken;
+
+    public OAuthUser toOAuthUser(OAuthAccessToken oAuthAccessToken) {
+        return new OAuthUser(serialNumber, GOOGLE, name, email, profileImage, oAuthAccessToken);
     }
 }

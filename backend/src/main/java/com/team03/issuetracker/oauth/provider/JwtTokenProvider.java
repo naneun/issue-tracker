@@ -1,6 +1,6 @@
 package com.team03.issuetracker.oauth.provider;
 
-import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
+import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.oauth.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,11 +10,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
-
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.ACCESS_TOKEN;
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.RESOURCE_SERVER;
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.SERIAL_NUMBER;
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.TOKEN_TYPE;
 
 @Component
 public class JwtTokenProvider {
@@ -28,31 +23,25 @@ public class JwtTokenProvider {
         this.secretKey = properties.getSecretKey();
     }
 
-    public String makeJwtAccessToken(LoginMemberResponse loginMemberResponse) {
+    public String makeJwtAccessToken(Member member) {
 
         return Jwts.builder()
-                .setAudience(loginMemberResponse.getId().toString())
+                .setAudience(member.getId().toString())
                 .setIssuer(issuer)
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusHours(1L)))
-                .claim(SERIAL_NUMBER, loginMemberResponse.getSerialNumber())
-                .claim(RESOURCE_SERVER, loginMemberResponse.getResourceServer())
-                .claim(TOKEN_TYPE, ACCESS_TOKEN)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
     }
 
-    public String makeJwtRefreshToken(LoginMemberResponse loginMemberResponse) {
+    public String makeJwtRefreshToken(Member member) {
 
         return Jwts.builder()
-                .setAudience(loginMemberResponse.getId().toString())
+                .setAudience(member.getId().toString())
                 .setIssuer(issuer)
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusWeeks(2L)))
-                .claim(SERIAL_NUMBER, loginMemberResponse.getSerialNumber())
-                .claim(RESOURCE_SERVER, loginMemberResponse.getResourceServer())
-                .claim(TOKEN_TYPE, ACCESS_TOKEN)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 

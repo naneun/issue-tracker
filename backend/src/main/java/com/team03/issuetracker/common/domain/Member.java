@@ -30,11 +30,10 @@ public class Member {
 
 	private String oAuthAccessToken;
 
-	private String oAuthRefreshToken;
-
 	@Builder
 	private Member(Long id, String serialNumber, ResourceServer resourceServer, String name, String email,
-		String profileImage, String oAuthAccessToken, String oAuthRefreshToken) {
+		String profileImage, String oAuthAccessToken) {
+
 		this.id = id;
 		this.serialNumber = serialNumber;
 		this.resourceServer = resourceServer;
@@ -42,7 +41,6 @@ public class Member {
 		this.email = email;
 		this.profileImage = profileImage;
 		this.oAuthAccessToken = oAuthAccessToken;
-		this.oAuthRefreshToken = oAuthRefreshToken;
 	}
 
 	public static Member of(Long id, String email, String name) {
@@ -57,8 +55,7 @@ public class Member {
 		this.name = member.getName();
 		this.email = member.getEmail();
 		this.oAuthAccessToken = member.getOAuthAccessToken();
-		this.oAuthRefreshToken = member.getOAuthRefreshToken();
 		this.profileImage = member.getProfileImage();
-		return null;
+		return this;
 	}
 }

@@ -1,13 +1,12 @@
 package com.team03.issuetracker.oauth.application;
 
-import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.oauth.dto.GoogleAccessTokenRequest;
 import com.team03.issuetracker.oauth.dto.GoogleUserInfo;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
+import com.team03.issuetracker.oauth.dto.OAuthUser;
 import com.team03.issuetracker.oauth.exception.OAuthException;
 import com.team03.issuetracker.oauth.properties.OAuthProperties;
 import com.team03.issuetracker.oauth.properties.VendorProperties;
-import net.bytebuddy.implementation.bind.annotation.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -19,13 +18,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Service("google")
 public class GoogleOAuthService implements OAuthService {
 
-    private final LoginService loginService;
-
     private final VendorProperties vendorProperties;
 
     @Autowired
-    public GoogleOAuthService(OAuthProperties oAuthProperties, LoginService loginService) {
-        this.loginService = loginService;
+    public GoogleOAuthService(OAuthProperties oAuthProperties) {
         this.vendorProperties = oAuthProperties.getVendorProperties("google");
     }
 
@@ -51,8 +47,9 @@ public class GoogleOAuthService implements OAuthService {
     }
 
     @Override
-    public LoginMemberResponse obtainUserInfo(OAuthAccessToken accessToken) {
-        GoogleUserInfo userInfo = WebClient.create().get()
+    public OAuthUser obtainUserInfo(OAuthAccessToken accessToken) {
+
+        GoogleUserInfo googleUserInfo = WebClient.create().get()
                 .uri(vendorProperties.getUserInfoUri())
                 .accept(MediaType.APPLICATION_JSON)
                 .header(AUTHORIZATION, accessToken.fullInfo())
@@ -61,6 +58,6 @@ public class GoogleOAuthService implements OAuthService {
                 .blockOptional()
                 .orElseThrow(OAuthException::new);
 
-        return loginService.login(userInfo.toEntity(accessToken));
+        return googleUserInfo.toOAuthUser(accessToken);
     }
 }

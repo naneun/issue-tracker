@@ -8,6 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	Optional<Member> findBySerialNumberAndResourceServer(String serialNumber, ResourceServer resourceServer);
-
-	boolean existsBySerialNumberAndResourceServer(String serialNumber, ResourceServer resourceServer);
 }

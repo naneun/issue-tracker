@@ -1,7 +1,7 @@
 package com.team03.issuetracker.common.config;
 
 import com.team03.issuetracker.oauth.common.AccessTokenResolver;
-import com.team03.issuetracker.oauth.common.LoginMemberResolver;
+import com.team03.issuetracker.oauth.common.LoginUserResolver;
 import com.team03.issuetracker.oauth.common.RefreshTokenResolver;
 import com.team03.issuetracker.oauth.interceptor.LoginInterceptor;
 import java.util.List;
@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	private final RefreshTokenResolver refreshTokenResolver;
 
-	private final LoginMemberResolver loginMemberResolver;
+	private final LoginUserResolver loginMemberResolver;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

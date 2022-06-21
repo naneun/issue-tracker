@@ -1,5 +1,9 @@
 package com.team03.issuetracker.oauth.interceptor;
 
+import com.team03.issuetracker.common.component.LoginMember;
+import com.team03.issuetracker.common.domain.Member;
+import com.team03.issuetracker.common.exception.MemberException;
+import com.team03.issuetracker.common.repository.MemberRepository;
 import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -16,13 +20,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import static com.team03.issuetracker.oauth.utils.OAuthUtils.BEARER;
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.LOGIN_ID;
 
 @Component
 @RequiredArgsConstructor
 public class LoginInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtProvider;
+
+    private final MemberRepository memberRepository;
+
+    private final LoginMember loginMember;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -49,7 +56,10 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        request.setAttribute(LOGIN_ID, claims.getAudience());
+        Member member = memberRepository.findById(3L)
+                .orElseThrow(MemberException::new);
+
+        loginMember.update(member);
 
         return true;
     }

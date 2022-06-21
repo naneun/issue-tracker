@@ -1,6 +1,5 @@
 package com.team03.issuetracker.common.application;
 
-import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.oauth.exception.JwtException;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +25,6 @@ public class RedisService {
 
 	public void removeJwtRefreshToken(Long memberId) {
 		redisTemplate.delete(String.valueOf(memberId));
-	}
-
-	public Member getLoginMember() {
-		// TODO values.get(loginMember);
-		return null;
 	}
 
 	public void verifyMatchingRefreshToken(Long memberId, String refreshToken) {

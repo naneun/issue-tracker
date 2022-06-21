@@ -1,6 +1,5 @@
 package com.team03.issuetracker.common.component;
 
-import com.team03.issuetracker.common.application.RedisService;
 import com.team03.issuetracker.common.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.AuditorAware;
@@ -12,10 +11,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoginMemberAuditorAware implements AuditorAware<Member> {
 
-    private final RedisService redisService;
+    private final LoginMember loginMember;
 
     @Override
     public Optional<Member> getCurrentAuditor() {
-        return Optional.of(redisService.getLoginMember());
+        return Optional.of(loginMember.toEntity());
     }
 }

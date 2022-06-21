@@ -64,17 +64,13 @@
             app:layout_constraintBottom_toTopOf="@id/cl_issue_write_tags"
             app:layout_constraintTop_toBottomOf="@id/tb_issue_write">
 
-
             <EditText
                 android:id="@+id/et_issue_write_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                />
+                android:background="@android:color/transparent" />
 
         </ScrollView>
-
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_issue_write_tags"
@@ -94,22 +90,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_issue_write_label_value"
-                style="@style/Subtitle2.Grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="16dp"
-                android:text="선택"
-                app:layout_constraintEnd_toStartOf="@id/spinner_issue_write_label"
-                app:layout_constraintTop_toTopOf="@id/tv_issue_write_label_title" />
 
             <Spinner
                 android:id="@+id/spinner_issue_write_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="16dp"
-                android:text="선택"
+                app:layout_constraintBottom_toBottomOf="@id/tv_issue_write_label_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_issue_write_label_title" />
 
@@ -123,21 +110,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_issue_write_label_title" />
 
-            <TextView
-                android:id="@+id/tv_issue_write_milestone_value"
-                style="@style/Subtitle2.Grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="16dp"
-                android:text="선택"
-                app:layout_constraintEnd_toStartOf="@id/spinner_issue_write_milestone"
-                app:layout_constraintTop_toBottomOf="@id/tv_issue_write_label_title" />
-
             <Spinner
                 android:id="@+id/spinner_issue_write_milestone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_issue_write_milestone_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_issue_write_label_title" />
 
@@ -152,14 +130,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_issue_write_milestone_title" />
 
-            <TextView
-                style="@style/Subtitle2.Grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="16dp"
-                android:text="선택"
-                app:layout_constraintEnd_toStartOf="@id/spinner_issue_write_assignee"
-                app:layout_constraintTop_toBottomOf="@id/tv_issue_write_milestone_title" />
 
             <Spinner
                 android:id="@+id/spinner_issue_write_assignee"

@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
-import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentMileStoneWriteBinding
 import java.text.SimpleDateFormat
 
@@ -51,7 +50,7 @@ class MileStoneWriteFragment : Fragment() {
                 dateFormatter.parse(inputDate.toString())
                 completeDayFlag = true
             } catch (e: Exception) {
-                binding.etMilestoneWriteCompleteDay.error = Constants.INVALID_INPUT_ERROR_MESSAGE
+                binding.etMilestoneWriteCompleteDay.error = getString(R.string.message_invalid_input_error)
                 completeDayFlag = false
             } finally {
                 setCompleteDayLabelBackground()
@@ -85,7 +84,7 @@ class MileStoneWriteFragment : Fragment() {
                 )
             )
         } else {
-            binding.etMilestoneWriteTitle.error = Constants.INPUT_ERROR_MESSAGE
+            binding.etMilestoneWriteTitle.error = getString(R.string.message_need_input_message)
             binding.tvMilestoneWriteSaveTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey1))
         }
     }

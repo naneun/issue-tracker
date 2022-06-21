@@ -1,11 +1,11 @@
 package com.team03.issuetracker.oauth.api;
 
+import com.team03.issuetracker.common.application.RedisService;
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.common.domain.dto.LoginMemberResponse;
 import com.team03.issuetracker.oauth.application.LoginService;
 import com.team03.issuetracker.oauth.application.OAuthService;
 import com.team03.issuetracker.oauth.common.AccessTokenHeader;
-import com.team03.issuetracker.oauth.common.LoginMember;
 import com.team03.issuetracker.oauth.common.RefreshTokenHeader;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 import com.team03.issuetracker.oauth.dto.OAuthUser;
@@ -35,19 +35,26 @@ public class LoginController {
 
 	private final LoginService loginService;
 
+	private final RedisService redisService;
+
 	@GetMapping("/{resource-server}/callback")
 	public ResponseEntity<LoginMemberResponse> login(@PathVariable(name = "resource-server") String resourceServer,
 		String code) {
 
 		OAuthService oAuthService = oAuthServiceMapper.get(resourceServer);
+
 		OAuthAccessToken accessToken = oAuthService.obtainAccessToken(code);
 		OAuthUser oAuthUser = oAuthService.obtainUserInfo(accessToken);
 
-		Member member = loginService.login(oAuthUser);
+		Member member = loginService.save(oAuthUser);
+		String jwtAccessToken = jwtTokenProvider.makeJwtAccessToken(member);
+		String jwtRefreshToken = jwtTokenProvider.makeJwtRefreshToken(member);
+
+		redisService.saveJwtRefreshToken(member.getId(), jwtRefreshToken);
 
 		return ResponseEntity.ok()
-			.header(ACCESS_TOKEN, jwtTokenProvider.makeJwtAccessToken(member))
-			.header(REFRESH_TOKEN, jwtTokenProvider.makeJwtRefreshToken(member))
+			.header(ACCESS_TOKEN, jwtAccessToken)
+			.header(REFRESH_TOKEN, jwtRefreshToken)
 			.body(LoginMemberResponse.from(member));
 	}
 
@@ -58,18 +65,18 @@ public class LoginController {
 		Member member = null;
 		try {
 			jwtTokenProvider.verifyToken(accessToken);
-
 		} catch (ExpiredJwtException e) {
 			Long memberId = Long.parseLong(e.getClaims().getAudience());
+
+			// TODO: verifyMatchingRefreshToken() 메서드가 catch 문에 걸리도록 로직 수정 필요
+			redisService.verifyMatchingRefreshToken(memberId, refreshToken);
 			member = loginService.findById(memberId);
-			//TODO : 꺼낸 refresh 토큰과 요청 시 받은 refresh 토큰을 비교하여 일치하는지 검사
-			jwtTokenProvider.validateRefreshToken(memberId, refreshToken);
+
 			return ResponseEntity.ok().header(ACCESS_TOKEN, jwtTokenProvider.makeJwtAccessToken(member)).build();
 
 		} catch (JwtException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-
 		return null;
 	}
 }

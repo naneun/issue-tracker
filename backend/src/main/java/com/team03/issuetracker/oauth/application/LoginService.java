@@ -16,7 +16,7 @@ public class LoginService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public Member login(OAuthUser oAuthUser) {
+	public Member save(OAuthUser oAuthUser) {
 		String serialNumber = oAuthUser.getSerialNumber();
 		ResourceServer resourceServer = oAuthUser.getResourceServer();
 

@@ -80,6 +80,7 @@ class LabelWriteFragment : Fragment() {
         binding.etLabelWriteTitle.doAfterTextChanged {inputTitle->
             val title = inputTitle.toString()
             titleFlag = title.isNotEmpty()
+            binding.btnLabelPreview.text = inputTitle
             setSaveTitleColor()
         }
     }

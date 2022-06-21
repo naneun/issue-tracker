@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,28 +14,36 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.PopupWindow
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueWriteBinding
+import com.example.issue_tracker.ui.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.MarkwonPlugin
 import io.noties.markwon.image.ImagesPlugin
 import io.noties.markwon.image.file.FileSchemeHandler
+import kotlinx.coroutines.launch
 
 
 class IssueWriteFragment : Fragment() {
     private var markDownFlag = false
+    private val sharedViewModel: HomeViewModel by activityViewModels()
     private lateinit var popupWindow: PopupWindow
     private var beforeChangedText = Constants.EMPTY_INPUT
     private var copyText = Constants.EMPTY_INPUT
@@ -42,6 +51,7 @@ class IssueWriteFragment : Fragment() {
     private lateinit var copyButton: Button
     private lateinit var insertPhotoButton: Button
     private lateinit var pasteButton: Button
+    private lateinit var navigator: NavController
     private lateinit var binding: FragmentIssueWriteBinding
     private lateinit var markOne: Markwon
     override fun onCreateView(
@@ -54,6 +64,7 @@ class IssueWriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navigator = Navigation.findNavController(view)
         markOne = Markwon.builder(requireContext())
             .usePlugin(ImagesPlugin.create())
             .usePlugin(object : AbstractMarkwonPlugin() {
@@ -67,7 +78,70 @@ class IssueWriteFragment : Fragment() {
             }).build()
         displayMarkDownPreview()
         setLongClickPopupWindow(view)
+        setUpBackButton()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { loadLabelList() }
+                launch { loadMileStoneList()}
+                launch { loadUserList() }
+            }
+        }
+    }
 
+    private suspend fun loadUserList() {
+        val userList = mutableListOf("선택")
+        sharedViewModel.userList.collect {
+            it.forEach { user ->
+                userList.add(user.name)
+            }
+            setSpinner(userList, "User")
+        }
+    }
+
+    private suspend fun loadLabelList() {
+        val labelList = mutableListOf("선택")
+        sharedViewModel.labelList.collect {
+            it.forEach { label ->
+                labelList.add(label.title)
+            }
+            setSpinner(labelList, "label")
+        }
+    }
+
+    private suspend fun loadMileStoneList() {
+        val mileStoneList = mutableListOf("선택")
+        sharedViewModel.mileStoneList.collect {
+            it.forEach { mileStone ->
+                mileStoneList.add(mileStone.title)
+            }
+            setSpinner(mileStoneList, "mileStone")
+        }
+    }
+
+    private fun setSpinner(list: List<String>, type: String) {
+        val spinner = when (type) {
+            "label" -> binding.spinnerIssueWriteLabel
+            "mileStone" -> binding.spinnerIssueWriteMilestone
+            else -> binding.spinnerIssueWriteAssignee
+        }
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_menu, list)
+        spinner.adapter = adapter
+        spinner.setSelection(0)
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when (position) {
+                    0 -> (view as TextView).setTextColor(Color.GRAY)
+                    else -> (view as TextView).setTextColor(Color.BLACK)
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setUpBackButton() {
+        binding.iBtnIssueWriteBack.setOnClickListener {
+            navigator.navigateUp()
+        }
     }
 
     private fun setLongClickPopupWindow(view: View) {
@@ -98,11 +172,7 @@ class IssueWriteFragment : Fragment() {
     }
 
     private fun displayPopup(view: View) {
-        popupWindow = PopupWindow(
-            view,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        popupWindow = PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.issue_popup_window, null)
         findMenuButton(popupView)
@@ -170,21 +240,13 @@ class IssueWriteFragment : Fragment() {
             permissions.entries.forEach { permission ->
                 when {
                     permission.value -> {
-                        Snackbar.make(
-                            binding.root,
-                            Constants.PERMISSION_GRANTED_MESSAGE,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                        Snackbar.make(binding.root, Constants.PERMISSION_GRANTED_MESSAGE, Snackbar.LENGTH_SHORT).show()
                     }
                     shouldShowRequestPermissionRationale(permission.key) -> {
                         showContextPopupPermission()
                     }
                     else -> {
-                        Snackbar.make(
-                            binding.root,
-                            Constants.PERMISSION_DENIED_MESSAGE,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                        Snackbar.make(binding.root, Constants.PERMISSION_DENIED_MESSAGE, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -205,10 +267,7 @@ class IssueWriteFragment : Fragment() {
     }
 
     private fun isAllPermissionsGranted(): Boolean = REQUIRED_PERMISSIONS.all { permission ->
-        ContextCompat.checkSelfPermission(
-            this.requireContext(),
-            permission
-        ) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(this.requireContext(), permission) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun getPhotoFromGallery() {

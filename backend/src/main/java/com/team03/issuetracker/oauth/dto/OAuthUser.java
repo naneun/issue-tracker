@@ -11,26 +11,26 @@ import lombok.ToString;
 @AllArgsConstructor
 public class OAuthUser {
 
-    private String serialNumber;
+	private String serialNumber;
 
-    private ResourceServer resourceServer;
+	private ResourceServer resourceServer;
 
-    private String name;
+	private String name;
 
-    private String email;
+	private String email;
 
-    private String profileImage;
+	private String profileImage;
 
-    private OAuthAccessToken oAuthAccessToken;
+	private OAuthAccessToken oAuthAccessToken;
 
-    public Member toEntity() {
-        return Member.builder()
-                .serialNumber(serialNumber)
-                .name(name)
-                .email(email)
-                .profileImage(profileImage)
-                .oAuthAccessToken(oAuthAccessToken.getAccessToken())
-                .resourceServer(ResourceServer.GITHUB)
-                .build();
-    }
+	public Member toEntity() {
+		return Member.builder()
+			.serialNumber(serialNumber)
+			.name(name)
+			.email(email)
+			.profileImage(profileImage)
+			.oAuthAccessToken(oAuthAccessToken.getAccessToken())
+			.resourceServer(resourceServer)
+			.build();
+	}
 }

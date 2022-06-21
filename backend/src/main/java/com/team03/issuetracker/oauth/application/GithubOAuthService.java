@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service("github")
-public class GithubOauthService implements OAuthService {
+public class GithubOAuthService implements OAuthService {
 
 	private final String clientId;
 	private final String clientSecret;
@@ -23,7 +23,7 @@ public class GithubOauthService implements OAuthService {
 	private final LoginService loginService;
 
 	@Autowired
-	public GithubOauthService(OAuthProperties properties, LoginService loginService) {
+	public GithubOAuthService(OAuthProperties properties, LoginService loginService) {
 		this.clientId = properties.getGithubClientId();
 		this.clientSecret = properties.getGithubClientSecret();
 		this.accessTokenUri = properties.getGithubAccessTokenUri();

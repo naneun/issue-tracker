@@ -15,13 +15,13 @@ public class LoginService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public LoginMemberResponse login(Member oauthMember) {
-		String serialNumber = oauthMember.getSerialNumber();
-		ResourceServer resourceServer = oauthMember.getResourceServer();
+	public LoginMemberResponse login(Member oAuthMember) {
+		String serialNumber = oAuthMember.getSerialNumber();
+		ResourceServer resourceServer = oAuthMember.getResourceServer();
 
 		Member loginMember = memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
-			.map(member -> member.updateLoginInfo(oauthMember))
-			.orElseGet(() -> memberRepository.save(oauthMember));
+			.map(member -> member.updateLoginInfo(oAuthMember))
+			.orElseGet(() -> memberRepository.save(oAuthMember));
 
 		return new LoginMemberResponse(loginMember);
 	}

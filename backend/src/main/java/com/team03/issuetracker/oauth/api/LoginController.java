@@ -22,15 +22,15 @@ public class LoginController {
 	private final LoginService loginService;
 	private final JwtTokenProvider jwtProvider;
 
-	private final Map<String, OAuthService> oauthServicePicker;
+	private final Map<String, OAuthService> oAuthServicePicker;
 
 	@GetMapping("/{resource-server}/login")
 	public ResponseEntity<LoginMemberResponse> login(@PathVariable(name = "resource-server") String resourceServer,
 		String code) {
 
-		OAuthService oauthService = oauthServicePicker.get(resourceServer);
-		OAuthAccessToken accessToken = oauthService.obtainAccessToken(code);
-		LoginMemberResponse memberDto = oauthService.obtainUserInfo(accessToken);
+		OAuthService oAuthService = oAuthServicePicker.get(resourceServer);
+		OAuthAccessToken accessToken = oAuthService.obtainAccessToken(code);
+		LoginMemberResponse memberDto = oAuthService.obtainUserInfo(accessToken);
 
 		return ResponseEntity.ok()
 			.header(ACCESS_TOKEN, jwtProvider.makeJwtToken(memberDto))

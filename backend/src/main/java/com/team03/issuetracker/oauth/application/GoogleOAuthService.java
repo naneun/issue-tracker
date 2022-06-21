@@ -15,7 +15,7 @@ import static com.team03.issuetracker.oauth.utils.OAuthUtils.AUTHORIZATION_CODE;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service("google")
-public class GoogleOauthService implements OAuthService {
+public class GoogleOAuthService implements OAuthService {
 
 	private final String clientId;
 	private final String clientSecret;
@@ -25,7 +25,7 @@ public class GoogleOauthService implements OAuthService {
 	private final LoginService loginService;
 
 	@Autowired
-	public GoogleOauthService(OAuthProperties properties, LoginService loginService) {
+	public GoogleOAuthService(OAuthProperties properties, LoginService loginService) {
 		this.clientId = properties.getGoogleClientId();
 		this.clientSecret = properties.getGoogleClientSecret();
 		this.accessTokenUri = properties.getGoogleAccessTokenUri();

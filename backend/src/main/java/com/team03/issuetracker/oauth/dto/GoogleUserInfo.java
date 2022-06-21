@@ -26,7 +26,7 @@ public class GoogleUserInfo {
 			.name(name)
 			.email(email)
 			.profileImage(profileImage)
-			.oauthAccessToken(accessToken.getAccessToken())
+			.oAuthAccessToken(accessToken.getAccessToken())
 			.resourceServer(ResourceServer.GOOGLE)
 			.build();
 	}

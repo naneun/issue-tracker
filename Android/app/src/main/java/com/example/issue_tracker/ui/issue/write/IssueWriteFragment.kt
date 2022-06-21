@@ -22,15 +22,14 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
-import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueWriteBinding
+import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 import io.noties.markwon.AbstractMarkwonPlugin
@@ -45,8 +44,8 @@ class IssueWriteFragment : Fragment() {
     private var markDownFlag = false
     private val sharedViewModel: HomeViewModel by activityViewModels()
     private lateinit var popupWindow: PopupWindow
-    private var beforeChangedText = Constants.EMPTY_INPUT
-    private var copyText = Constants.EMPTY_INPUT
+    private var beforeChangedText = ""
+    private var copyText = ""
     private lateinit var cutButton: Button
     private lateinit var copyButton: Button
     private lateinit var insertPhotoButton: Button
@@ -82,58 +81,64 @@ class IssueWriteFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { loadLabelList() }
-                launch { loadMileStoneList()}
+                launch { loadMileStoneList() }
                 launch { loadUserList() }
             }
         }
     }
 
     private suspend fun loadUserList() {
-        val userList = mutableListOf("선택")
+        val userList = mutableListOf(getString(R.string.spinner_default))
         sharedViewModel.userList.collect {
             it.forEach { user ->
                 userList.add(user.name)
             }
-            setSpinner(userList, "User")
+            setSpinner(userList, SpinnerType.WRITER)
         }
     }
 
     private suspend fun loadLabelList() {
-        val labelList = mutableListOf("선택")
+        val labelList = mutableListOf(getString(R.string.spinner_default))
         sharedViewModel.labelList.collect {
             it.forEach { label ->
                 labelList.add(label.title)
             }
-            setSpinner(labelList, "label")
+            setSpinner(labelList, SpinnerType.LABEL)
         }
     }
 
     private suspend fun loadMileStoneList() {
-        val mileStoneList = mutableListOf("선택")
+        val mileStoneList = mutableListOf(getString(R.string.spinner_default))
         sharedViewModel.mileStoneList.collect {
             it.forEach { mileStone ->
                 mileStoneList.add(mileStone.title)
             }
-            setSpinner(mileStoneList, "mileStone")
+            setSpinner(mileStoneList, SpinnerType.MILESTONE)
         }
     }
 
-    private fun setSpinner(list: List<String>, type: String) {
+    private fun setSpinner(list: List<String>, type: SpinnerType) {
         val spinner = when (type) {
-            "label" -> binding.spinnerIssueWriteLabel
-            "mileStone" -> binding.spinnerIssueWriteMilestone
+            SpinnerType.LABEL -> binding.spinnerIssueWriteLabel
+            SpinnerType.MILESTONE -> binding.spinnerIssueWriteMilestone
             else -> binding.spinnerIssueWriteAssignee
         }
         val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_menu, list)
         spinner.adapter = adapter
         spinner.setSelection(0)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 when (position) {
                     0 -> (view as TextView).setTextColor(Color.GRAY)
                     else -> (view as TextView).setTextColor(Color.BLACK)
                 }
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
@@ -154,7 +159,7 @@ class IssueWriteFragment : Fragment() {
     private fun addCutAction() {
         cutButton.setOnClickListener {
             copyText = binding.etIssueWriteContent.text.toString()
-            binding.etIssueWriteContent.setText(Constants.EMPTY_INPUT)
+            binding.etIssueWriteContent.setText(getString(R.string.empty_inout))
         }
 
     }
@@ -172,8 +177,13 @@ class IssueWriteFragment : Fragment() {
     }
 
     private fun displayPopup(view: View) {
-        popupWindow = PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        popupWindow = PopupWindow(
+            view,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        val inflater =
+            requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.issue_popup_window, null)
         findMenuButton(popupView)
         addMenuEventListener()
@@ -240,34 +250,45 @@ class IssueWriteFragment : Fragment() {
             permissions.entries.forEach { permission ->
                 when {
                     permission.value -> {
-                        Snackbar.make(binding.root, Constants.PERMISSION_GRANTED_MESSAGE, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            binding.root,
+                            getString(R.string.message_permission_granted),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
                     shouldShowRequestPermissionRationale(permission.key) -> {
                         showContextPopupPermission()
                     }
                     else -> {
-                        Snackbar.make(binding.root, Constants.PERMISSION_DENIED_MESSAGE, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            binding.root,
+                            getString(R.string.message_permission_denied),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
         }
 
     private fun showContextPopupPermission() {
-        AlertDialog.Builder(requireContext()).setTitle(Constants.PERMISSION_NEED_MESSAGE)
-            .setMessage(Constants.PERMISSION_NEED_REASON_MESSAGE)
-            .setPositiveButton(Constants.MOVE_TO_SETTING_MESSAGE) { _, _ ->
+        AlertDialog.Builder(requireContext()).setTitle(getString(R.string.message_permission_need))
+            .setMessage(getString(R.string.message_permission_need_reason))
+            .setPositiveButton(getString(R.string.message_move_to_setting)) { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     .setData(Uri.parse("package:${requireContext().packageName}"))
                 startActivity(intent)
             }
-            .setNegativeButton(Constants.CANCEL_MESSAGE) { _, _ -> }
+            .setNegativeButton(getString(R.string.message_cancel)) { _, _ -> }
             .create()
             .show()
 
     }
 
     private fun isAllPermissionsGranted(): Boolean = REQUIRED_PERMISSIONS.all { permission ->
-        ContextCompat.checkSelfPermission(this.requireContext(), permission) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(
+            this.requireContext(),
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun getPhotoFromGallery() {

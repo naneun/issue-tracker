@@ -51,5 +51,14 @@
     <string name="my_account_write_issue_count_value">%d개</string>
     <string name="my_account_assign_issue_count_value">%d개</string>
     <string name="my_account_write_comment_count_value">%d개</string>
-
+    <string name="spinner_default">선택</string>
+    <string name="message_cancel">취소하기</string>
+    <string name="message_move_to_setting">설정으로 이동하기</string>
+    <string name="message_permission_need">권한이 필요합니다</string>
+    <string name="message_permission_need_reason">사진을 불러오기 위해서는 권한이 필요합니다</string>
+    <string name="message_permission_denied">Permission Denied</string>
+    <string name="message_permission_granted">Permission Granted</string>
+    <string name="message_invalid_input_error">잘못된 입력 양식</string>
+    <string name="message_need_input_message">필수입력값입니다</string>
+    <string name="empty_inout">""</string>
 </resources>

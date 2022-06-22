@@ -1,8 +1,16 @@
 package com.team03.issuetracker.issue.domain;
 
-import lombok.*;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -31,10 +39,10 @@ public class Emoji {
 
     public static Emoji of(Long id, String unicode, String description) {
         return Emoji.builder()
-                .id(id)
-                .unicode(unicode)
-                .description(description)
-                .build();
+            .id(id)
+            .unicode(unicode)
+            .description(description)
+            .build();
     }
 
     /********************************************************************/

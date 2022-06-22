@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: local
+  config:
+    import: classpath:auth.yml
 
   mvc:
     pathmatch:
@@ -25,3 +27,4 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug
+  org.hibernate.type.descriptor.sql: trace

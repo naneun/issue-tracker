@@ -1,19 +1,34 @@
 package com.team03.issuetracker.issue.domain;
 
+import static com.team03.issuetracker.issue.domain.IssueState.OPEN;
+import static com.team03.issuetracker.issue.domain.IssueState.nextState;
+
 import com.team03.issuetracker.common.domain.BaseTimeEntity;
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.milestone.domain.Milestone;
-import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.team03.issuetracker.issue.domain.IssueState.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 @Entity
 @Getter
@@ -66,7 +81,8 @@ public class Issue extends BaseTimeEntity {
     /********************************************************************/
 
     @Builder
-    private Issue(Long id, String title, String content, Label label, Milestone milestone, Member assignee, List<Comment> comments) {
+    private Issue(Long id, String title, String content, Label label, Milestone milestone,
+        Member assignee, List<Comment> comments) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -77,16 +93,17 @@ public class Issue extends BaseTimeEntity {
         this.comments.addAll(comments);
     }
 
-    public static Issue of(Long id, String title, String content, Label label, Milestone milestone, Member assignee, List<Comment> comments) {
+    public static Issue of(Long id, String title, String content, Label label, Milestone milestone,
+        Member assignee, List<Comment> comments) {
         return Issue.builder()
-                .id(id)
-                .title(title)
-                .content(content)
-                .label(label)
-                .milestone(milestone)
-                .assignee(assignee)
-                .comments(comments)
-                .build();
+            .id(id)
+            .title(title)
+            .content(content)
+            .label(label)
+            .milestone(milestone)
+            .assignee(assignee)
+            .comments(comments)
+            .build();
     }
 
     /********************************************************************/
@@ -100,7 +117,7 @@ public class Issue extends BaseTimeEntity {
     }
 
     public void changeState() {
-        this.state = IssueState.values()[this.state.ordinal() + 1 % values().length];
+        this.state = nextState(this.state);
     }
 
     public void changeLabel(Label label) {

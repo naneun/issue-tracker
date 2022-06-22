@@ -1,8 +1,12 @@
 package com.team03.issuetracker.issue.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+
 import com.team03.issuetracker.common.config.DataJpaConfig;
 import com.team03.issuetracker.issue.domain.Emoji;
 import com.team03.issuetracker.issue.exception.EmojiException;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -11,11 +15,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.*;
-
 @Import(DataJpaConfig.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -23,17 +22,16 @@ class EmojiRepositoryTest {
 
     final EmojiRepository emojiRepository;
 
-    final List<Emoji> registeredEmojis;
+    static List<Emoji> registeredEmojis = List.of(
+        Emoji.of(1L, "❤", "좋아요"),
+        Emoji.of(2L, "👍", "최고에요"),
+        Emoji.of(3L, "👎", "싫어요"),
+        Emoji.of(4L, "✅", "확인했어요")
+    );
 
     @Autowired
     EmojiRepositoryTest(EmojiRepository emojiRepository) {
         this.emojiRepository = emojiRepository;
-        this.registeredEmojis = List.of(
-                Emoji.of(1L, "❤", "좋아요"),
-                Emoji.of(2L, "👍", "최고에요"),
-                Emoji.of(3L, "👎", "싫어요"),
-                Emoji.of(4L, "✅", "확인했어요")
-        );
     }
 
     /**
@@ -49,8 +47,8 @@ class EmojiRepositoryTest {
 
         // then
         emojis.forEach((emoji) -> assertThat(emoji)
-                .usingRecursiveComparison()
-                .isEqualTo(registeredEmojis.get(emojis.indexOf(emoji))));
+            .usingRecursiveComparison()
+            .isEqualTo(registeredEmojis.get(emojis.indexOf(emoji))));
     }
 
     /**
@@ -64,11 +62,11 @@ class EmojiRepositoryTest {
 
         // when
         Emoji foundEmoji = emojiRepository.findById(id)
-                .orElseThrow(EmojiException::new);
+            .orElseThrow(EmojiException::new);
 
         // then
         assertThat(foundEmoji).usingRecursiveComparison()
-                .isEqualTo(registeredEmojis.get(id.intValue() - 1));
+            .isEqualTo(registeredEmojis.get(id.intValue() - 1));
     }
 
     // TODO 특정 이모지를 삭제하면 해당 이모지가 등록된 댓글에서도 표기되지 않도록 한다.

@@ -1,14 +1,24 @@
 package com.team03.issuetracker.issue.repository;
 
+import static com.team03.issuetracker.issue.domain.IssueState.CLOSE;
+import static com.team03.issuetracker.issue.domain.IssueState.OPEN;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+
 import com.team03.issuetracker.common.config.DataJpaConfig;
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.issue.domain.Comment;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
 import com.team03.issuetracker.issue.domain.Label;
-import com.team03.issuetracker.issue.domain.dto.IssueSearchCondition;
+import com.team03.issuetracker.issue.domain.dto.issue.IssueSearchCondition;
 import com.team03.issuetracker.issue.exception.IssueException;
 import com.team03.issuetracker.milestone.domain.Milestone;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -16,16 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.team03.issuetracker.issue.domain.IssueState.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.*;
 
 @Import(DataJpaConfig.class)
 @DataJpaTest
@@ -45,19 +45,19 @@ class IssueRepositoryTest {
         this.issueRepository = issueRepository;
 
         registeredOpenedIssues = List.of(
-                Issue.of(1L, "제목", "이슈에 대한 설명(최대 두 줄까지 보여줄 수 있다)",
-                        getLabel(1L), getMilestone(1L), getAssignee(1L), getComments(1L)
+            Issue.of(1L, "제목", "이슈에 대한 설명(최대 두 줄까지 보여줄 수 있다)",
+                getLabel(1L), getMilestone(1L), getAssignee(1L), getComments(1L)
 
-                ),
-                Issue.of(2L, "안드로이드 이슈트래커", "2022년 6월 13일 월요일 부터 7월 1일 금요일 까지",
-                        getLabel(2L), getMilestone(2L), getAssignee(2L), getComments(2L)
-                )
+            ),
+            Issue.of(2L, "안드로이드 이슈트래커", "2022년 6월 13일 월요일 부터 7월 1일 금요일 까지",
+                getLabel(2L), getMilestone(2L), getAssignee(2L), getComments(2L)
+            )
         );
 
         registeredClosedIssues = List.of(
-                Issue.of(3L, "닫힌 이슈", "이미 닫힌 이슈입니다.",
-                        getLabel(1L), getMilestone(2L), getAssignee(1L), getComments(3L)
-                )
+            Issue.of(3L, "닫힌 이슈", "이미 닫힌 이슈입니다.",
+                getLabel(1L), getMilestone(2L), getAssignee(1L), getComments(3L)
+            )
         );
 
         registeredIssues = new ArrayList<>(registeredOpenedIssues);
@@ -79,15 +79,15 @@ class IssueRepositoryTest {
     }
 
     private List<Comment> getComments(Long id) {
-        return entityManager.createQuery("select c from Comment c where c.issue.id = :id", Comment.class)
-                .setParameter("id", id)
-                .getResultList();
+        return entityManager.createQuery("select c from Comment c where c.issue.id = :id",
+                Comment.class)
+            .setParameter("id", id)
+            .getResultList();
     }
 
     /**
-     * @implNote - 사용자에게 '오픈'되어있는 이슈를 보여준다.
-     * - IssueSimpleResponse { Milestone, title, description, Label }
-     * - 'comments' 는 이슈 목록 조회 시 필요하지 않다. - 22/06/16
+     * @implNote - 사용자에게 '오픈'되어있는 이슈를 보여준다. - IssueSimpleResponse { Milestone, title, description,
+     * Label } - 'comments' 는 이슈 목록 조회 시 필요하지 않다. - 22/06/16
      */
     @Test
     void 오픈된_모든_이슈를_조회한다() {
@@ -101,16 +101,16 @@ class IssueRepositoryTest {
         foundOpenedIssues.forEach(issue -> {
             Issue comparisonTarget = registeredOpenedIssues.get(foundOpenedIssues.indexOf(issue));
             assertThat(issue).usingRecursiveComparison()
-                    .comparingOnlyFields()
-                    .ignoringFields("comments")
-                    .ignoringFields("milestone.issues")
-                    .isEqualTo(comparisonTarget);
+                .comparingOnlyFields()
+                .ignoringFields("comments")
+                .ignoringFields("milestone.issues")
+                .isEqualTo(comparisonTarget);
         });
     }
 
     /**
-     * @implNote - 클라이언트가 닫기 버튼을 클릭하면 이슈가 닫히고, 실행 취소를 하면 이슈가 다시 열린다.
-     * - '해당하는 ID를 가진 이슈를 닫는다' -> '해당하는 ID를 가진 이슈의 상태를 변경한다' 로 수정한다. - 2022/06/15
+     * @implNote - 클라이언트가 닫기 버튼을 클릭하면 이슈가 닫히고, 실행 취소를 하면 이슈가 다시 열린다. - '해당하는 ID를 가진 이슈를 닫는다' ->
+     * '해당하는 ID를 가진 이슈의 상태를 변경한다' 로 수정한다. - 2022/06/15
      */
     @Test
     void 해당하는_ID를_가진_이슈의_상태를_변경한다() {
@@ -118,22 +118,22 @@ class IssueRepositoryTest {
         // given
         Long id = 1L;
         Issue foundIssue = issueRepository.findById(id)
-                .orElseThrow(IssueException::new);
+            .orElseThrow(IssueException::new);
+
+        foundIssue.changeState();
 
         // when
-        foundIssue.changeState();
         Issue changedIssue = issueRepository.save(foundIssue);
 
         // then
         assertAll(
-                () -> assertThat(changedIssue.getState()).isEqualTo(CLOSE),
-                () -> assertThat(changedIssue).usingRecursiveComparison().isEqualTo(foundIssue)
+            () -> assertThat(changedIssue.getState()).isEqualTo(CLOSE),
+            () -> assertThat(changedIssue).usingRecursiveComparison().isEqualTo(foundIssue)
         );
     }
 
     /**
-     * @implNote - 해당하는 ID를 가진 이슈의 상세정보를 조회한다.
-     * - IssueDetailResponse { 레이블, 마일스톤, 담당자, (상태) }
+     * @implNote - 해당하는 ID를 가진 이슈의 상세정보를 조회한다. - IssueDetailResponse { 레이블, 마일스톤, 담당자, (상태) }
      */
     @ParameterizedTest
     @ValueSource(longs = {1, 2, 3})
@@ -143,13 +143,13 @@ class IssueRepositoryTest {
 
         // when
         Issue foundIssue = issueRepository.findById(id)
-                .orElseThrow(IssueException::new);
+            .orElseThrow(IssueException::new);
 
         // then
         assertThat(foundIssue).usingRecursiveComparison()
-                .ignoringFields("comments")
-                .ignoringFields("milestone.issues")
-                .isEqualTo(registeredIssues.get(id.intValue() - 1));
+            .ignoringFields("comments")
+            .ignoringFields("milestone.issues")
+            .isEqualTo(registeredIssues.get(id.intValue() - 1));
     }
 
     /**
@@ -164,19 +164,20 @@ class IssueRepositoryTest {
         Long labelId = 1L;
         Long milestoneId = 1L;
 
-        IssueSearchCondition issueSearchCondition = IssueSearchCondition.of(state, creatorId, labelId, milestoneId);
+        IssueSearchCondition issueSearchCondition = IssueSearchCondition.of(state, creatorId,
+            labelId, milestoneId);
 
         // when
         List<Issue> foundIssues = issueRepository.findBySearchCondition(issueSearchCondition);
 
         // then
         foundIssues.forEach(issue ->
-                assertAll(
-                        () -> assertThat(issue.getState()).isEqualTo(state),
-                        () -> assertThat(issue.getCreator().getId()).isEqualTo(creatorId),
-                        () -> assertThat(issue.getLabel().getId()).isEqualTo(labelId),
-                        () -> assertThat(issue.getMilestone().getId()).isEqualTo(milestoneId)
-                )
+            assertAll(
+                () -> assertThat(issue.getState()).isEqualTo(state),
+                () -> assertThat(issue.getCreator().getId()).isEqualTo(creatorId),
+                () -> assertThat(issue.getLabel().getId()).isEqualTo(labelId),
+                () -> assertThat(issue.getMilestone().getId()).isEqualTo(milestoneId)
+            )
         );
     }
 
@@ -216,16 +217,16 @@ class IssueRepositoryTest {
         // given
         List<Issue> foundIssues = issueRepository.findAll();
         List<Long> issueIds = foundIssues.stream()
-                .map(Issue::getId)
-                .collect(Collectors.toList());
+            .map(Issue::getId)
+            .collect(Collectors.toList());
 
         // when
         issueRepository.deleteAllById(issueIds);
 
         // then
         assertAll(
-                () -> assertThat(foundIssues).isNotEmpty(),
-                () -> assertThat(issueRepository.findAll()).isEmpty()
+            () -> assertThat(foundIssues).isNotEmpty(),
+            () -> assertThat(issueRepository.findAll()).isEmpty()
         );
     }
 
@@ -247,13 +248,14 @@ class IssueRepositoryTest {
 
         // when
         issueRepository.save(newIssue);
-        Issue foundIssue = issueRepository.findById(newIssue.getId())
-                .orElseThrow(IssueException::new);
 
         // then
+        Issue foundIssue = issueRepository.findById(newIssue.getId())
+            .orElseThrow(IssueException::new);
+
         assertThat(foundIssue).usingRecursiveComparison()
-                .ignoringFields("creator") // TODO 'creator' (@CreatedBy) 등록 검증
-                .isEqualTo(newIssue);
+            .ignoringFields("creator") // TODO 'creator' (@CreatedBy) 등록 검증
+            .isEqualTo(newIssue);
     }
 
     @Test
@@ -262,7 +264,7 @@ class IssueRepositoryTest {
         // given
         Long id = 1L;
         Issue foundIssue = issueRepository.findById(id)
-                .orElseThrow(IssueException::new);
+            .orElseThrow(IssueException::new);
 
         String otherTitle = "otherTitle";
         String otherContent = "otherContent";
@@ -270,19 +272,20 @@ class IssueRepositoryTest {
         Milestone otherMilestone = entityManager.find(Milestone.class, 2L);
         Member otherAssignee = entityManager.find(Member.class, 2L);
 
-        // when
         foundIssue.changeTitle(otherTitle);
         foundIssue.changeContent(otherContent);
         foundIssue.changeLabel(otherLabel);
         foundIssue.changeMilestone(otherMilestone);
         foundIssue.changeAssignee(otherAssignee);
 
+        // when
         Issue changedIssue = issueRepository.findById(foundIssue.getId())
-                .orElseThrow(IssueException::new);
+            .orElseThrow(IssueException::new);
 
         // then
         assertThat(changedIssue).usingRecursiveComparison()
-                .ignoringFields("modifier", "modifiedDate") // TODO '수정자', '수정시간' (@LastModifiedBy, @LastModifiedDate) 검증
-                .isEqualTo(foundIssue);
+            .ignoringFields("modifier",
+                "modifiedDate") // TODO '수정자', '수정시간' (@LastModifiedBy, @LastModifiedDate) 검증
+            .isEqualTo(foundIssue);
     }
 }

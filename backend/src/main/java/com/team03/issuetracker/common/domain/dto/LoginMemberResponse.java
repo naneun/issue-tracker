@@ -19,9 +19,13 @@ public class LoginMemberResponse {
 
     private final String profileImage;
 
-    public static LoginMemberResponse from(Member member) {
+    private final String jwtAccessToken;
+
+    private final String jwtRefreshToken;
+
+    public static LoginMemberResponse of(Member member, String jwtAccessToken, String jwtRefreshToken) {
 
         return new LoginMemberResponse(member.getId(), member.getName(), member.getSerialNumber(),
-                member.getResourceServer(), member.getProfileImage());
+                member.getResourceServer(), member.getProfileImage(), jwtAccessToken, jwtRefreshToken);
     }
 }

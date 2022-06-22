@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.team03.issuetracker.oauth.utils.AuthUtils.ACCESS_TOKEN;
-import static com.team03.issuetracker.oauth.utils.AuthUtils.REFRESH_TOKEN;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/login")
@@ -53,27 +50,25 @@ public class LoginController {
 
         refreshTokenService.saveJwtRefreshToken(member.getId(), jwtRefreshToken);
 
-        return ResponseEntity.ok()
-                .header(ACCESS_TOKEN, jwtAccessToken)
-                .header(REFRESH_TOKEN, jwtRefreshToken)
-                .body(LoginMemberResponse.from(member));
+        return ResponseEntity.ok().body(LoginMemberResponse.of(member, jwtAccessToken, jwtRefreshToken));
     }
 
     @GetMapping("/update/jwt-access-token")
-    public ResponseEntity<Void> renewJwtAccessToken(@AccessTokenHeader String accessToken,
-                                                    @RefreshTokenHeader String refreshToken) {
+    public ResponseEntity<LoginMemberResponse> renewJwtAccessToken(@AccessTokenHeader String accessToken,
+                                                                   @RefreshTokenHeader String refreshToken) {
 
         String jwtAccessToken = null;
+        Member member = null;
 
         try {
             jwtTokenProvider.verifyToken(accessToken);
         } catch (ExpiredJwtException e) {
             Long memberId = Long.parseLong(e.getClaims().getAudience());
             refreshTokenService.verifyMatchingRefreshToken(memberId, refreshToken);
-            Member member = loginService.findById(memberId);
+            member = loginService.findById(memberId);
             jwtAccessToken = jwtTokenProvider.makeJwtAccessToken(member);
         }
 
-        return ResponseEntity.ok().header(ACCESS_TOKEN, jwtAccessToken).build();
+        return ResponseEntity.ok().body(LoginMemberResponse.of(member, jwtAccessToken, null));
     }
 }

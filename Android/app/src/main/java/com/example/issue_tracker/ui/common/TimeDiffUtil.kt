@@ -12,7 +12,7 @@ const val SECONDS_OF_HOUR = 60 * 60
 const val SECONDS_OF_DAY = 60 * 60 * 24
 
 fun getTimeDiff(dateTimeInfo: String): String {
-    val date = dateTimeInfo.replace("T"," ")
+    val date = dateTimeInfo.replace("T", " ")
     val nowDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
     val dataFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val actionDateTime = LocalDateTime.parse(date, dataFormatter)

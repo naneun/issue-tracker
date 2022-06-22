@@ -14,25 +14,25 @@ import com.example.issue_tracker.ui.common.getTimeDiff
 const val VIEW_TYPE_MY_COMMENT = 0
 const val VIEW_TYPE_OTHER_COMMENT = 1
 
-class IssueDetailAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class IssueDetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val comments = mutableListOf<Comment>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when(viewType){
-            VIEW_TYPE_MY_COMMENT-> MyCommentViewHolder(ItemCommentMyselfBinding.inflate(inflater,parent,false))
-            else-> OtherCommentViewHolder(ItemCommentOtherBinding.inflate(inflater,parent,false))
+        return when (viewType) {
+            VIEW_TYPE_MY_COMMENT -> MyCommentViewHolder(ItemCommentMyselfBinding.inflate(inflater, parent, false))
+            else -> OtherCommentViewHolder(ItemCommentOtherBinding.inflate(inflater, parent, false))
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder){
-            is MyCommentViewHolder ->{
-                val item=  comments[position] as MyComment
+        when (holder) {
+            is MyCommentViewHolder -> {
+                val item = comments[position] as MyComment
                 holder.bind(item)
             }
-            is OtherCommentViewHolder->{
-                val item= comments[position] as OtherComment
+            is OtherCommentViewHolder -> {
+                val item = comments[position] as OtherComment
                 holder.bind(item)
             }
 
@@ -43,13 +43,15 @@ class IssueDetailAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(comment: MyComment) {
-            binding.comment= comment
+            binding.comment = comment
             binding.logTime = getTimeDiff(comment.time)
         }
     }
-    inner class OtherCommentViewHolder(private val binding:ItemCommentOtherBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(comment: OtherComment){
-            binding.comment= comment
+
+    inner class OtherCommentViewHolder(private val binding: ItemCommentOtherBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(comment: OtherComment) {
+            binding.comment = comment
             binding.logTime = getTimeDiff(comment.time)
         }
     }
@@ -65,7 +67,7 @@ class IssueDetailAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return comments.size
     }
 
-    fun submitList(items:List<Comment>){
+    fun submitList(items: List<Comment>) {
         this.comments.addAll(items)
     }
 }

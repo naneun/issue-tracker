@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.issue_tracker.R
+import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
@@ -45,8 +46,8 @@ class IssueHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navigator = Navigation.findNavController(view)
-        adapter = IssueAdapter(){
-            id-> moveToDetail(id)
+        adapter = IssueAdapter{ id ->
+            moveToDetail(id)
         }
         binding.rvIssue.adapter = adapter
 
@@ -129,12 +130,7 @@ class IssueHomeFragment : Fragment() {
         spinner.adapter = adapter
         spinner.setSelection(0)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val text = view?.findViewById<TextView>(R.id.tv_filter_value)
                 text?.setTextColor(Color.WHITE)
                 view?.findViewById<View>(R.id.divider_filter_value)?.isVisible = false
@@ -143,7 +139,6 @@ class IssueHomeFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 view?.findViewById<View>(R.id.divider_filter_value)?.isVisible = true
             }
-
         }
     }
 
@@ -179,8 +174,8 @@ class IssueHomeFragment : Fragment() {
             ContextCompat.getColor(requireContext(), R.color.white)
     }
 
-    private fun moveToDetail(id:Int){
-        navigator.navigate(R.id.action_navigation_issue_to_issueDetailFragment, bundleOf("IssueID" to id))
+    private fun moveToDetail(id: Int) {
+        navigator.navigate(R.id.action_navigation_issue_to_issueDetailFragment, bundleOf(Constants.ISSUE_ID_KEY to id))
     }
 
     override fun onStop() {

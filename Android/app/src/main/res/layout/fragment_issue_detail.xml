@@ -66,7 +66,7 @@
             android:drawableStart="@drawable/ic_issue_blue"
             android:drawablePadding="6dp"
             android:paddingHorizontal="12dp"
-            android:text="열림"
+            android:text="@string/issue_detail_open_state_title"
             android:textColor="@color/blue2"
             app:layout_constraintStart_toStartOf="@id/tv_issue_detail_title"
             app:layout_constraintTop_toBottomOf="@id/tv_issue_detail_title" />
@@ -81,7 +81,7 @@
             android:drawableStart="@drawable/ic_close_blue"
             android:drawablePadding="6dp"
             android:paddingHorizontal="12dp"
-            android:text="닫힘"
+            android:text="@string/issue_detail_close_state_title"
             android:textColor="@color/blue1"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/tv_issue_detail_title"

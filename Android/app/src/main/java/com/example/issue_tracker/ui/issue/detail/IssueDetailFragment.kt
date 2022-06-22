@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.issue_tracker.R
+import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueDetailBinding
 
 class IssueDetailFragment : Fragment() {
@@ -20,27 +21,27 @@ class IssueDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_issue_detail, container, false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_issue_detail, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        issueID = requireArguments().getInt("IssueID")
+        issueID = requireArguments().getInt(Constants.ISSUE_ID_KEY)
         adapter = IssueDetailAdapter()
         binding.rvIssueDetail.adapter = adapter
         viewModel.loadDetail(issueID)
-        viewModel.issueDetail.observe(viewLifecycleOwner){
+        viewModel.issueDetail.observe(viewLifecycleOwner) {
             binding.tvIssueDetailTitle.text = it.title
             binding.writer = it.writer.name
             binding.time = it.time.toString()
-            if(it.state){
-                binding.btnIssueDetailOpenState.isVisible=true
-                binding.btnIssueDetailCloseState.isVisible=false
-            }
-            else{
-                binding.btnIssueDetailOpenState.isVisible=false
-                binding.btnIssueDetailCloseState.isVisible=true
+            if (it.state) {
+                binding.btnIssueDetailOpenState.isVisible = true
+                binding.btnIssueDetailCloseState.isVisible = false
+            } else {
+                binding.btnIssueDetailOpenState.isVisible = false
+                binding.btnIssueDetailCloseState.isVisible = true
             }
             adapter.submitList(it.comment)
         }

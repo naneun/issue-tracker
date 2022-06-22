@@ -61,7 +61,7 @@
     <string name="message_invalid_input_error">잘못된 입력 양식</string>
     <string name="message_need_input_message">필수입력값입니다</string>
     <string name="empty_inout">""</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="issue_write_label_option_title">레이블</string>
     <string name="issue_write_milestone_option_title">마일스톤</string>
@@ -77,4 +77,13 @@
     <string name="issue_detail_close_state_title">닫힘</string>
 
     <string name="issue_detail_issue_log">%s님이 %s에 작성하셨습니다</string>
+    <string name="search_title_value">검색</string>
+    <string name="search_bar_hint">검색어를 입력하세요</string>
+    <string name="filter_milestone_title">마일스톤</string>
+    <string name="filter_label_title">레이블</string>
+    <string name="filter_writer_title">작성자</string>
+    <string name="filter_state_title">상태</string>
+    <string name="filter_apply_title">적용</string>
+    <string name="filter_initalize_title">초기화</string>
+    <string name="filter_title_value">필터</string>
 </resources>

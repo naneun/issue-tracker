@@ -58,7 +58,9 @@ class IssueHomeFragment : Fragment() {
 
         setUpIssueWriteBtn()
         setSwitchToFilterMode()
-        setSwitchToListMode()
+        setSwitchToListModeFromFilterMode()
+        setSwitchSearchMode()
+        setSwitchToListModeFromSearchMode()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -68,6 +70,10 @@ class IssueHomeFragment : Fragment() {
                 launch { loadUserList() }
                 launch { loadIssueList() }
             }
+        }
+
+        binding.etlSearch.setEndIconOnClickListener {
+            //To do: Search 로직 (백엔드 API와 협의 필요)
         }
     }
 
@@ -142,6 +148,24 @@ class IssueHomeFragment : Fragment() {
         }
     }
 
+    private fun setSwitchSearchMode(){
+        binding.btnSearch.setOnClickListener {
+            binding.clSearch.isVisible = true
+            binding.tbIssues.isVisible = false
+            binding.btnPlusIssue.isVisible = false
+            changeStatusBarSkyBLue()
+        }
+    }
+
+    private fun setSwitchToListModeFromSearchMode(){
+        binding.btnSearchClose.setOnClickListener {
+            binding.clSearch.isVisible = false
+            binding.tbIssues.isVisible = true
+            binding.btnPlusIssue.isVisible = true
+            changeStatusBarWhite()
+        }
+    }
+
     private fun setSwitchToFilterMode() {
         binding.btnFilter.setOnClickListener {
             binding.clIssueList.isVisible = false
@@ -150,7 +174,7 @@ class IssueHomeFragment : Fragment() {
         }
     }
 
-    private fun setSwitchToListMode() {
+    private fun setSwitchToListModeFromFilterMode() {
         binding.btnFilterClose.setOnClickListener {
             binding.clIssueList.isVisible = true
             binding.clFilter.isVisible = false

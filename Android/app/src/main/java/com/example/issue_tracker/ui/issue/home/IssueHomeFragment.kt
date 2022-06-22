@@ -22,7 +22,6 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
-import com.example.issue_tracker.domain.model.Issue
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
 import kotlinx.coroutines.launch
@@ -55,7 +54,9 @@ class IssueHomeFragment : Fragment() {
 
         setUpIssueWriteBtn()
         setSwitchToFilterMode()
-        setSwitchToListMode()
+        setSwitchToListModeFromFilterMode()
+        setSwitchSearchMode()
+        setSwitchToListModeFromSearchMode()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -65,6 +66,10 @@ class IssueHomeFragment : Fragment() {
                 launch { loadUserList() }
                 launch { loadIssueList() }
             }
+        }
+
+        binding.etlSearch.setEndIconOnClickListener {
+            //To do: Search 로직 (백엔드 API와 협의 필요)
         }
     }
 
@@ -141,7 +146,24 @@ class IssueHomeFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 view?.findViewById<View>(R.id.divider_filter_value)?.isVisible = true
             }
+        }
+    }
 
+    private fun setSwitchSearchMode(){
+        binding.btnSearch.setOnClickListener {
+            binding.clSearch.isVisible = true
+            binding.tbIssues.isVisible = false
+            binding.btnPlusIssue.isVisible = false
+            changeStatusBarSkyBLue()
+        }
+    }
+
+    private fun setSwitchToListModeFromSearchMode(){
+        binding.btnSearchClose.setOnClickListener {
+            binding.clSearch.isVisible = false
+            binding.tbIssues.isVisible = true
+            binding.btnPlusIssue.isVisible = true
+            changeStatusBarWhite()
         }
     }
 
@@ -153,7 +175,7 @@ class IssueHomeFragment : Fragment() {
         }
     }
 
-    private fun setSwitchToListMode() {
+    private fun setSwitchToListModeFromFilterMode() {
         binding.btnFilterClose.setOnClickListener {
             binding.clIssueList.isVisible = true
             binding.clFilter.isVisible = false

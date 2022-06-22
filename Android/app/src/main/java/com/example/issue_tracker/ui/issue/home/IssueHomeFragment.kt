@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.issue_tracker.R
+import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
@@ -44,7 +46,9 @@ class IssueHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navigator = Navigation.findNavController(view)
-        adapter = IssueAdapter()
+        adapter = IssueAdapter{ id ->
+            moveToDetail(id)
+        }
         binding.rvIssue.adapter = adapter
 
         val swipeHelperCallback = ItemHelper(adapter).apply {
@@ -132,12 +136,7 @@ class IssueHomeFragment : Fragment() {
         spinner.adapter = adapter
         spinner.setSelection(0)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val text = view?.findViewById<TextView>(R.id.tv_filter_value)
                 text?.setTextColor(Color.WHITE)
                 view?.findViewById<View>(R.id.divider_filter_value)?.isVisible = false
@@ -197,6 +196,10 @@ class IssueHomeFragment : Fragment() {
     private fun changeStatusBarWhite() {
         requireActivity().window.statusBarColor =
             ContextCompat.getColor(requireContext(), R.color.white)
+    }
+
+    private fun moveToDetail(id: Int) {
+        navigator.navigate(R.id.action_navigation_issue_to_issueDetailFragment, bundleOf(Constants.ISSUE_ID_KEY to id))
     }
 
     override fun onStop() {

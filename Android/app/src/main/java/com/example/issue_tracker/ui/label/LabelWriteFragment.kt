@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
-import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentLabelWriteBinding
 import kotlin.random.Random
 
@@ -80,6 +79,7 @@ class LabelWriteFragment : Fragment() {
         binding.etLabelWriteTitle.doAfterTextChanged {inputTitle->
             val title = inputTitle.toString()
             titleFlag = title.isNotEmpty()
+            binding.btnLabelPreview.text = inputTitle
             setSaveTitleColor()
         }
     }
@@ -91,11 +91,11 @@ class LabelWriteFragment : Fragment() {
         }
         else if(!titleFlag&&colorFlag){
             binding.etLabelWriteColor.error = null
-            binding.etLabelWriteTitle.error = Constants.INPUT_ERROR_MESSAGE
+            binding.etLabelWriteTitle.error = getString(R.string.message_need_input_message)
             binding.tvLabelWriteSaveTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey1))
         }
         else  if(!colorFlag&&titleFlag){
-            binding.etLabelWriteColor.error = Constants.INPUT_ERROR_MESSAGE
+            binding.etLabelWriteColor.error = getString(R.string.message_need_input_message)
             binding.tvLabelWriteSaveTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey1))
         }
         else{
@@ -104,8 +104,7 @@ class LabelWriteFragment : Fragment() {
     }
 
     private fun changeStatusBarColor() {
-        requireActivity().window.statusBarColor =
-            ContextCompat.getColor(requireContext(), R.color.skyBlue)
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.skyBlue)
     }
 
     private fun setUpBackButton() {

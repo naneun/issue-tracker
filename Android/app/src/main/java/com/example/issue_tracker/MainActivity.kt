@@ -1,6 +1,7 @@
 package com.example.issue_tracker
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.view.isVisible
@@ -8,9 +9,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.issue_tracker.databinding.ActivityMainBinding
+import com.example.issue_tracker.ui.HomeViewModel
 
 class MainActivity : AppCompatActivity() {
 
+    private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

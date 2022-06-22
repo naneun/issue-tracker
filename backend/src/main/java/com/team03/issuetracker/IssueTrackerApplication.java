@@ -8,8 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @ConfigurationPropertiesScan
 public class IssueTrackerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(IssueTrackerApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(IssueTrackerApplication.class, args);
+    }
 }

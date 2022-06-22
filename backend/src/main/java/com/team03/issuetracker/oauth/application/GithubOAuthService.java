@@ -2,7 +2,7 @@ package com.team03.issuetracker.oauth.application;
 
 import com.team03.issuetracker.oauth.dto.*;
 import com.team03.issuetracker.oauth.exception.OAuthException;
-import com.team03.issuetracker.oauth.properties.OAuthProperties;
+import com.team03.issuetracker.oauth.properties.AuthProperties;
 import com.team03.issuetracker.oauth.properties.VendorProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,7 +17,7 @@ public class GithubOAuthService implements OAuthService {
     private final VendorProperties vendorProperties;
 
     @Autowired
-    public GithubOAuthService(OAuthProperties oAuthProperties) {
+    public GithubOAuthService(AuthProperties oAuthProperties) {
         this.vendorProperties = oAuthProperties.getVendorProperties("github");
     }
 

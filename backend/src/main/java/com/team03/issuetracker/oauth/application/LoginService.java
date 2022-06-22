@@ -13,21 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LoginService {
 
-	private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-	@Transactional
-	public Member save(OAuthUser oAuthUser) {
-		String serialNumber = oAuthUser.getSerialNumber();
-		ResourceServer resourceServer = oAuthUser.getResourceServer();
+    @Transactional
+    public Member save(OAuthUser oAuthUser) {
+        String serialNumber = oAuthUser.getSerialNumber();
+        ResourceServer resourceServer = oAuthUser.getResourceServer();
 
-		Member loginMember = oAuthUser.toEntity();
+        Member loginMember = oAuthUser.toEntity();
 
-		return memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
-			.map(member -> member.updateLoginInfo(loginMember))
-			.orElseGet(() -> memberRepository.save(loginMember));
-	}
+        return memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
+                .map(member -> member.updateLoginInfo(loginMember))
+                .orElseGet(() -> memberRepository.save(loginMember));
+    }
 
-	public Member findById(Long memberId) {
-		return memberRepository.findById(memberId).orElseThrow(LoginException::new);
-	}
+    public Member findById(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(LoginException::new);
+    }
 }

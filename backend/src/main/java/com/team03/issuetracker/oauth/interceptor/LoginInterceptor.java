@@ -23,7 +23,7 @@ import static com.team03.issuetracker.oauth.utils.OAuthUtils.BEARER;
 
 @Component
 @RequiredArgsConstructor
-public class LoginInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider jwtProvider;
 

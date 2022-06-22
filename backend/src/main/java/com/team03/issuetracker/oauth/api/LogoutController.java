@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LogoutController {
 
-	private final RefreshTokenService redisService;
+    private final RefreshTokenService redisService;
 
-	@GetMapping("/logout")
-	public ResponseEntity<Void> logout(Long memberId) {
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(Long memberId) {
 
-		redisService.removeJwtRefreshToken(memberId);
-		return ResponseEntity.ok().build();
-	}
+        redisService.removeJwtRefreshToken(memberId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @ConstructorBinding
 @ConfigurationProperties(prefix = "oauth")
-public class OAuthProperties {
+public class AuthProperties {
 
     private final Map<String, VendorProperties> vendors;
 

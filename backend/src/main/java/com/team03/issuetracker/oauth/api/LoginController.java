@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.ACCESS_TOKEN;
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.REFRESH_TOKEN;
+import static com.team03.issuetracker.oauth.utils.AuthUtils.ACCESS_TOKEN;
+import static com.team03.issuetracker.oauth.utils.AuthUtils.REFRESH_TOKEN;
 
 @RestController
 @RequiredArgsConstructor

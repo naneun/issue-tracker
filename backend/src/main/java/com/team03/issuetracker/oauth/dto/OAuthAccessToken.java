@@ -6,13 +6,13 @@ import lombok.Getter;
 @Getter
 public class OAuthAccessToken {
 
-	@JsonProperty("access_token")
-	private String accessToken;
+    @JsonProperty("access_token")
+    private String accessToken;
 
-	@JsonProperty("token_type")
-	private String tokenType;
+    @JsonProperty("token_type")
+    private String tokenType;
 
-	public String fullInfo() {
-		return tokenType + " " + accessToken;
-	}
+    public String fullInfo() {
+        return tokenType + " " + accessToken;
+    }
 }

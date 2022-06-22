@@ -5,14 +5,14 @@ import com.team03.issuetracker.oauth.dto.GoogleUserInfo;
 import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 import com.team03.issuetracker.oauth.dto.OAuthUser;
 import com.team03.issuetracker.oauth.exception.OAuthException;
-import com.team03.issuetracker.oauth.properties.OAuthProperties;
+import com.team03.issuetracker.oauth.properties.AuthProperties;
 import com.team03.issuetracker.oauth.properties.VendorProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.AUTHORIZATION_CODE;
+import static com.team03.issuetracker.oauth.utils.AuthUtils.AUTHORIZATION_CODE;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service("google")
@@ -21,7 +21,7 @@ public class GoogleOAuthService implements OAuthService {
     private final VendorProperties vendorProperties;
 
     @Autowired
-    public GoogleOAuthService(OAuthProperties oAuthProperties) {
+    public GoogleOAuthService(AuthProperties oAuthProperties) {
         this.vendorProperties = oAuthProperties.getVendorProperties("google");
     }
 

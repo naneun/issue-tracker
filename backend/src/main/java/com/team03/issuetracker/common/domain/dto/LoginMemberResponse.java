@@ -9,19 +9,19 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LoginMemberResponse {
 
-	private final Long id;
+    private final Long id;
 
-	private final String name;
+    private final String name;
 
-	private final String serialNumber;
+    private final String serialNumber;
 
-	private final ResourceServer resourceServer;
+    private final ResourceServer resourceServer;
 
-	private final String profileImage;
+    private final String profileImage;
 
-	public static LoginMemberResponse from(Member member) {
+    public static LoginMemberResponse from(Member member) {
 
-		return new LoginMemberResponse(member.getId(), member.getName(), member.getSerialNumber(),
-				member.getResourceServer(), member.getProfileImage());
-	}
+        return new LoginMemberResponse(member.getId(), member.getName(), member.getSerialNumber(),
+                member.getResourceServer(), member.getProfileImage());
+    }
 }

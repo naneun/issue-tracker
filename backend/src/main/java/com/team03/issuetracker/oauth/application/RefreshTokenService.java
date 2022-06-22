@@ -12,22 +12,22 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-	private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-	public void saveJwtRefreshToken(Long memberId, String refreshToken) {
-		ValueOperations<String, String> values = redisTemplate.opsForValue();
-		values.set(String.valueOf(memberId), refreshToken, Duration.ofDays(14));
-	}
+    public void saveJwtRefreshToken(Long memberId, String refreshToken) {
+        ValueOperations<String, String> values = redisTemplate.opsForValue();
+        values.set(String.valueOf(memberId), refreshToken, Duration.ofDays(14));
+    }
 
-	public void removeJwtRefreshToken(Long memberId) {
-		redisTemplate.delete(String.valueOf(memberId));
-	}
+    public void removeJwtRefreshToken(Long memberId) {
+        redisTemplate.delete(String.valueOf(memberId));
+    }
 
-	public void verifyMatchingRefreshToken(Long memberId, String refreshToken) {
-		String savedRefreshToken = redisTemplate.opsForValue().get(String.valueOf(memberId));
+    public void verifyMatchingRefreshToken(Long memberId, String refreshToken) {
+        String savedRefreshToken = redisTemplate.opsForValue().get(String.valueOf(memberId));
 
-		if (!refreshToken.equals(savedRefreshToken)) {
-			throw new JwtRefreshTokenException();
-		}
-	}
+        if (!refreshToken.equals(savedRefreshToken)) {
+            throw new JwtRefreshTokenException();
+        }
+    }
 }

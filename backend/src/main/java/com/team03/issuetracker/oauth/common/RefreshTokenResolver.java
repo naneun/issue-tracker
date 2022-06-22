@@ -9,7 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.REFRESH_TOKEN;
+import static com.team03.issuetracker.oauth.utils.AuthUtils.REFRESH_TOKEN;
 
 @Component
 public class RefreshTokenResolver implements HandlerMethodArgumentResolver {

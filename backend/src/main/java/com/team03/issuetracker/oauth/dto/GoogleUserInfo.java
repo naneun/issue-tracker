@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team03.issuetracker.oauth.common.ResourceServer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import static com.team03.issuetracker.oauth.common.ResourceServer.*;
 
 @Getter
 @NoArgsConstructor
-public class GoogleUserInfo{
+public class GoogleUserInfo {
 
     @JsonProperty(value = "sub")
     private String serialNumber;

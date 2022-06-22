@@ -1,6 +1,6 @@
 package com.team03.issuetracker.oauth.utils;
 
-public class OAuthUtils {
+public class AuthUtils {
 
     public static final String LOGIN_ID = "login_id";
 

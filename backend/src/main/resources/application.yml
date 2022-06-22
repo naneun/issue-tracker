@@ -2,7 +2,7 @@ spring:
   profiles:
     active: local
   config:
-    import: classpath:oauth.yml
+    import: classpath:auth.yml
 
   mvc:
     pathmatch:
@@ -24,10 +24,6 @@ spring:
           batch_size: 1000
 
     defer-datasource-initialization: true
-
-  redis:
-    host: localhost
-    port: 6379
 
 logging.level:
   org.hibernate.SQL: debug

@@ -9,7 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.ACCESS_TOKEN;
+import static com.team03.issuetracker.oauth.utils.AuthUtils.ACCESS_TOKEN;
 
 @Component
 public class AccessTokenResolver implements HandlerMethodArgumentResolver {

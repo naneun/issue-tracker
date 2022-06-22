@@ -33,6 +33,7 @@ public interface IssueService {
 
     /**
      * 이슈 상태를 일괄 변경한다.
+     *
      * @param checkedIds
      */
     List<IssueResponse> changeStateById(List<Long> checkedIds);

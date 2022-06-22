@@ -44,7 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/api/**", "/login/update/jwt-access-token");
+                .addPathPatterns("/api/**");
     }
 
     @Override

@@ -61,4 +61,6 @@
     <string name="message_invalid_input_error">잘못된 입력 양식</string>
     <string name="message_need_input_message">필수입력값입니다</string>
     <string name="empty_inout">""</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

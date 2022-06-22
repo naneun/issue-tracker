@@ -81,6 +81,10 @@
     <style name="Subtitle2.Grey">
         <item name="android:textColor">@color/grey2</item>
     </style>
+
+    <style name="Subtitle2.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
     //12px
 
     <style name="Caption" parent="TextAppearance.MaterialComponents.Caption"/>

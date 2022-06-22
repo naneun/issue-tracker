@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.issue_tracker.databinding.ItemIssuesBinding
 import com.example.issue_tracker.domain.model.Issue
 
-class IssueAdapter() : ListAdapter<Issue, IssueAdapter.ViewHolder>(IssueDiffUtil) {
+class IssueAdapter(private val itemClick:(selectedIssueID: Int) -> Unit) : ListAdapter<Issue, IssueAdapter.ViewHolder>(IssueDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssueAdapter.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -17,13 +17,16 @@ class IssueAdapter() : ListAdapter<Issue, IssueAdapter.ViewHolder>(IssueDiffUtil
 
     inner class ViewHolder(private val binding: ItemIssuesBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(itemIssue: Issue) {
+        fun bind(itemIssue: Issue,itemClick:(selectedIssueID: Int) -> Unit) {
             binding.itemIssue = itemIssue
+            binding.root.setOnClickListener {
+                itemClick.invoke(itemIssue.id)
+            }
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position),itemClick)
     }
 
     companion object IssueDiffUtil : DiffUtil.ItemCallback<Issue>() {

@@ -35,7 +35,7 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    private final RefreshTokenService redisService;
+    private final RefreshTokenService refreshTokenService;
 
     @GetMapping("/{resource-server}/callback")
     public ResponseEntity<LoginMemberResponse> login(@PathVariable(name = "resource-server") String resourceServer,
@@ -51,7 +51,7 @@ public class LoginController {
         String jwtAccessToken = jwtTokenProvider.makeJwtAccessToken(member);
         String jwtRefreshToken = jwtTokenProvider.makeJwtRefreshToken(member);
 
-        redisService.saveJwtRefreshToken(member.getId(), jwtRefreshToken);
+        refreshTokenService.saveJwtRefreshToken(member.getId(), jwtRefreshToken);
 
         return ResponseEntity.ok()
                 .header(ACCESS_TOKEN, jwtAccessToken)
@@ -69,7 +69,7 @@ public class LoginController {
             jwtTokenProvider.verifyToken(accessToken);
         } catch (ExpiredJwtException e) {
             Long memberId = Long.parseLong(e.getClaims().getAudience());
-            redisService.verifyMatchingRefreshToken(memberId, refreshToken);
+            refreshTokenService.verifyMatchingRefreshToken(memberId, refreshToken);
             Member member = loginService.findById(memberId);
             jwtAccessToken = jwtTokenProvider.makeJwtAccessToken(member);
         }

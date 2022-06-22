@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import static com.team03.issuetracker.oauth.utils.OAuthUtils.BEARER;
+import static com.team03.issuetracker.oauth.utils.AuthUtils.BEARER;
 
 @Component
 @RequiredArgsConstructor
@@ -34,19 +34,19 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        return validateJwtToken(request, response, header);
+        return validateJwtToken(response, header);
     }
 
-    private boolean validateJwtToken(HttpServletRequest request, HttpServletResponse response, String header) {
+    private boolean validateJwtToken(HttpServletResponse response, String header) {
         if (header.isBlank() || !header.startsWith(BEARER)) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return false;
         }
 
-        String jwtToken = header.replaceFirst(BEARER, Strings.EMPTY).trim();
-        Claims claims = null;
+        Claims claims;
 
         try {
+            String jwtToken = header.replaceFirst(BEARER, Strings.EMPTY).trim();
             claims = jwtProvider.verifyToken(jwtToken);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -56,7 +56,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        Member member = memberRepository.findById(3L)
+        Member member = memberRepository.findById(Long.parseLong(claims.getAudience()))
                 .orElseThrow(MemberException::new);
 
         loginMember.update(member);

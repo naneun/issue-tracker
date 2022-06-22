@@ -9,7 +9,6 @@ import lombok.Getter;
 public class EmojiResponse {
 
     private String unicode;
-
     private String description;
 
     public EmojiResponse(Emoji emoji) {

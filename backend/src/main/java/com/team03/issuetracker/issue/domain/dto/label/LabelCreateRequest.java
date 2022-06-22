@@ -1,9 +1,7 @@
 package com.team03.issuetracker.issue.domain.dto.label;
 
 import com.team03.issuetracker.issue.domain.Label;
-
 import javax.validation.constraints.NotBlank;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,9 +19,9 @@ public class LabelCreateRequest {
 
     public Label toEntity() {
         return Label.builder()
-                .title(title)
-                .description(description)
-                .backgroundColor(backgroundColor)
-                .build();
+            .title(title)
+            .description(description)
+            .backgroundColor(backgroundColor)
+            .build();
     }
 }

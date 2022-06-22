@@ -9,14 +9,13 @@ import lombok.Getter;
 public class IssueSearchCondition {
 
     private IssueState state;
-
     private Long creatorId;
-
     private Long labelId;
-
     private Long milestoneId;
 
-    public static IssueSearchCondition of(IssueState state, Long creatorId, Long labelId, Long milestoneId) {
+    public static IssueSearchCondition of(IssueState state, Long creatorId, Long labelId,
+        Long milestoneId) {
+
         return new IssueSearchCondition(state, creatorId, labelId, milestoneId);
     }
 }

@@ -6,11 +6,10 @@ import com.team03.issuetracker.milestone.domain.dto.MilestoneCreateRequest;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneModifyRequest;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneResponse;
 import com.team03.issuetracker.milestone.repository.MilestoneRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service

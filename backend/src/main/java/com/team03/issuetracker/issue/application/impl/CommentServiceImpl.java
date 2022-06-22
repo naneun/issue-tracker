@@ -1,7 +1,11 @@
 package com.team03.issuetracker.issue.application.impl;
 
 import com.team03.issuetracker.issue.application.CommentService;
-import com.team03.issuetracker.issue.domain.dto.comment.*;
+import com.team03.issuetracker.issue.domain.dto.comment.CommentAddEmojiRequest;
+import com.team03.issuetracker.issue.domain.dto.comment.CommentAddRequest;
+import com.team03.issuetracker.issue.domain.dto.comment.CommentModifyRequest;
+import com.team03.issuetracker.issue.domain.dto.comment.CommentResponse;
+import com.team03.issuetracker.issue.domain.dto.comment.CommentSimpleResponse;
 import com.team03.issuetracker.issue.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

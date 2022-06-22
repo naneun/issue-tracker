@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class IssueServiceTest {
 
     final IssueService issueService;
-
     final IssueRepository issueRepository;
 
     public IssueServiceTest(IssueService issueService, IssueRepository issueRepository) {

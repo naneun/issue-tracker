@@ -1,11 +1,16 @@
 package com.team03.issuetracker.issue.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+
 import com.team03.issuetracker.common.config.DataJpaConfig;
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.issue.domain.Comment;
 import com.team03.issuetracker.issue.domain.Emoji;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.exception.CommentException;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,19 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import javax.persistence.EntityManager;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.*;
-
 @Import(DataJpaConfig.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class CommentRepositoryTest {
 
     final EntityManager entityManager;
-
     final CommentRepository commentRepository;
 
     @Autowired
@@ -68,7 +66,7 @@ class CommentRepositoryTest {
 
         // when
         Comment foundComment = commentRepository.findById(newComment.getId())
-                .orElseThrow(CommentException::new);
+            .orElseThrow(CommentException::new);
 
         // then
         assertThat(foundComment).usingRecursiveComparison().isEqualTo(newComment);
@@ -80,7 +78,7 @@ class CommentRepositoryTest {
         // given
         Long id = 1L;
         Comment foundComment = commentRepository.findById(id)
-                .orElseThrow(CommentException::new);
+            .orElseThrow(CommentException::new);
 
         String otherContent = "otherContent";
 
@@ -89,7 +87,7 @@ class CommentRepositoryTest {
 
         // then
         Comment changedComment = commentRepository.findById(foundComment.getId())
-                .orElseThrow(CommentException::new);
+            .orElseThrow(CommentException::new);
 
         assertThat(changedComment.getContent()).isEqualTo(otherContent);
     }
@@ -100,15 +98,15 @@ class CommentRepositoryTest {
         // given
         Long id = 1L;
         Comment foundComment = commentRepository.findById(id)
-                .orElseThrow(CommentException::new);
+            .orElseThrow(CommentException::new);
 
         // when
         commentRepository.deleteById(foundComment.getId());
 
         // then
         assertAll(
-                () -> assertThat(foundComment).isNotNull(),
-                () -> assertThat(commentRepository.findById(foundComment.getId())).isEmpty()
+            () -> assertThat(foundComment).isNotNull(),
+            () -> assertThat(commentRepository.findById(foundComment.getId())).isEmpty()
         );
     }
 
@@ -120,13 +118,13 @@ class CommentRepositoryTest {
 
         Long commentId = 1L;
         Comment foundComment = commentRepository.findById(commentId)
-                .orElseThrow(CommentException::new);
+            .orElseThrow(CommentException::new);
 
         foundComment.addEmoji(emoji);
 
         // when
         Comment changedComment = commentRepository.findById(foundComment.getId())
-                .orElseThrow(CommentException::new);
+            .orElseThrow(CommentException::new);
 
         // then
         assertThat(changedComment.getEmoji()).usingRecursiveComparison().isEqualTo(emoji);

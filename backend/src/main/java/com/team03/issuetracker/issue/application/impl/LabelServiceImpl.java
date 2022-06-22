@@ -5,11 +5,10 @@ import com.team03.issuetracker.issue.domain.Label;
 import com.team03.issuetracker.issue.domain.dto.label.LabelCreateRequest;
 import com.team03.issuetracker.issue.domain.dto.label.LabelModifyRequest;
 import com.team03.issuetracker.issue.repository.LabelRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service

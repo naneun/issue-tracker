@@ -23,8 +23,8 @@ public class LoginService {
         Member loginMember = oAuthUser.toEntity();
 
         return memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
-                .map(member -> member.updateLoginInfo(loginMember))
-                .orElseGet(() -> memberRepository.save(loginMember));
+            .map(member -> member.updateLoginInfo(loginMember))
+            .orElseGet(() -> memberRepository.save(loginMember));
     }
 
     public Member findById(Long memberId) {

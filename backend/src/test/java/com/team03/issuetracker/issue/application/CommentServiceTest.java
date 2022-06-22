@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class CommentServiceTest {
 
     final CommentService commentService;
-
     final CommentRepository commentRepository;
 
     public CommentServiceTest(CommentService commentService, CommentRepository commentRepository) {

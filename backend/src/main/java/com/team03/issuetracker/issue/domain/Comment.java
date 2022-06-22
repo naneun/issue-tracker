@@ -1,11 +1,24 @@
 package com.team03.issuetracker.issue.domain;
 
 import com.team03.issuetracker.common.domain.Member;
-
 import java.time.LocalDateTime;
-import javax.persistence.*;
-
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -56,10 +69,10 @@ public class Comment {
 
     public static Comment of(Long id, Member writer, String content) {
         return Comment.builder()
-                .id(id)
-                .writer(writer)
-                .content(content)
-                .build();
+            .id(id)
+            .writer(writer)
+            .content(content)
+            .build();
     }
 
     /********************************************************************/

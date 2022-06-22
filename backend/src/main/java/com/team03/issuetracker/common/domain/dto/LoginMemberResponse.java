@@ -10,22 +10,17 @@ import lombok.Getter;
 public class LoginMemberResponse {
 
     private final Long id;
-
     private final String name;
-
     private final String serialNumber;
-
     private final ResourceServer resourceServer;
-
     private final String profileImage;
-
     private final String jwtAccessToken;
-
     private final String jwtRefreshToken;
 
-    public static LoginMemberResponse of(Member member, String jwtAccessToken, String jwtRefreshToken) {
+    public static LoginMemberResponse of(Member member, String jwtAccessToken,
+        String jwtRefreshToken) {
 
         return new LoginMemberResponse(member.getId(), member.getName(), member.getSerialNumber(),
-                member.getResourceServer(), member.getProfileImage(), jwtAccessToken, jwtRefreshToken);
+            member.getResourceServer(), member.getProfileImage(), jwtAccessToken, jwtRefreshToken);
     }
 }

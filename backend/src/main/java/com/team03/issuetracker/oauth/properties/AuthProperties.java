@@ -1,11 +1,10 @@
 package com.team03.issuetracker.oauth.properties;
 
+import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
-
-import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor

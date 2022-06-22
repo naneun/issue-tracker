@@ -13,42 +13,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
-	private final String issuer;
+    private final String issuer;
+    private final String secretKey;
 
-	private final String secretKey;
+    public JwtTokenProvider(JwtProperties properties) {
+        this.issuer = properties.getIssuer();
+        this.secretKey = properties.getSecretKey();
+    }
 
-	public JwtTokenProvider(JwtProperties properties) {
-		this.issuer = properties.getIssuer();
-		this.secretKey = properties.getSecretKey();
-	}
+    public String makeJwtAccessToken(Member member) {
+        return Jwts.builder()
+            .setAudience(member.getId().toString())
+            .setIssuer(issuer)
+            .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+            .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusHours(1L)))
+            .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
+            .compact();
 
-	public String makeJwtAccessToken(Member member) {
-		return Jwts.builder()
-			.setAudience(member.getId().toString())
-			.setIssuer(issuer)
-			.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-			.setExpiration(Timestamp.valueOf(LocalDateTime.now().plusHours(1L)))
-			.signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
-			.compact();
+    }
 
-	}
+    public String makeJwtRefreshToken(Member member) {
+        return Jwts.builder()
+            .setAudience(member.getId().toString())
+            .setIssuer(issuer)
+            .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+            .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusWeeks(2L)))
+            .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
+            .compact();
 
-	public String makeJwtRefreshToken(Member member) {
-		return Jwts.builder()
-			.setAudience(member.getId().toString())
-			.setIssuer(issuer)
-			.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-			.setExpiration(Timestamp.valueOf(LocalDateTime.now().plusWeeks(2L)))
-			.signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
-			.compact();
+    }
 
-	}
-
-	public Claims verifyToken(String jwtToken) {
-		return Jwts.parserBuilder()
-			.setSigningKey(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
-			.build()
-			.parseClaimsJws(jwtToken)
-			.getBody();
-	}
+    public Claims verifyToken(String jwtToken) {
+        return Jwts.parserBuilder()
+            .setSigningKey(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
+            .build()
+            .parseClaimsJws(jwtToken)
+            .getBody();
+    }
 }

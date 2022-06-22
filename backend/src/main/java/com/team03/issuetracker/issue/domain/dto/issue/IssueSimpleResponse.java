@@ -11,11 +11,8 @@ import lombok.RequiredArgsConstructor;
 public class IssueSimpleResponse {
 
     private final MilestoneResponseOfSimpleIssue milestone;
-
     private final String title;
-
     private final String content;
-
     private final LabelResponseOfSimpleIssue label;
 
     public IssueSimpleResponse(Issue issue) {
@@ -41,7 +38,6 @@ public class IssueSimpleResponse {
     private static class LabelResponseOfSimpleIssue {
 
         private final String title;
-
         private final String backgroundColor;
 
         public static LabelResponseOfSimpleIssue from(Label label) {

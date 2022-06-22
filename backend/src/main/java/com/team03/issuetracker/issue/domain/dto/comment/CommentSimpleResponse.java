@@ -2,11 +2,10 @@ package com.team03.issuetracker.issue.domain.dto.comment;
 
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.issue.domain.Comment;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -20,7 +19,7 @@ public class CommentSimpleResponse {
 
     public static CommentSimpleResponse from(Comment comment) {
         return new CommentSimpleResponse(WriterResponseOfSimpleComment.from(comment.getWriter()),
-                comment.getCreatedDate(), comment.getContent());
+            comment.getCreatedDate(), comment.getContent());
     }
 
     @Getter

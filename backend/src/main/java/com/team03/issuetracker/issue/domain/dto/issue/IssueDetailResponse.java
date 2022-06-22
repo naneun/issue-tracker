@@ -13,16 +13,14 @@ import lombok.RequiredArgsConstructor;
 public class IssueDetailResponse {
 
     private LabelResponseOfDetailIssue label;
-
     private MilestoneResponseOfDetailIssue milestone;
-
     private AssigneeResponseOfDetailIssue assignee;
 
     public static IssueDetailResponse of(Issue issue) {
         return new IssueDetailResponse(
-                LabelResponseOfDetailIssue.from(issue.getLabel()),
-                MilestoneResponseOfDetailIssue.from(issue.getMilestone()),
-                AssigneeResponseOfDetailIssue.from(issue.getAssignee())
+            LabelResponseOfDetailIssue.from(issue.getLabel()),
+            MilestoneResponseOfDetailIssue.from(issue.getMilestone()),
+            AssigneeResponseOfDetailIssue.from(issue.getAssignee())
         );
     }
 
@@ -31,7 +29,6 @@ public class IssueDetailResponse {
     private static class LabelResponseOfDetailIssue {
 
         private final Long labelId;
-
         private final String labelTitle;
 
         public static LabelResponseOfDetailIssue from(Label label) {
@@ -44,7 +41,6 @@ public class IssueDetailResponse {
     private static class MilestoneResponseOfDetailIssue {
 
         private final Long milestoneId;
-
         private final String milestoneTitle;
 
         public static MilestoneResponseOfDetailIssue from(Milestone milestone) {
@@ -57,7 +53,6 @@ public class IssueDetailResponse {
     private static class AssigneeResponseOfDetailIssue {
 
         private final Long assigneeId;
-
         private final String assigneeName;
 
         public static AssigneeResponseOfDetailIssue from(Member assignee) {

@@ -1,11 +1,11 @@
 package com.team03.issuetracker.oauth.dto;
 
+import static com.team03.issuetracker.oauth.common.ResourceServer.GITHUB;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team03.issuetracker.oauth.common.ResourceServer;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import static com.team03.issuetracker.oauth.common.ResourceServer.*;
 
 @Setter
 @NoArgsConstructor

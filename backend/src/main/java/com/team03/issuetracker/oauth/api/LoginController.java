@@ -11,9 +11,7 @@ import com.team03.issuetracker.oauth.dto.OAuthAccessToken;
 import com.team03.issuetracker.oauth.dto.OAuthUser;
 import com.team03.issuetracker.oauth.provider.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
-
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,16 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private final JwtTokenProvider jwtTokenProvider;
-
     private final Map<String, OAuthService> oAuthServiceMapper;
-
     private final LoginService loginService;
-
     private final RefreshTokenService refreshTokenService;
 
     @GetMapping("/{resource-server}/callback")
-    public ResponseEntity<LoginMemberResponse> login(@PathVariable(name = "resource-server") String resourceServer,
-                                                     String code) {
+    public ResponseEntity<LoginMemberResponse> login(
+        @PathVariable(name = "resource-server") String resourceServer,
+        String code) {
 
         OAuthService oAuthService = oAuthServiceMapper.get(resourceServer);
 
@@ -50,12 +46,14 @@ public class LoginController {
 
         refreshTokenService.saveJwtRefreshToken(member.getId(), jwtRefreshToken);
 
-        return ResponseEntity.ok().body(LoginMemberResponse.of(member, jwtAccessToken, jwtRefreshToken));
+        return ResponseEntity.ok()
+            .body(LoginMemberResponse.of(member, jwtAccessToken, jwtRefreshToken));
     }
 
     @GetMapping("/update/jwt-access-token")
-    public ResponseEntity<LoginMemberResponse> renewJwtAccessToken(@AccessTokenHeader String accessToken,
-                                                                   @RefreshTokenHeader String refreshToken) {
+    public ResponseEntity<LoginMemberResponse> renewJwtAccessToken(
+        @AccessTokenHeader String accessToken,
+        @RefreshTokenHeader String refreshToken) {
 
         String jwtAccessToken = null;
         Member member = null;

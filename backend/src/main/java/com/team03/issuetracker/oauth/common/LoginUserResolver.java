@@ -22,7 +22,7 @@ public class LoginUserResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 
         return loginMember.toEntity();
     }

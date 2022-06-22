@@ -1,10 +1,8 @@
 package com.team03.issuetracker.milestone.domain.dto;
 
 import com.team03.issuetracker.milestone.domain.Milestone;
-
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,9 +21,9 @@ public class MilestoneCreateRequest {
 
     public Milestone toEntity() {
         return Milestone.builder()
-                .title(title)
-                .description(description)
-                .dueDate(dueDate)
-                .build();
+            .title(title)
+            .description(description)
+            .dueDate(dueDate)
+            .build();
     }
 }

@@ -1,16 +1,18 @@
 package com.team03.issuetracker.issue.application;
 
 import com.team03.issuetracker.issue.domain.IssueState;
-import com.team03.issuetracker.issue.domain.dto.issue.*;
-
+import com.team03.issuetracker.issue.domain.dto.issue.IssueAddRequest;
+import com.team03.issuetracker.issue.domain.dto.issue.IssueModifyRequest;
+import com.team03.issuetracker.issue.domain.dto.issue.IssueResponse;
+import com.team03.issuetracker.issue.domain.dto.issue.IssueSearchCondition;
+import com.team03.issuetracker.issue.domain.dto.issue.IssueSearchText;
+import com.team03.issuetracker.issue.domain.dto.issue.IssueSimpleResponse;
 import java.util.List;
 
 public interface IssueService {
 
     /**
-     * 해당 상태 값의 이슈 리스트를 출력한다.
-     * 안드로이드의 경우 오픈된 이슈 리스트만 출력하도록 한다.
-     * state -> 'OPEN'
+     * 해당 상태 값의 이슈 리스트를 출력한다. 안드로이드의 경우 오픈된 이슈 리스트만 출력하도록 한다. state -> 'OPEN'
      *
      * @param state
      * @return
@@ -48,7 +50,8 @@ public interface IssueService {
     /**
      * '상태', '작성자', '레이블', '마일스톤' 을 검색 조건으로 필터링하여 해당하는 이슈를 조회한다.
      *
-     * @param issueSearchCondition { IssueState state; Member creator; Label label; Milestone milestone; }
+     * @param issueSearchCondition { IssueState state; Member creator; Label label; Milestone
+     *                             milestone; }
      * @return
      */
     List<IssueSimpleResponse> findBySearchCondition(IssueSearchCondition issueSearchCondition);

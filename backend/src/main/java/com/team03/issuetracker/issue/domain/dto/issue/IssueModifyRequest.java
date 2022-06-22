@@ -1,9 +1,8 @@
 package com.team03.issuetracker.issue.domain.dto.issue;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @AllArgsConstructor
@@ -16,8 +15,6 @@ public class IssueModifyRequest {
     private String content;
 
     private Long labelId;
-
     private Long milestoneId;
-
     private Long assigneeId;
 }

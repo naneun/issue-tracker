@@ -11,11 +11,13 @@ import org.springframework.data.repository.query.Param;
 
 public interface IssueRepository extends JpaRepository<Issue, Long>, IssueRepositoryCustom {
 
-    @EntityGraph(attributePaths = {"label", "milestone", "assignee", "creator", "modifier",
-        "comments"})
-    Optional<Issue> findById(@Param("id") Long id);
+	@EntityGraph(attributePaths = {"label", "milestone", "assignee", "creator", "modifier",
+		"comments"})
+	Optional<Issue> findById(@Param("id") Long id);
 
-    @EntityGraph(attributePaths = {"label", "milestone", "assignee", "creator", "modifier",
-        "comments"})
-    List<Issue> findByState(@Param("state") IssueState state);
+	@EntityGraph(attributePaths = {"label", "milestone", "assignee", "creator", "modifier",
+		"comments"})
+	List<Issue> findByState(@Param("state") IssueState state);
+
+	List<Issue> findAllByLabelId(Long id);
 }

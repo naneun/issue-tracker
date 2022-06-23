@@ -1,102 +1,104 @@
 package com.team03.issuetracker.issue.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-
+import com.team03.issuetracker.issue.application.impl.LabelServiceImpl;
 import com.team03.issuetracker.issue.domain.Label;
 import com.team03.issuetracker.issue.domain.dto.label.LabelCreateRequest;
 import com.team03.issuetracker.issue.domain.dto.label.LabelModifyRequest;
+import com.team03.issuetracker.issue.domain.dto.label.LabelResponse;
+import com.team03.issuetracker.issue.exception.LabelException;
 import com.team03.issuetracker.issue.repository.LabelRepository;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-@WebMvcTest(LabelService.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
 class LabelServiceTest {
 
-    final LabelService labelService;
-    final List<Label> registeredLabels;
+	final LabelServiceImpl labelServiceImpl;
+	final LabelRepository labelRepository;
 
-    @MockBean
-    LabelRepository labelRepository;
+	final List<Label> registeredLabels;
 
-    @Autowired
-    LabelServiceTest(LabelService labelService) {
-        this.labelService = labelService;
-        this.registeredLabels = List.of(
-            Label.of(1L, "Label", "레이블에 대한 설명", "#b7bcc4"),
-            Label.of(2L, "Documentation", "개발 내용을 문서화", "#041c42")
-        );
-    }
+	@Autowired
+	public LabelServiceTest(LabelServiceImpl labelServiceImpl, LabelRepository labelRepository) {
+		this.labelRepository = labelRepository;
+		this.labelServiceImpl = labelServiceImpl;
+		this.registeredLabels = List.of(
+			Label.of(1L, "Label", "레이블에 대한 설명", "#b7bcc4"),
+			Label.of(2L, "Documentation", "개발 내용을 문서화", "#041c42")
+		);
+	}
 
-    @Test
-    void 라벨을_생성한다() {
+	@Test
+	void 라벨을_생성한다() {
 
-        // given
-        LabelCreateRequest createRequest = new LabelCreateRequest("Label", "레이블에 대한 설명", "#b7bcc4");
-
-        Label registeredLabel = registeredLabels.get(0);
-
-        given(labelRepository.save(createRequest.toEntity())).willReturn(registeredLabel);
-
-        // when
-        Label createdLabel = labelService.addLabel(createRequest);
-
-        // then
-        assertThat(createdLabel)
-            .usingRecursiveComparison()
-            .isEqualTo(registeredLabel);
-    }
-
-    @Test
-    void 라벨_목록을_조회한다() {
-
-        // given
-        given(labelRepository.findAll()).willReturn(registeredLabels);
-
-        // when
-        List<Label> labels = labelService.findAll();
-
-        // then
-        labels.forEach(label -> {
-            assertThat(label).usingRecursiveComparison()
-                .isEqualTo(registeredLabels.get(labels.indexOf(label)));
-        });
-    }
-
-    @Test
-    void 라벨을_편집한다() {
-
-        // given
-        LabelModifyRequest modifyRequest = new LabelModifyRequest("수정 제목", "수정 설명", "#ffffff");
-        Label registeredLabel = registeredLabels.get(0);
-        Label updatedLabel = Label.of(1L, "수정 제목", "수정 설명", "#ffffff");
-
-        given(labelRepository.save(registeredLabel.update(modifyRequest))).willReturn(updatedLabel);
-
-        // when
-        Label label = labelService.update(modifyRequest);
-
-        // then
-        assertThat(label)
-            .usingRecursiveComparison()
-            .isEqualTo(updatedLabel);
-    }
-
-    // TODO
-    @Test
-    void 라벨을_일괄_삭제한다() {
-
-/*		// given
-		List<Long> ids = List.of(1L, 2L);
-		given(labelRepository.deleteAllByIdInBatch(ids)).willReturn(ids);
+		// given
+		LabelCreateRequest createRequest = new LabelCreateRequest("Label", "레이블에 대한 설명", "#b7bcc4");
 
 		// when
-		List<Long> deletedLabelIds = labelService.deleteById(ids);
+		LabelResponse labelResponse = labelServiceImpl.addLabel(createRequest);
 
 		// then
-		assertThat(deletedLabelIds).isEqualTo(ids);*/
-    }
+		Label foundLabel = labelRepository.findById(labelResponse.getId()).orElseThrow(LabelException::new);
+		assertThat(labelResponse)
+			.usingRecursiveComparison()
+			.isEqualTo(foundLabel);
+	}
+
+	@Test
+	void 라벨_목록을_조회한다() {
+
+		// given
+
+		// when
+		List<LabelResponse> labelResponses = labelServiceImpl.findAll();
+
+		// then
+		List<Label> foundLabels = labelRepository.findAll();
+		labelResponses.forEach(label -> {
+			assertThat(label).usingRecursiveComparison().isEqualTo(foundLabels.get(labelResponses.indexOf(label)));
+		});
+	}
+
+	@Test
+	void 라벨을_편집한다() {
+
+		// given
+		Long id = 1L;
+		LabelModifyRequest modifyRequest = new LabelModifyRequest("수정 제목", "수정 설명", "#ffffff");
+		Label registeredLabel = labelRepository.findById(id).orElseThrow(LabelException::new);
+		Label updatedLabel = Label.of(1L, "수정 제목", "수정 설명", "#ffffff");
+
+		// when
+		LabelResponse labelResponse = labelServiceImpl.update(id, modifyRequest);
+
+		// then
+		assertThat(labelResponse)
+			.usingRecursiveComparison()
+			.isEqualTo(updatedLabel);
+	}
+
+	// TODO
+	@Test
+	@Transactional
+	void 라벨을_일괄_삭제한다() {
+
+		// given
+		List<Long> ids = List.of(1L, 2L);
+		List<Label> foundLabels = labelRepository.findAllById(ids);
+
+		// when
+		List<Long> deletedLabelIds = labelServiceImpl.deleteById(ids);
+
+		// then
+		assertThat(foundLabels).hasSize(2);
+		deletedLabelIds.forEach(id ->
+			assertThat(labelRepository.findById(id)).isEmpty()
+		);
+	}
+
 }

@@ -1,20 +1,25 @@
 package com.team03.issuetracker.issue.domain.dto.issue;
 
+import static com.team03.issuetracker.issue.domain.IssueState.OPEN;
+
+import com.team03.issuetracker.issue.domain.IssueState;
 import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class IssueAddRequest {
 
     @NotBlank
-    private String title;
+    private final String title;
 
     @NotBlank
-    private String content;
+    private final String content;
 
-    private Long labelId;
-    private Long milestoneId;
-    private Long assigneeId;
+    private final IssueState state = OPEN;
+
+    private final Long labelId;
+    private final Long milestoneId;
+    private final Long assigneeId;
 }

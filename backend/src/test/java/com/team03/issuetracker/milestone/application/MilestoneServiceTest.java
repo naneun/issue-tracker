@@ -1,126 +1,135 @@
 package com.team03.issuetracker.milestone.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
-
-import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
+import com.team03.issuetracker.milestone.application.impl.MilestoneServiceImpl;
 import com.team03.issuetracker.milestone.domain.Milestone;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneCreateRequest;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneModifyRequest;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneResponse;
+import com.team03.issuetracker.milestone.exception.MilestoneException;
 import com.team03.issuetracker.milestone.repository.MilestoneRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-@WebMvcTest(MilestoneService.class)
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+@SpringBootTest
 class MilestoneServiceTest {
 
-    final EntityManager entityManager;
-    final MilestoneService milestoneService;
-    final List<Milestone> registeredMilestones;
+	final MilestoneServiceImpl milestoneServiceImpl;
 
-    @MockBean
-    MilestoneRepository milestoneRepository;
+	final MilestoneRepository milestoneRepository;
 
-    @Autowired
-    MilestoneServiceTest(MilestoneService milestoneService, EntityManager entityManager) {
-        this.milestoneService = milestoneService;
-        this.entityManager = entityManager;
+	@Autowired
+	public MilestoneServiceTest(MilestoneServiceImpl milestoneServiceImpl, MilestoneRepository milestoneRepository) {
+		this.milestoneServiceImpl = milestoneServiceImpl;
+		this.milestoneRepository = milestoneRepository;
 
-        this.registeredMilestones = List.of(
-            Milestone.of(1L, "제목", "마일스톤에 대한 설명", LocalDate.of(2022, 07, 01),
-                getIssuesByMilestoneId(1L)),
-            Milestone.of(2L, "마일스톤", "코드스쿼드 마일스톤", LocalDate.of(2022, 06, 20),
-                getIssuesByMilestoneId(2L)
-            ));
-    }
+	}
 
-    private List<Issue> getIssuesByMilestoneId(Long milestoneId) {
-        return entityManager.createQuery(
-                "select i from Issue i where i.milestone.id = :milestoneId", Issue.class)
-            .setParameter("milestoneId", milestoneId)
-            .getResultList();
-    }
+	private Long getIssueCount(Long milestoneId, IssueState state) {
+		return milestoneRepository.findById(milestoneId).stream()
+			.map(Milestone::getIssues)
+			.flatMap(Collection::stream)
+			.filter(issue -> issue.getState().equals(state))
+			.count();
 
-    private Long getIssueCount(Long milestoneId, IssueState state) {
-        return registeredMilestones.get(milestoneId.intValue() - 1)
-            .getIssues()
-            .stream()
-            .filter(issue -> issue.getState().equals(state))
-            .count();
-    }
+	}
 
-    @Test
-    void 마일스톤을_생성한다() {
+	@Test
+	void 마일스톤을_생성한다() {
 
-        // given
-        MilestoneCreateRequest createRequest = new MilestoneCreateRequest("제목", "마일스톤에 대한 설명",
-            LocalDate.of(2022, 7, 1));
-        Milestone registeredMilestone = registeredMilestones.get(0);
-        given(milestoneRepository.save(createRequest.toEntity())).willReturn(registeredMilestone);
+		// given
+		Long id = 1L;
+		MilestoneCreateRequest createRequest = new MilestoneCreateRequest("제목", "마일스톤에 대한 설명",
+			LocalDate.of(2022, 7, 1));
+		Milestone registeredMilestone = milestoneRepository.findById(id).orElseThrow();
 
-        // when
-        Milestone milestone = milestoneService.addMilestone(createRequest);
+		// when
+		MilestoneResponse milestoneResponse = milestoneServiceImpl.addMilestone(createRequest);
 
-        // then
-        assertThat(milestone).usingRecursiveComparison().isEqualTo(registeredMilestone);
-    }
+		// then
+		assertAll(
+			() -> assertThat(milestoneResponse).usingRecursiveComparison()
+				.ignoringFields("openIssueCount", "closedIssueCount")
+				.isEqualTo(registeredMilestone),
+			() -> assertThat(milestoneResponse.getOpenIssueCount()).isEqualTo(0L),
+			() -> assertThat(milestoneResponse.getClosedIssueCount()).isEqualTo(0L)
+		);
+	}
 
-    @Test
-    void 마일스톤_목록을_조회하면_DTO를_반환한다() {
+	@Test
+	@Transactional
+	void 마일스톤_목록을_조회하면_DTO를_반환한다() {
 
-        // given
-        given(milestoneRepository.findAll()).willReturn(registeredMilestones);
+		// given
+		List<Milestone> savedMilestones = milestoneRepository.findAll();
 
-        // when
-        List<MilestoneResponse> milestoneDtos = milestoneService.findAll();
+		// when
+		List<MilestoneResponse> milestoneDtos = milestoneServiceImpl.findAll();
 
-        // then
-        milestoneDtos.forEach(milestoneDto -> {
-            assertThat(milestoneDto).usingRecursiveComparison()
-                .ignoringFields("openIssueCount", "closedIssueCount")
-                .isEqualTo(registeredMilestones.get(milestoneDtos.indexOf(milestoneDto)));
-        });
+		// then
+		milestoneDtos.forEach(milestoneDto -> {
+			assertThat(milestoneDto).usingRecursiveComparison()
+				.ignoringFields("openIssueCount", "closedIssueCount")
+				.isEqualTo(savedMilestones.get(milestoneDtos.indexOf(milestoneDto)));
+		});
 
-        milestoneDtos.forEach(milestoneDto -> {
-            assertAll(
-                () -> assertThat(milestoneDto.getOpenIssueCount()).isEqualTo(
-                    getIssueCount(milestoneDtos.indexOf(milestoneDto) + 1L, IssueState.OPEN)),
-                () -> assertThat(milestoneDto.getOpenIssueCount()).isEqualTo(
-                    getIssueCount(milestoneDtos.indexOf(milestoneDto) + 1L, IssueState.CLOSE))
-            );
-        });
-    }
+		milestoneDtos.forEach(milestoneDto -> {
+			assertAll(
+				() -> assertThat(milestoneDto.getOpenIssueCount()).isEqualTo(
+					getIssueCount(milestoneDtos.indexOf(milestoneDto) + 1L, IssueState.OPEN)),
+				() -> assertThat(milestoneDto.getClosedIssueCount()).isEqualTo(
+					getIssueCount(milestoneDtos.indexOf(milestoneDto) + 1L, IssueState.CLOSE))
+			);
+		});
+	}
 
-    @Test
-    void 마일스톤을_편집한다() {
+	@Test
+	void 마일스톤을_편집한다() {
 
-        // given
-        MilestoneModifyRequest request = new MilestoneModifyRequest("수정 제목", "수정 설명",
-            LocalDate.of(2022, 8, 1));
-        Milestone registeredMilestone = registeredMilestones.get(0);
-        Milestone updatedMilestone = Milestone.of(1L, "수정 제목", "수정 설명", LocalDate.of(2022, 8, 1),
-            new ArrayList<>());
-        given(milestoneRepository.save(registeredMilestone.update(request))).willReturn(
-            updatedMilestone);
+		// given
+		Long id = 1L;
+		MilestoneModifyRequest request = new MilestoneModifyRequest("수정 제목", "수정 설명",
+			LocalDate.of(2022, 8, 1));
+		Milestone registeredMilestone = milestoneRepository.findById(id).orElseThrow(MilestoneException::new);
+		Milestone updatedMilestone = Milestone.of(id, "수정 제목", "수정 설명", LocalDate.of(2022, 8, 1),
+			new ArrayList<>());
 
-        // when
-        Milestone milestone = milestoneService.update(request);
+		// when
+		MilestoneResponse milestoneResponse = milestoneServiceImpl.update(id, request);
 
-        // then
-        assertThat(milestone).usingRecursiveComparison().isEqualTo(updatedMilestone);
-    }
+		// then
+		assertThat(milestoneResponse).usingRecursiveComparison()
+			.ignoringFields("openIssueCount", "closedIssueCount")
+			.isEqualTo(updatedMilestone);
+	}
 
-    @Test
-    void 마일스톤을_일괄_삭제한다() {
+	// Todo : 삭제 테스트는 Transactional을 붙여주지 않으면 실패한다. 왜일까..
+	// "object references an unsaved transient instance"
+	@Test
+	@Transactional
+	void 마일스톤을_일괄_삭제한다() {
 
-    }
+		// given
+		List<Long> ids = List.of(1L, 2L);
+		List<Milestone> foundMilestones = milestoneRepository.findAllById(ids);
+
+		// when
+		List<Long> deletedMilestoneIds = milestoneServiceImpl.deleteById(ids);
+
+		// then
+		assertThat(foundMilestones).hasSize(2);
+		deletedMilestoneIds.forEach(id ->
+			assertThat(milestoneRepository.findById(id)).isEmpty()
+		);
+
+	}
 }

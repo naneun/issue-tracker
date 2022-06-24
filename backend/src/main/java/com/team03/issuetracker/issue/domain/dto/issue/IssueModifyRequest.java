@@ -9,6 +9,9 @@ import lombok.Getter;
 public class IssueModifyRequest {
 
     @NotBlank
+    private Long id;
+
+    @NotBlank
     private String title;
 
     @NotBlank

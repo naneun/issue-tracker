@@ -1,22 +1,14 @@
 package com.team03.issuetracker.milestone.domain;
 
 import com.team03.issuetracker.issue.domain.Issue;
+import com.team03.issuetracker.issue.domain.IssueState;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneModifyRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
@@ -24,58 +16,79 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Milestone {
 
-    @OneToMany(mappedBy = "milestone") //, cascade = CascadeType.PERSIST)
-    @ToString.Exclude
-    private final List<Issue> issues = new ArrayList<>();
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @NotBlank
-    @Column(nullable = false)
-    private String title;
-    private String description;
-    private LocalDate dueDate;
+	@OneToMany(mappedBy = "milestone", fetch = FetchType.LAZY)
+	@ToString.Exclude
+	private final List<Issue> issues = new ArrayList<>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@NotBlank
+	@Column(nullable = false)
+	private String title;
+	private String description;
+	private LocalDate dueDate;
 
-    /********************************************************************/
+	/********************************************************************/
 
-    @Builder
-    private Milestone(Long id, String title, String description, LocalDate dueDate,
-        List<Issue> issues) {
+	@Builder
+	private Milestone(Long id, String title, String description, LocalDate dueDate,
+		List<Issue> issues) {
 
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.dueDate = dueDate;
-        this.issues.addAll(issues);
-    }
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.dueDate = dueDate;
+		this.issues.addAll(issues);
+	}
 
-    public static Milestone of(Long id, String title, String description, LocalDate dueDate,
-        List<Issue> issues) {
+	public static Milestone of(Long id, String title, String description, LocalDate dueDate,
+		List<Issue> issues) {
 
-        return Milestone.builder()
-            .id(id)
-            .title(title)
-            .description(description)
-            .dueDate(dueDate)
-            .issues(issues)
-            .build();
-    }
+		return Milestone.builder()
+			.id(id)
+			.title(title)
+			.description(description)
+			.dueDate(dueDate)
+			.issues(issues)
+			.build();
+	}
 
-    /********************************************************************/
+	/********************************************************************/
 
-    public Milestone update(MilestoneModifyRequest request) {
-        this.title = request.getTitle();
-        this.description = request.getDescription();
-        this.dueDate = request.getDueDate();
-        return this;
-    }
+	public Milestone update(MilestoneModifyRequest request) {
+		this.title = request.getTitle();
+		this.description = request.getDescription();
+		this.dueDate = request.getDueDate();
+		return this;
+	}
 
-    public void addIssue(Issue issue) {
-        this.issues.add(issue);
-    }
+	public boolean hasIssue(Issue issue) {
+		return issues.contains(issue);
+	}
 
-    public void truncateIssues() {
-        this.issues.forEach(issue -> issue.changeMilestone(null));
-        this.issues.clear();
-    }
+	public void addIssue(Issue issue) {
+		this.issues.add(issue);
+	}
+
+	public void truncateIssues() {
+		this.issues.forEach(issue -> issue.changeMilestone(null));
+		this.issues.clear();
+	}
+
+	public void removeIssue(Issue issue) {
+		this.issues.remove(issue);
+		issue.changeMilestone(null);
+	}
+
+	public Long getOpenIssueCount() {
+		return this.issues.stream()
+			.filter(issue -> issue.getState().equals(IssueState.OPEN))
+			.count();
+	}
+
+	public Long getClosedIssueCount() {
+		return this.issues.stream()
+			.filter(issue -> issue.getState().equals(IssueState.CLOSE))
+			.count();
+	}
 }

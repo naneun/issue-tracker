@@ -33,6 +33,7 @@ class IssueDetailFragment : Fragment() {
         binding.id = issueID.toString()
         binding.rvIssueDetail.adapter = adapter
         loadComments()
+        switchEditMode()
     }
 
     private fun loadComments(){
@@ -52,5 +53,11 @@ class IssueDetailFragment : Fragment() {
         }
     }
 
+    private fun switchEditMode(){
+        binding.iBtnIssueDetailMore.setOnClickListener {
+            val dialog = IssueDetailMoreDialogFragment()
+            dialog.show(requireParentFragment().childFragmentManager, "more")
+        }
+    }
 
 }

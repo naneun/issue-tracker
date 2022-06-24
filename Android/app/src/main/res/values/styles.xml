@@ -64,6 +64,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Subtitle1.Red">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
 
     //14px
 

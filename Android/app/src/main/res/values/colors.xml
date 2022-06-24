@@ -14,6 +14,7 @@
     <color name="light_skyBlue">#FFCCD4FF</color>
     <color name="selected_skyBlue">#FFC7EBFF</color>
     <color name="greyScale">#FFE5E5EA</color>
+    <color name="greyScale2">#FFF2F2F7</color>
     <color name="grey1">#FF8E8E93</color>
     <color name="grey2">#FF87878D</color>
     <color name="red">#FFFF3B30</color>

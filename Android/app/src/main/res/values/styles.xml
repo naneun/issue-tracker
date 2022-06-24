@@ -20,6 +20,9 @@
         <item name="android:textSize">23sp</item>
     </style>
 
+    <style name="HeadLine5.Grey">
+        <item name="android:textColor">@color/grey1</item>
+    </style>
     //20px
 
     <style name="HeadLine6" parent="TextAppearance.MaterialComponents.Headline6" />

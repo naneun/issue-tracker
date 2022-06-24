@@ -30,7 +30,12 @@ class IssueDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         issueID = requireArguments().getInt(Constants.ISSUE_ID_KEY)
         adapter = IssueDetailAdapter()
+        binding.id = issueID.toString()
         binding.rvIssueDetail.adapter = adapter
+        loadComments()
+    }
+
+    private fun loadComments(){
         viewModel.loadDetail(issueID)
         viewModel.issueDetail.observe(viewLifecycleOwner) {
             binding.tvIssueDetailTitle.text = it.title
@@ -46,4 +51,6 @@ class IssueDetailFragment : Fragment() {
             adapter.submitList(it.comment)
         }
     }
+
+
 }

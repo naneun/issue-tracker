@@ -28,6 +28,7 @@ import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 import com.example.issue_tracker.domain.model.Issue
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class IssueHomeFragment : Fragment() {
@@ -64,23 +65,39 @@ class IssueHomeFragment : Fragment() {
         setSwitchToListModeFromFilterMode()
         setSwitchSearchMode()
         setSwitchToListModeFromSearchMode()
+        setDefaultFilterMenu()
+        setDefaultFilterSelection()
         closeEditMode()
         removeIssue()
         closeIssueList()
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { loadStateList() }
-                launch { loadLabelList() }
-                launch { loadMileStoneList() }
-                launch { loadUserList() }
-                launch { loadIssueList() }
+                async { loadStateList() }
+                async { loadLabelList() }
+                async { loadMileStoneList() }
+                async { loadUserList() }
+                async { loadIssueList() }
             }
         }
 
         binding.etlSearch.setEndIconOnClickListener {
             //To do: Search 로직 (백엔드 API와 협의 필요)
         }
+    }
+
+    private fun setDefaultFilterMenu(){
+        val menuList = mutableListOf(getString(R.string.spinner_default))
+        setSpinner(menuList, SpinnerType.STATE)
+        setSpinner(menuList, SpinnerType.WRITER)
+        setSpinner(menuList, SpinnerType.LABEL)
+        setSpinner(menuList, SpinnerType.MILESTONE)
+    }
+
+    private fun setDefaultFilterSelection(){
+        binding.spinnerIssueState.setSelection(0)
+        binding.spinnerIssueMilestone.setSelection(0)
+        binding.spinnerIssueAssignee.setSelection(0)
+        binding.spinnerIssueLabel.setSelection(0)
     }
 
     private suspend fun loadIssueList() {
@@ -99,7 +116,6 @@ class IssueHomeFragment : Fragment() {
         }
 
     }
-
     private suspend fun loadUserList() {
         val userList = mutableListOf(getString(R.string.spinner_default))
         sharedViewModel.userList.collect {
@@ -112,6 +128,7 @@ class IssueHomeFragment : Fragment() {
 
     private suspend fun loadLabelList() {
         val labelList = mutableListOf(getString(R.string.spinner_default))
+        setSpinner(labelList, SpinnerType.LABEL)
         sharedViewModel.labelList.collect {
             it.forEach { label ->
                 labelList.add(label.title)
@@ -311,4 +328,5 @@ class IssueHomeFragment : Fragment() {
         super.onStop()
         changeStatusBarWhite()
     }
+
 }

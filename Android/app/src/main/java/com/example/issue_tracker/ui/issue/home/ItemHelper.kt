@@ -4,7 +4,7 @@ import android.graphics.Canvas
 import android.icu.lang.UCharacter.IndicPositionalCategory.LEFT
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
 import androidx.recyclerview.widget.RecyclerView
 import com.example.issue_tracker.R
 
@@ -52,13 +52,6 @@ class ItemHelper(private val issueAdapter: IssueAdapter) : ItemTouchHelper.Callb
                 isCurrentlyActive
             )  // newX 만큼 이동(고정 시 이동 위치/고정 해제 시 이동 위치 결정)
 
-            // 고정시킬 시 애니메이션 추가
-//            if (newX == -clamp) {
-//                getView(viewHolder).animate().translationX(-clamp).setDuration(100L).start()
-//                return
-//            }
-
-            currentDx = newX
             getDefaultUIUtil().onDraw(
                 c,
                 recyclerView,
@@ -74,7 +67,7 @@ class ItemHelper(private val issueAdapter: IssueAdapter) : ItemTouchHelper.Callb
     private fun getView(viewHolder: RecyclerView.ViewHolder): View =
         viewHolder.itemView.findViewById(R.id.cl_swipe_view)
 
-    private fun getTag(viewHolder: RecyclerView.ViewHolder) : Boolean =
+    private fun getTag(viewHolder: RecyclerView.ViewHolder): Boolean =
         viewHolder.itemView.tag as? Boolean ?: false
 
 
@@ -82,17 +75,14 @@ class ItemHelper(private val issueAdapter: IssueAdapter) : ItemTouchHelper.Callb
         dX: Float,
         isClamped: Boolean,
         isCurrentlyActive: Boolean
-    ) : Float {
+    ): Float {
 
-        // 고정할 수 있으면
-        val newX = if (isClamped) {
-            // 현재 swipe 중이면 swipe되는 영역 제한
-            if (isCurrentlyActive) {
-                dX - clamp
-            }
-            else -clamp
-        }
-        else dX / 4
+        val newX =
+            if (isClamped) {
+                if (isCurrentlyActive) {
+                    dX - clamp
+                } else -clamp
+            } else dX / 4
 
         return newX
     }

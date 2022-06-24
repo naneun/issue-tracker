@@ -10,8 +10,14 @@ class IssueHomeViewModel : ViewModel() {
     private val _stateList = MutableStateFlow<List<IssueState>>(listOf())
     val stateList: StateFlow<List<IssueState>> = _stateList
 
-    private val _issueList = MutableStateFlow<List<Issue>>(listOf())
+    private val _issueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
     val issueList: StateFlow<List<Issue>> = _issueList
+
+    private val _checkList = MutableStateFlow<MutableList<Int>>(mutableListOf())
+    val checkList: StateFlow<List<Int>> = _checkList
+
+    private val _closeIssueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
+    val closeIssueList: StateFlow<List<Issue>> = _closeIssueList
 
     init {
         initStateList()
@@ -19,14 +25,54 @@ class IssueHomeViewModel : ViewModel() {
     }
 
     private fun initStateList() {
-        _stateList.value = listOf(IssueState.OPEN, IssueState.WRITE_MYSELF, IssueState.ASSIGN_MYSELF, IssueState.WRITE_COMMENT, IssueState.CLOSE)
+        _stateList.value = listOf(
+            IssueState.OPEN,
+            IssueState.WRITE_MYSELF,
+            IssueState.ASSIGN_MYSELF,
+            IssueState.WRITE_COMMENT,
+            IssueState.CLOSE
+        )
     }
 
     private fun makeDummyIssueList() {
-        _issueList.value = listOf<Issue>(
+        _issueList.value = mutableListOf<Issue>(
             Issue(1, "마일스톤", "제목", "설명", "label"),
             Issue(2, "마스터즈 코스1", "이슈트래커1", "6월 13일에서 20일까지", "ABCDEF"),
             Issue(3, "마스터즈 코스2", "이슈트래커2", "7월 9일에서 12일까지", "asdfef")
         )
+    }
+
+    fun addCheckList(itemId: Int) {
+        _checkList.value.add(itemId)
+    }
+
+    fun removeCheckList(itemId: Int) {
+        _checkList.value.removeIf {
+            it == itemId
+        }
+    }
+
+    fun clearCheckList() {
+        _checkList.value.clear()
+    }
+
+    fun closeIssueList() {
+        for (i in 0 until _checkList.value.size) {
+            val str = _issueList.value.filter {
+                it.id == _checkList.value[i]
+            }
+            _issueList.value.removeIf {
+                it.id == checkList.value[i]
+            }
+            _closeIssueList.value.add(str[0])
+        }
+    }
+
+    fun removeIssueList() {
+        for (i in 0 until _checkList.value.size) {
+            _issueList.value.removeIf {
+                it.id == checkList.value[i]
+            }
+        }
     }
 }

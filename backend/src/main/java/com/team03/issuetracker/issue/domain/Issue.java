@@ -120,6 +120,10 @@ public class Issue extends BaseTimeEntity {
         this.state = nextState(this.state);
     }
 
+    public void setState(IssueState state) {
+        this.state = state;
+    }
+
     public void changeLabel(Label label) {
         this.label = label;
     }
@@ -130,5 +134,26 @@ public class Issue extends BaseTimeEntity {
 
     public void changeAssignee(Member assignee) {
         this.assignee = assignee;
+    }
+
+    /********************************************************************/
+
+    public Issue merge(Issue updated) {
+        if (!title.equals(updated.title)) {
+            title = updated.title;
+        }
+        if (!content.equals(updated.content)) {
+            content = updated.content;
+        }
+        if (!label.equals(updated.label)) {
+            label = updated.label;
+        }
+        if (!milestone.equals(updated.milestone)) {
+            milestone = updated.milestone;
+        }
+        if (!assignee.equals(updated.assignee)) {
+            assignee = updated.assignee;
+        }
+        return this;
     }
 }

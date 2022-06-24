@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -31,6 +32,14 @@ public class WebConfig implements WebMvcConfigurer {
         filterRegistrationBean.setFilter(loginFilter);
         filterRegistrationBean.setOrder(1);
         filterRegistrationBean.addUrlPatterns("/login/github", "/login/google");
+        return filterRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<Filter> registerOpenEntityManagerInViewFilterBean() {
+        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(new OpenEntityManagerInViewFilter());
+        filterRegistrationBean.setOrder(2);
         return filterRegistrationBean;
     }
 

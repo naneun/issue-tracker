@@ -45,7 +45,7 @@ public interface IssueService {
      *
      * @param checkedIds
      */
-    List<IssueResponse> deleteById(List<Long> checkedIds);
+    List<Long> deleteById(List<Long> checkedIds);
 
     /**
      * '상태', '작성자', '레이블', '마일스톤' 을 검색 조건으로 필터링하여 해당하는 이슈를 조회한다.

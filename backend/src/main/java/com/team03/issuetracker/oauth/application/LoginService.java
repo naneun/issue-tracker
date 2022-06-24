@@ -1,6 +1,8 @@
 package com.team03.issuetracker.oauth.application;
 
+import com.team03.issuetracker.common.component.LoginMember;
 import com.team03.issuetracker.common.domain.Member;
+import com.team03.issuetracker.common.exception.MemberException;
 import com.team03.issuetracker.common.repository.MemberRepository;
 import com.team03.issuetracker.oauth.common.ResourceServer;
 import com.team03.issuetracker.oauth.dto.OAuthUser;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LoginService {
 
     private final MemberRepository memberRepository;
+    private final LoginMember loginMember;
 
     @Transactional
     public Member save(OAuthUser oAuthUser) {
@@ -27,7 +30,17 @@ public class LoginService {
             .orElseGet(() -> memberRepository.save(loginMember));
     }
 
+    @Transactional(readOnly = true)
+    public void updateLoginMemberById(Long id) {
+        Member member = memberRepository.findById(id)
+            .orElseThrow(MemberException::new);
+
+        loginMember.update(member);
+    }
+
+    @Transactional(readOnly = true)
     public Member findById(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(LoginException::new);
+        return memberRepository.findById(memberId)
+            .orElseThrow(LoginException::new);
     }
 }

@@ -16,21 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 class LabelServiceTest {
 
 	final LabelServiceImpl labelServiceImpl;
 	final LabelRepository labelRepository;
 
-	final List<Label> registeredLabels;
-
 	@Autowired
 	public LabelServiceTest(LabelServiceImpl labelServiceImpl, LabelRepository labelRepository) {
 		this.labelRepository = labelRepository;
 		this.labelServiceImpl = labelServiceImpl;
-		this.registeredLabels = List.of(
-			Label.of(1L, "Label", "레이블에 대한 설명", "#b7bcc4"),
-			Label.of(2L, "Documentation", "개발 내용을 문서화", "#041c42")
-		);
 	}
 
 	@Test
@@ -82,9 +77,7 @@ class LabelServiceTest {
 			.isEqualTo(updatedLabel);
 	}
 
-	// TODO
 	@Test
-	@Transactional
 	void 라벨을_일괄_삭제한다() {
 
 		// given

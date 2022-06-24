@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,35 +14,43 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.PopupWindow
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.issue_tracker.R
-import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueWriteBinding
+import com.example.issue_tracker.domain.model.SpinnerType
+import com.example.issue_tracker.ui.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.MarkwonPlugin
 import io.noties.markwon.image.ImagesPlugin
 import io.noties.markwon.image.file.FileSchemeHandler
+import kotlinx.coroutines.launch
 
 
 class IssueWriteFragment : Fragment() {
     private var markDownFlag = false
+    private val sharedViewModel: HomeViewModel by activityViewModels()
     private lateinit var popupWindow: PopupWindow
-    private var beforeChangedText = Constants.EMPTY_INPUT
-    private var copyText = Constants.EMPTY_INPUT
+    private var beforeChangedText = ""
+    private var copyText = ""
     private lateinit var cutButton: Button
     private lateinit var copyButton: Button
     private lateinit var insertPhotoButton: Button
     private lateinit var pasteButton: Button
+    private lateinit var navigator: NavController
     private lateinit var binding: FragmentIssueWriteBinding
     private lateinit var markOne: Markwon
     override fun onCreateView(
@@ -54,6 +63,7 @@ class IssueWriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navigator = Navigation.findNavController(view)
         markOne = Markwon.builder(requireContext())
             .usePlugin(ImagesPlugin.create())
             .usePlugin(object : AbstractMarkwonPlugin() {
@@ -67,7 +77,76 @@ class IssueWriteFragment : Fragment() {
             }).build()
         displayMarkDownPreview()
         setLongClickPopupWindow(view)
+        setUpBackButton()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { loadLabelList() }
+                launch { loadMileStoneList() }
+                launch { loadUserList() }
+            }
+        }
+    }
 
+    private suspend fun loadUserList() {
+        val userList = mutableListOf(getString(R.string.spinner_default))
+        sharedViewModel.userList.collect {
+            it.forEach { user ->
+                userList.add(user.name)
+            }
+            setSpinner(userList, SpinnerType.WRITER)
+        }
+    }
+
+    private suspend fun loadLabelList() {
+        val labelList = mutableListOf(getString(R.string.spinner_default))
+        sharedViewModel.labelList.collect {
+            it.forEach { label ->
+                labelList.add(label.title)
+            }
+            setSpinner(labelList, SpinnerType.LABEL)
+        }
+    }
+
+    private suspend fun loadMileStoneList() {
+        val mileStoneList = mutableListOf(getString(R.string.spinner_default))
+        sharedViewModel.mileStoneList.collect {
+            it.forEach { mileStone ->
+                mileStoneList.add(mileStone.title)
+            }
+            setSpinner(mileStoneList, SpinnerType.MILESTONE)
+        }
+    }
+
+    private fun setSpinner(list: List<String>, type: SpinnerType) {
+        val spinner = when (type) {
+            SpinnerType.LABEL -> binding.spinnerIssueWriteLabel
+            SpinnerType.MILESTONE -> binding.spinnerIssueWriteMilestone
+            else -> binding.spinnerIssueWriteAssignee
+        }
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_menu, list)
+        spinner.adapter = adapter
+        spinner.setSelection(0)
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    0 -> (view as TextView).setTextColor(Color.GRAY)
+                    else -> (view as TextView).setTextColor(Color.BLACK)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setUpBackButton() {
+        binding.iBtnIssueWriteBack.setOnClickListener {
+            navigator.navigateUp()
+        }
     }
 
     private fun setLongClickPopupWindow(view: View) {
@@ -80,7 +159,7 @@ class IssueWriteFragment : Fragment() {
     private fun addCutAction() {
         cutButton.setOnClickListener {
             copyText = binding.etIssueWriteContent.text.toString()
-            binding.etIssueWriteContent.setText(Constants.EMPTY_INPUT)
+            binding.etIssueWriteContent.setText(getString(R.string.empty_inout))
         }
 
     }
@@ -103,7 +182,8 @@ class IssueWriteFragment : Fragment() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater =
+            requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.issue_popup_window, null)
         findMenuButton(popupView)
         addMenuEventListener()
@@ -172,7 +252,7 @@ class IssueWriteFragment : Fragment() {
                     permission.value -> {
                         Snackbar.make(
                             binding.root,
-                            Constants.PERMISSION_GRANTED_MESSAGE,
+                            getString(R.string.message_permission_granted),
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
@@ -182,7 +262,7 @@ class IssueWriteFragment : Fragment() {
                     else -> {
                         Snackbar.make(
                             binding.root,
-                            Constants.PERMISSION_DENIED_MESSAGE,
+                            getString(R.string.message_permission_denied),
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
@@ -191,14 +271,14 @@ class IssueWriteFragment : Fragment() {
         }
 
     private fun showContextPopupPermission() {
-        AlertDialog.Builder(requireContext()).setTitle(Constants.PERMISSION_NEED_MESSAGE)
-            .setMessage(Constants.PERMISSION_NEED_REASON_MESSAGE)
-            .setPositiveButton(Constants.MOVE_TO_SETTING_MESSAGE) { _, _ ->
+        AlertDialog.Builder(requireContext()).setTitle(getString(R.string.message_permission_need))
+            .setMessage(getString(R.string.message_permission_need_reason))
+            .setPositiveButton(getString(R.string.message_move_to_setting)) { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     .setData(Uri.parse("package:${requireContext().packageName}"))
                 startActivity(intent)
             }
-            .setNegativeButton(Constants.CANCEL_MESSAGE) { _, _ -> }
+            .setNegativeButton(getString(R.string.message_cancel)) { _, _ -> }
             .create()
             .show()
 

@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_issue_to_issueWriteFragment"
             app:destination="@id/issueWriteFragment" />
+        <action
+            android:id="@+id/action_navigation_issue_to_issueDetailFragment"
+            app:destination="@id/issueDetailFragment" />
     </fragment>
     <fragment
         android:id="@id/navigation_label"
@@ -50,4 +53,9 @@
         android:id="@+id/issueWriteFragment"
         android:name="com.example.issue_tracker.ui.issue.write.IssueWriteFragment"
         android:label="IssueWriteFragment" />
+    <fragment
+        android:id="@+id/issueDetailFragment"
+        android:name="com.example.issue_tracker.ui.issue.detail.IssueDetailFragment"
+        android:label="fragment_issue_detail"
+        tools:layout="@layout/fragment_issue_detail" />
 </navigation>

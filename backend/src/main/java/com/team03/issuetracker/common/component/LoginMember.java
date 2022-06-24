@@ -2,6 +2,7 @@ package com.team03.issuetracker.common.component;
 
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.oauth.common.ResourceServer;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.context.annotation.Scope;
@@ -10,8 +11,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
-@NoArgsConstructor
+@Getter
 @ToString
+@NoArgsConstructor
 public class LoginMember {
 
     private Long id;
@@ -21,6 +23,10 @@ public class LoginMember {
     private String email;
     private String profileImage;
     private String oAuthAccessToken;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public void update(Member member) {
         this.id = member.getId();

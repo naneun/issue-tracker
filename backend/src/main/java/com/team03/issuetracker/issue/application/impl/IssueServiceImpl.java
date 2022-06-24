@@ -74,8 +74,12 @@ public class IssueServiceImpl implements IssueService {
 	@Override
 	@Transactional
 	public List<Long> deleteById(List<Long> checkedIds) {
-		// TODO
-		return null;
+		List<Issue> issues = issueRepository.findAllById(checkedIds);
+		issues.forEach(issue -> issue.getMilestone().removeIssue(issue));
+		issueRepository.deleteAllById(checkedIds);
+
+		return issues.stream().map(Issue::getId)
+			.collect(Collectors.toList());
 	}
 
 	@Override

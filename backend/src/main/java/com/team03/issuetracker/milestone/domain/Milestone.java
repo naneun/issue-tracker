@@ -62,6 +62,10 @@ public class Milestone {
 		return this;
 	}
 
+	public boolean hasIssue(Issue issue) {
+		return issues.contains(issue);
+	}
+
 	public void addIssue(Issue issue) {
 		this.issues.add(issue);
 	}
@@ -69,6 +73,11 @@ public class Milestone {
 	public void truncateIssues() {
 		this.issues.forEach(issue -> issue.changeMilestone(null));
 		this.issues.clear();
+	}
+
+	public void removeIssue(Issue issue) {
+		this.issues.remove(issue);
+		issue.changeMilestone(null);
 	}
 
 	public Long getOpenIssueCount() {

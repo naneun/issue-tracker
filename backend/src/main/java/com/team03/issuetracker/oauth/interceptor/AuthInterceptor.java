@@ -49,7 +49,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        loginService.updateLoginMemberById(3L);
+        loginService.updateLoginMemberById(Long.parseLong(claims.getAudience()));
 
         return true;
     }

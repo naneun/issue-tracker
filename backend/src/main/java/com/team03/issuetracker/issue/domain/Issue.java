@@ -129,6 +129,12 @@ public class Issue extends BaseTimeEntity {
     }
 
     public void changeMilestone(Milestone milestone) {
+        if (this.milestone != null && this.milestone.hasIssue(this)) {
+            this.milestone.removeIssue(this);
+        }
+        if (milestone != null) {
+            milestone.addIssue(this);
+        }
         this.milestone = milestone;
     }
 

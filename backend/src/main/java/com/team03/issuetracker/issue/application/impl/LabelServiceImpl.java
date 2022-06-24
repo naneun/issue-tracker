@@ -12,7 +12,6 @@ import com.team03.issuetracker.issue.repository.LabelRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ public class LabelServiceImpl implements LabelService {
 
 	private final LabelRepository labelRepository;
 	private final IssueRepository issueRepository;
-	private final EntityManager entityManager;
 
 	@Override
 	public LabelResponse addLabel(LabelCreateRequest createRequest) {
@@ -68,5 +66,4 @@ public class LabelServiceImpl implements LabelService {
 
 		return ids;
 	}
-
 }

@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.issue_tracker.databinding.ItemCommentMyselfBinding
 import com.example.issue_tracker.databinding.ItemCommentOtherBinding
 import com.example.issue_tracker.domain.model.Comment
-import com.example.issue_tracker.domain.model.MyComment
-import com.example.issue_tracker.domain.model.OtherComment
 import com.example.issue_tracker.ui.common.getTimeDiff
 
 
@@ -28,12 +26,10 @@ class IssueDetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is MyCommentViewHolder -> {
-                val item = comments[position] as MyComment
-                holder.bind(item)
+                holder.bind(comments[position])
             }
             is OtherCommentViewHolder -> {
-                val item = comments[position] as OtherComment
-                holder.bind(item)
+                holder.bind(comments[position])
             }
 
         }
@@ -42,7 +38,7 @@ class IssueDetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class MyCommentViewHolder(private val binding: ItemCommentMyselfBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(comment: MyComment) {
+        fun bind(comment: Comment) {
             binding.comment = comment
             binding.logTime = getTimeDiff(comment.time)
         }
@@ -50,15 +46,15 @@ class IssueDetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class OtherCommentViewHolder(private val binding: ItemCommentOtherBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(comment: OtherComment) {
+        fun bind(comment: Comment) {
             binding.comment = comment
             binding.logTime = getTimeDiff(comment.time)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (comments[position]) {
-            is MyComment -> VIEW_TYPE_MY_COMMENT
+        return when (comments[position].editable) {
+            true-> VIEW_TYPE_MY_COMMENT
             else -> VIEW_TYPE_OTHER_COMMENT
         }
     }

@@ -7,9 +7,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/emojis")
 @RequiredArgsConstructor
 public class EmojiController {
 
@@ -21,7 +23,7 @@ public class EmojiController {
 		produces = "application/json",
 		response = EmojiResponse.class
 	)
-	@GetMapping("/emojis")
+	@GetMapping
 	public ResponseEntity<List<EmojiResponse>> findByState() {
 		return ResponseEntity.ok(emojiService.findAll());
 	}

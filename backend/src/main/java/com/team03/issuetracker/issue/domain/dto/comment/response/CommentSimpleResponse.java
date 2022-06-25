@@ -1,4 +1,4 @@
-package com.team03.issuetracker.issue.domain.dto.comment;
+package com.team03.issuetracker.issue.domain.dto.comment.response;
 
 import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.issue.domain.Comment;
@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class CommentSimpleResponse {
 
     private WriterResponseOfSimpleComment writer;
-
     private LocalDateTime createdAt;
-
     private String content;
 
     public static CommentSimpleResponse from(Comment comment) {

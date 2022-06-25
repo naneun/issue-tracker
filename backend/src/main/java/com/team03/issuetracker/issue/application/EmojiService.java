@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface EmojiService {
 
-    List<EmojiResponse> findAll();
+	List<EmojiResponse> findAll();
 }

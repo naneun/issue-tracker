@@ -8,6 +8,7 @@ import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.milestone.domain.Milestone;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +28,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
@@ -83,6 +85,7 @@ public class Issue extends BaseTimeEntity {
     @Builder
     private Issue(Long id, String title, String content, Label label, Milestone milestone,
         Member assignee, List<Comment> comments) {
+
         this.id = id;
         this.title = title;
         this.content = content;
@@ -90,7 +93,9 @@ public class Issue extends BaseTimeEntity {
         this.label = label;
         this.milestone = milestone;
         this.assignee = assignee;
-        this.comments.addAll(comments);
+        if (Objects.nonNull(comments)) {
+            this.comments.addAll(comments);
+        }
     }
 
     public static Issue of(Long id, String title, String content, Label label, Milestone milestone,
@@ -145,19 +150,19 @@ public class Issue extends BaseTimeEntity {
     /********************************************************************/
 
     public Issue merge(Issue updated) {
-        if (!title.equals(updated.title)) {
+        if (Strings.isNotBlank(updated.title)) {
             title = updated.title;
         }
-        if (!content.equals(updated.content)) {
+        if (Strings.isNotBlank(updated.content)) {
             content = updated.content;
         }
-        if (!label.equals(updated.label)) {
+        if (Objects.nonNull(updated.label)) {
             label = updated.label;
         }
-        if (!milestone.equals(updated.milestone)) {
+        if (Objects.nonNull(updated.milestone)) {
             milestone = updated.milestone;
         }
-        if (!assignee.equals(updated.assignee)) {
+        if (Objects.nonNull(updated.assignee)) {
             assignee = updated.assignee;
         }
         return this;

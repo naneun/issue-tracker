@@ -24,10 +24,6 @@ public class LoginMember {
     private String profileImage;
     private String oAuthAccessToken;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void update(Member member) {
         this.id = member.getId();
         this.serialNumber = member.getSerialNumber();

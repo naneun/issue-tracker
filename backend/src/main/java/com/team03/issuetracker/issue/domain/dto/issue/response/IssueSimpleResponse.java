@@ -1,4 +1,4 @@
-package com.team03.issuetracker.issue.domain.dto.issue;
+package com.team03.issuetracker.issue.domain.dto.issue.response;
 
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.Label;

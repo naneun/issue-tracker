@@ -1,4 +1,4 @@
-package com.team03.issuetracker.issue.domain.dto.comment;
+package com.team03.issuetracker.issue.domain.dto.comment.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CommentAddEmojiRequest {
+public class CommentAddRequest {
 
     @JsonProperty
-    private Long emojiId;
+    private String content;
 }

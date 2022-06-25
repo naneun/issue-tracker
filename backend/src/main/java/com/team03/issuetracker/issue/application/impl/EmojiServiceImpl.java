@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmojiServiceImpl implements EmojiService {
 
-    private final EmojiRepository emojiRepository;
+	private final EmojiRepository emojiRepository;
 
-    @Override
-    public List<EmojiResponse> findAll() {
-        return emojiRepository.findAll().stream()
-            .map(EmojiResponse::new)
-            .collect(Collectors.toList());
-    }
+	@Override
+	public List<EmojiResponse> findAll() {
+		return emojiRepository.findAll().stream()
+			.map(EmojiResponse::new)
+			.collect(Collectors.toList());
+	}
 }

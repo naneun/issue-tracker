@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IssueRepositoryCustom {
 
-    List<Issue> findBySearchCondition(IssueSearchCondition searchCondition);
+	List<Issue> findBySearchCondition(IssueSearchCondition searchCondition);
 }

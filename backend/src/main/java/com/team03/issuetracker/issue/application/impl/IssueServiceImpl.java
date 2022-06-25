@@ -121,9 +121,11 @@ public class IssueServiceImpl implements IssueService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<IssueSimpleResponse> findBySearchCondition(
-		IssueSearchCondition issueSearchCondition) {
-		// TODO
-		return null;
+		IssueSearchCondition searchCondition) {
+
+		return issueRepository.findBySearchCondition(searchCondition).stream()
+			.map(IssueSimpleResponse::new)
+			.collect(Collectors.toList());
 	}
 
 	@Override

@@ -59,11 +59,11 @@ public interface IssueService {
 	/**
 	 * '상태', '작성자', '레이블', '마일스톤' 을 검색 조건으로 필터링하여 해당하는 이슈를 조회한다.
 	 *
-	 * @param issueSearchCondition { IssueState state; Member creator; Label label; Milestone
+	 * @param searchCondition { IssueState state; Member creator; Label label; Milestone
 	 *                             milestone; }
 	 * @return
 	 */
-	List<IssueSimpleResponse> findBySearchCondition(IssueSearchCondition issueSearchCondition);
+	List<IssueSimpleResponse> findBySearchCondition(IssueSearchCondition searchCondition);
 
 	/**
 	 * 이슈의 '제목' 과 '본문' 내용에서 '검색어' 가 매칭되는 이슈 리스트를 조회한다.

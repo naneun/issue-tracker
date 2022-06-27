@@ -47,7 +47,7 @@ public interface IssueService {
 	 *
 	 * @param checkedIds
 	 */
-	List<IssueResponse> changeStateById(List<Long> checkedIds);
+	List<IssueResponse> changeState(List<Long> checkedIds);
 
 	/**
 	 * 이슈를 일괄 삭제한다.

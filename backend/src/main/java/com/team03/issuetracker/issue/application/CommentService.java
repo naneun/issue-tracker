@@ -38,7 +38,7 @@ public interface CommentService {
 	 *
 	 * @param commentId
 	 */
-	CommentResponse deleteCommentById(Long issueId, Long commentId);
+	CommentResponse deleteComment(Long issueId, Long commentId);
 
 	/**
 	 * commentId 에 해당하는 코멘트에 emojiId 에 해당하는 이모지를 등록한다.

@@ -99,7 +99,7 @@ public class IssueServiceImpl implements IssueService {
 
 	@Override
 	@Transactional
-	public List<IssueResponse> changeStateById(List<Long> checkedIds) {
+	public List<IssueResponse> changeState(List<Long> checkedIds) {
 		List<Issue> issues = issueRepository.findAllById(checkedIds);
 		issues.forEach(Issue::changeState);
 

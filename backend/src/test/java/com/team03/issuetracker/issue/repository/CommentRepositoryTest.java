@@ -46,7 +46,7 @@ class CommentRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        Page<Comment> comments = commentRepository.findByIssue(issue, pageable);
+        Page<Comment> comments = commentRepository.findByIssueId(issueId, pageable);
 
         // then
         // TODO 'page 속성' 및 'content' 검증

@@ -6,9 +6,9 @@ values ('❤', '좋아요'),
        ('✅', '확인했어요');
 
 /* member */
-insert into member(email)
-values ('yhsep7@gmail.com'),
-       ('gruzzimo@naver.com');
+insert into member(name, email)
+values ('Sam', 'yhsep7@gmail.com'),
+       ('Daniel', 'gruzzimo@naver.com');
 
 /* label */
 insert into label(title, description, background_color)
@@ -28,5 +28,5 @@ values ('제목', '이슈에 대한 설명(최대 두 줄까지 보여줄 수 �
 
 /* comment */
 insert into comment(writer_id, content, issue_id)
-values (1, 'content1', 1),
-       (2, 'content2', 1);
+values (1, '마크다운이 어떻게 보여지는 지 확인합니다.', 1),
+       (2, '코멘트는 어떻게 보여지는 지 확인합니다.', 1);

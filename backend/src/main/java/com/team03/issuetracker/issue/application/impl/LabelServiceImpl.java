@@ -43,7 +43,7 @@ public class LabelServiceImpl implements LabelService {
 	}
 
 	@Override
-	public LabelResponse update(Long id, LabelModifyRequest modifyRequest) {
+	public LabelResponse modifyLabel(Long id, LabelModifyRequest modifyRequest) {
 
 		Label foundLabel = labelRepository.findById(id).orElseThrow(LabelException::new);
 		Label modifiedLabel = foundLabel.update(modifyRequest);

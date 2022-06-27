@@ -104,7 +104,7 @@ class MilestoneServiceTest {
 			new ArrayList<>());
 
 		// when
-		MilestoneResponse milestoneResponse = milestoneServiceImpl.update(id, request);
+		MilestoneResponse milestoneResponse = milestoneServiceImpl.modifyMilestone(id, request);
 
 		// then
 		assertThat(milestoneResponse).usingRecursiveComparison()
@@ -112,24 +112,4 @@ class MilestoneServiceTest {
 			.isEqualTo(updatedMilestone);
 	}
 
-	// Todo : 삭제 테스트는 Transactional을 붙여주지 않으면 실패한다. 왜일까..
-	// "object references an unsaved transient instance"
-	@Test
-	@Transactional
-	void 마일스톤을_일괄_삭제한다() {
-
-		// given
-		List<Long> ids = List.of(1L, 2L);
-		List<Milestone> foundMilestones = milestoneRepository.findAllById(ids);
-
-		// when
-		List<Long> deletedMilestoneIds = milestoneServiceImpl.deleteById(ids);
-
-		// then
-		assertThat(foundMilestones).hasSize(2);
-		deletedMilestoneIds.forEach(id ->
-			assertThat(milestoneRepository.findById(id)).isEmpty()
-		);
-
-	}
 }

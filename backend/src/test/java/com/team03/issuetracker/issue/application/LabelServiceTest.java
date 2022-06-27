@@ -69,7 +69,7 @@ class LabelServiceTest {
 		Label updatedLabel = Label.of(1L, "수정 제목", "수정 설명", "#ffffff");
 
 		// when
-		LabelResponse labelResponse = labelServiceImpl.update(id, modifyRequest);
+		LabelResponse labelResponse = labelServiceImpl.modifyLabel(id, modifyRequest);
 
 		// then
 		assertThat(labelResponse)

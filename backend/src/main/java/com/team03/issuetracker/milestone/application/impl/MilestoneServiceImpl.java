@@ -1,6 +1,5 @@
 package com.team03.issuetracker.milestone.application.impl;
 
-import com.team03.issuetracker.issue.repository.IssueRepository;
 import com.team03.issuetracker.milestone.application.MilestoneService;
 import com.team03.issuetracker.milestone.domain.Milestone;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneCreateRequest;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MilestoneServiceImpl implements MilestoneService {
 
 	private final MilestoneRepository milestoneRepository;
-	private final IssueRepository issueRepository;
 
 	@Override
 	public MilestoneResponse addMilestone(MilestoneCreateRequest createRequest) {
@@ -42,10 +40,9 @@ public class MilestoneServiceImpl implements MilestoneService {
 
 	@Override
 	@Transactional
-	public MilestoneResponse update(Long id, MilestoneModifyRequest request) {
+	public MilestoneResponse modifyMilestone(Long id, MilestoneModifyRequest request) {
 		Milestone foundMilestone = milestoneRepository.findById(id).orElseThrow(MilestoneException::new);
-		Milestone updatedMilestone = foundMilestone.update(request);
-		return new MilestoneResponse(updatedMilestone);
+		return new MilestoneResponse(foundMilestone.update(request));
 	}
 
 	@Override

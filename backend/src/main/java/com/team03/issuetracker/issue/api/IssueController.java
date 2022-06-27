@@ -73,7 +73,7 @@ public class IssueController {
 	public ResponseEntity<IssueResponse> modifyIssue(
 		@RequestBody IssueModifyRequest issueModifyRequest) {
 
-		return ResponseEntity.ok().body(issueService.modifyIssue(issueModifyRequest));
+		return ResponseEntity.ok(issueService.modifyIssue(issueModifyRequest));
 	}
 
 	@ApiOperation(
@@ -85,7 +85,8 @@ public class IssueController {
 	@PatchMapping("/state")
 	public ResponseEntity<List<IssueResponse>> changeStateById(
 		@RequestParam("id") List<Long> checkedIds) {
-		return ResponseEntity.ok().body(issueService.changeStateById(checkedIds));
+
+		return ResponseEntity.ok(issueService.changeStateById(checkedIds));
 	}
 
 	@ApiOperation(
@@ -96,6 +97,6 @@ public class IssueController {
 	)
 	@DeleteMapping
 	public ResponseEntity<List<Long>> deleteById(@RequestParam("id") List<Long> checkedIds) {
-		return ResponseEntity.ok().body(issueService.deleteById(checkedIds));
+		return ResponseEntity.ok(issueService.deleteById(checkedIds));
 	}
 }

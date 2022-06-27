@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class CommentAddEmojiRequest {
+public class CommentRequestDto {
 
-    private final Long commentId;
-    private final Long emojiId;
+	private final Long id;
+	private final String content;
 }

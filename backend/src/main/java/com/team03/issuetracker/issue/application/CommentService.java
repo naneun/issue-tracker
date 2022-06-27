@@ -46,5 +46,6 @@ public interface CommentService {
 	 *
 	 * @param commentAddEmojiRequest
 	 */
-	CommentResponse addEmojiToComment(CommentAddEmojiRequest commentAddEmojiRequest);
+	CommentResponse addEmojiToComment(Long commentId,
+		CommentAddEmojiRequest commentAddEmojiRequest);
 }

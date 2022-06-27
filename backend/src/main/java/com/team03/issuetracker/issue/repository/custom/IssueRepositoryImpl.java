@@ -20,6 +20,9 @@ public class IssueRepositoryImpl implements IssueRepositoryCustom {
 
 		return jpaQueryFactory
 			.selectFrom(issue).distinct()
+			.leftJoin(issue.label).fetchJoin()
+			.leftJoin(issue.milestone).fetchJoin()
+			.leftJoin(issue.creator).fetchJoin()
 			.where(
 				stateEqualsTo(searchCondition.getState()),
 				creatorEqualsTo(searchCondition.getCreatorId()),

@@ -77,7 +77,7 @@ public class Issue extends BaseTimeEntity {
     @JoinColumn
     private Member modifier;
 
-    @OneToMany(mappedBy = "issue", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private final List<Comment> comments = new ArrayList<>();
 
     /********************************************************************/

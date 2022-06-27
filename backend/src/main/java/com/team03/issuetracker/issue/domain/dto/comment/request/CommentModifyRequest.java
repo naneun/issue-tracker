@@ -1,13 +1,8 @@
 package com.team03.issuetracker.issue.domain.dto.comment.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+public class CommentModifyRequest extends CommentRequestDto {
 
-@Getter
-@AllArgsConstructor
-public class CommentModifyRequest {
-
-    @JsonProperty
-    private String content;
+    public CommentModifyRequest(Long id, String content) {
+        super(id, content);
+    }
 }

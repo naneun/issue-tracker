@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER_NAME}
+    password: ${DATABASE_USER_PASSWORD}
+
+  sql:
+    init:
+      mode: always
+
+  redis:
+    host: localhost
+    port: 6379

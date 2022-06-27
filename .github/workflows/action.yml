@@ -1,0 +1,91 @@
+name: GitHub workflow - Java with Gradle
+
+on:
+  push:
+    # 테스트 중. 나중에 deploy 브랜치로 바꿀 것
+    branches: [ "BE-deploy" ]
+
+permissions:
+  contents: read
+
+jobs:
+  job1:
+    name: 1. Build jar
+    runs-on: ubuntu-latest
+    # 기본 경로 지정 https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_iddefaultsrun
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      #     현재 커밋의 소스파일을 깃헙 서버로 가져온다
+      - name: Checkout to current branch
+        uses: actions/checkout@v3
+      #     깃헙 서버에 JDK11 설치
+      - name: Install JDK11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      #     깃헙에서 테스트가 돌아가게 하려면 어떻게 해야하지? 일단은 안돼서 build 대신 bootJar로 변경
+      - name: Build with Gradle
+        run: ./gradlew bootJar
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: jar_file
+          path: ./backend/build/libs
+
+
+  job2:
+    needs: job1
+    name: 2. Build & Push Docker Image
+    runs-on: ubuntu-latest
+
+    #     https://github.com/marketplace/actions/build-and-push-docker-images
+    steps:
+      - name: Checkout to current branch
+        uses: actions/checkout@v3
+
+      - name: Get artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: jar_file
+          path: ./backend/build/libs
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: gruzzimo/issue_tracker:latest
+          context: ./backend
+
+
+  job3:
+    needs: job2
+    name: 3. Deploy to AWS EC2
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PUBLIC_EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.PUBLIC_EC2_SSH_KEY }}
+          script: |
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/issue_tracker:latest
+            sudo docker stop $(sudo docker ps -a -q) || true
+            sudo docker system prune -f
+            sudo docker run -p 80:8080 -e PROFILE=${{ secrets.PROFILE }} -e MYSQL_DATABASE_URL=${{secrets.MYSQL_DATABASE_URL}} -e MYSQL_DATABASE_USERNAME=${{secrets.MYSQL_DATABASE_USERNAME}} -e MYSQL_DATABASE_PASSWORD=${{secrets.MYSQL_DATABASE_PASSWORD}} -e GOOGLE_CLIENT_ID=${{secrets.GOOGLE_CLIENT_ID}} -e GOOGLE_CLIENT_SECRET=${{secrets.GOOGLE_CLIENT_SECRET}} -e GITHUB_CLIENT_ID=${{secrets.GIT_OAUTH_CLIENT_ID}} -e GITHUB_CLIENT_SECRET=${{secrets.GIT_OAUTH_CLIENT_SECRET}} -e JWT_ISSUER=${{secrets.JWT_ISSUER}} -e JWT_SECRET_KEY=${{secrets.JWT_SECRET_KEY}} -e PUBLIC_IP=${{secrets.PUBLIC_IP}} gruzzimo/issue_tracker

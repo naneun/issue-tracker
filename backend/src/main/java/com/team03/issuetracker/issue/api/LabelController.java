@@ -55,7 +55,7 @@ public class LabelController {
 		produces = "application/json"
 	)
 	@DeleteMapping
-	public ResponseEntity<List<Long>> deleteById(List<Long> ids) {
+	public ResponseEntity<List<Long>> deleteById(@RequestParam("id") List<Long> ids) {
 		return ResponseEntity.ok(labelService.deleteById(ids));
 	}
 }

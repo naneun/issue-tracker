@@ -7,6 +7,7 @@ import com.team03.issuetracker.milestone.domain.dto.MilestoneModifyRequest;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneResponse;
 import com.team03.issuetracker.milestone.exception.MilestoneException;
 import com.team03.issuetracker.milestone.repository.MilestoneRepository;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +50,16 @@ public class MilestoneServiceImpl implements MilestoneService {
 	@Transactional
 	public List<Long> deleteById(List<Long> ids) {
 
-		milestoneRepository.findAllById(ids)
-			.forEach(Milestone::truncateIssues);
+		List<Milestone> milestones = ids.stream()
+			.map(milestoneRepository::findById)
+			.map(milestone -> milestone.orElseThrow(MilestoneException::new))
+			.collect(Collectors.toList());
+
+		milestones.stream()
+			.map(Milestone::getIssues)
+			.flatMap(Collection::stream)
+			.collect(Collectors.toList())
+			.forEach(issue -> issue.changeMilestone(null));
 
 		milestoneRepository.deleteAllById(ids);
 

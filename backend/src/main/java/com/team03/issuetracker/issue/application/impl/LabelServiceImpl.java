@@ -59,9 +59,9 @@ public class LabelServiceImpl implements LabelService {
 			.map(label -> label.orElseThrow(LabelException::new))
 			.collect(Collectors.toList());
 
-		labels.stream().map(Label::getIssues)
+		labels.stream()
+			.map(Label::getIssues)
 			.flatMap(Collection::stream)
-			.collect(Collectors.toList())
 			.forEach(issue -> issue.changeLabel(null));
 
 		labelRepository.deleteAllById(labelIds);

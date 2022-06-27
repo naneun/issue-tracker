@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class MilestoneCreateRequest {
 

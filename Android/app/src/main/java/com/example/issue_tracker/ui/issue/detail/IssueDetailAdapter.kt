@@ -53,11 +53,13 @@ class IssueDetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (comments[position].editable) {
-            true-> VIEW_TYPE_MY_COMMENT
-            else -> VIEW_TYPE_OTHER_COMMENT
+        return if (comments[position].editable) {
+            VIEW_TYPE_MY_COMMENT
+        } else {
+            VIEW_TYPE_OTHER_COMMENT
         }
     }
+
 
     override fun getItemCount(): Int {
         return comments.size

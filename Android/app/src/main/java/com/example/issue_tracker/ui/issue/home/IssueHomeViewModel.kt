@@ -1,14 +1,15 @@
 package com.example.issue_tracker.ui.issue.home
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.issue_tracker.domain.model.Issue
-import com.example.issue_tracker.domain.model.IssueState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class IssueHomeViewModel : ViewModel() {
-    private val _stateList = MutableStateFlow<List<IssueState>>(listOf())
-    val stateList: StateFlow<List<IssueState>> = _stateList
+
 
     private val _issueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
     val issueList: StateFlow<List<Issue>> = _issueList
@@ -19,19 +20,11 @@ class IssueHomeViewModel : ViewModel() {
     private val _closeIssueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
     val closeIssueList: StateFlow<List<Issue>> = _closeIssueList
 
-    init {
-        initStateList()
-        makeDummyIssueList()
-    }
+    private val _editMode = MutableStateFlow<Boolean>(false)
+    val editMode = _editMode.asStateFlow()
 
-    private fun initStateList() {
-        _stateList.value = listOf(
-            IssueState.OPEN,
-            IssueState.WRITE_MYSELF,
-            IssueState.ASSIGN_MYSELF,
-            IssueState.WRITE_COMMENT,
-            IssueState.CLOSE
-        )
+    init {
+        makeDummyIssueList()
     }
 
     private fun makeDummyIssueList() {
@@ -41,6 +34,7 @@ class IssueHomeViewModel : ViewModel() {
             Issue(3, "마스터즈 코스2", "이슈트래커2", "7월 9일에서 12일까지", "asdfef")
         )
     }
+
 
     fun addCheckList(itemId: Int) {
         _checkList.value.add(itemId)
@@ -74,5 +68,13 @@ class IssueHomeViewModel : ViewModel() {
                 it.id == checkList.value[i]
             }
         }
+    }
+
+    fun turnOnEditMode() {
+        _editMode.value = true
+    }
+
+    fun turnOffEditMode() {
+        _editMode.value = false
     }
 }

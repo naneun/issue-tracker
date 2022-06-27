@@ -1,6 +1,7 @@
 package com.example.issue_tracker.ui
 
 import androidx.lifecycle.ViewModel
+import com.example.issue_tracker.domain.model.IssueState
 import com.example.issue_tracker.domain.model.Label
 import com.example.issue_tracker.domain.model.MileStone
 import com.example.issue_tracker.domain.model.User
@@ -18,13 +19,26 @@ class HomeViewModel : ViewModel() {
     private val _userList = MutableStateFlow<List<User>>(listOf())
     val userList: StateFlow<List<User>> = _userList
 
+    private val _stateList = MutableStateFlow<List<IssueState>>(listOf())
+    val stateList: StateFlow<List<IssueState>> = _stateList
+
+
     init {
         makeDummyLabels()
         makeDummyMileStones()
         makeDummyUser()
+        initStateList()
     }
 
-
+    private fun initStateList() {
+        _stateList.value = listOf(
+            IssueState.OPEN,
+            IssueState.WRITE_MYSELF,
+            IssueState.ASSIGN_MYSELF,
+            IssueState.WRITE_COMMENT,
+            IssueState.CLOSE
+        )
+    }
     private fun makeDummyUser() {
         val users = mutableListOf<User>()
         for (i in 0..10) {

@@ -57,5 +57,13 @@
         android:id="@+id/issueDetailFragment"
         android:name="com.example.issue_tracker.ui.issue.detail.IssueDetailFragment"
         android:label="fragment_issue_detail"
-        tools:layout="@layout/fragment_issue_detail" />
+        tools:layout="@layout/fragment_issue_detail" >
+        <action
+            android:id="@+id/action_issueDetailFragment_to_issueDetailMoreDialogFragment"
+            app:destination="@id/issueDetailMoreDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/issueDetailMoreDialogFragment"
+        android:name="com.example.issue_tracker.ui.issue.detail.IssueDetailMoreDialogFragment"
+        android:label="IssueDetailMoreDialogFragment" />
 </navigation>

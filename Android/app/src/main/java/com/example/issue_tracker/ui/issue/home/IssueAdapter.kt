@@ -34,9 +34,9 @@ class IssueAdapter(
         ) {
             if (isEditMode) {
                 binding.cbIssueSelector.visibility = View.VISIBLE
-                binding.cbIssueSelector.isChecked = false
             } else {
                 binding.cbIssueSelector.visibility = View.GONE
+                binding.cbIssueSelector.isChecked = false
             }
 
             binding.clSwipeView.setOnClickListener {
@@ -53,10 +53,12 @@ class IssueAdapter(
                 if (isChecked) {
                     issueAdapterEventListener?.addInCheckList(itemIssue.id)
                     binding.cbIssueSelector.setBackgroundColor(0xffF2F2F7.toInt())
+                    binding.clSwipeView.setBackgroundColor(0xffF2F2F7.toInt())
                     binding.cbIssueSelector.buttonTintList = ColorStateList.valueOf(0xff007AFF.toInt())
                 } else {
                     issueAdapterEventListener?.deleteInCheckList(itemIssue.id)
                     binding.cbIssueSelector.setBackgroundColor(0xffffffff.toInt())
+                    binding.clSwipeView.setBackgroundColor(0xffffffff.toInt())
                     binding.cbIssueSelector.buttonTintList = ColorStateList.valueOf(0xffD5D5DB.toInt())
                 }
             }

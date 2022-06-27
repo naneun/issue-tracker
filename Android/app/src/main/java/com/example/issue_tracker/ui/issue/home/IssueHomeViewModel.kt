@@ -1,41 +1,27 @@
 package com.example.issue_tracker.ui.issue.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.issue_tracker.domain.model.Issue
-import com.example.issue_tracker.domain.model.IssueState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class IssueHomeViewModel : ViewModel() {
-    private val _stateList = MutableStateFlow<List<IssueState>>(listOf())
-    val stateList: StateFlow<List<IssueState>> = _stateList
-
-    private val _issueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
-    val issueList: StateFlow<List<Issue>> = _issueList
-
-    private val _checkList = MutableStateFlow<MutableList<Int>>(mutableListOf())
-    val checkList: StateFlow<List<Int>> = _checkList
+    private val _openIssueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
+    val openIssueList: StateFlow<List<Issue>> = _openIssueList
 
     private val _closeIssueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
     val closeIssueList: StateFlow<List<Issue>> = _closeIssueList
 
+    private val _checkList = MutableStateFlow<MutableList<Int>>(mutableListOf())
+    val checkList: StateFlow<List<Int>> = _checkList
+
     init {
-        initStateList()
         makeDummyIssueList()
     }
 
-    private fun initStateList() {
-        _stateList.value = listOf(
-            IssueState.OPEN,
-            IssueState.WRITE_MYSELF,
-            IssueState.ASSIGN_MYSELF,
-            IssueState.WRITE_COMMENT,
-            IssueState.CLOSE
-        )
-    }
-
     private fun makeDummyIssueList() {
-        _issueList.value = mutableListOf<Issue>(
+        _openIssueList.value = mutableListOf<Issue>(
             Issue(1, "마일스톤", "제목", "설명", "label"),
             Issue(2, "마스터즈 코스1", "이슈트래커1", "6월 13일에서 20일까지", "ABCDEF"),
             Issue(3, "마스터즈 코스2", "이슈트래커2", "7월 9일에서 12일까지", "asdfef")
@@ -58,10 +44,10 @@ class IssueHomeViewModel : ViewModel() {
 
     fun closeIssueList() {
         for (i in 0 until _checkList.value.size) {
-            val str = _issueList.value.filter {
+            val str = _openIssueList.value.filter {
                 it.id == _checkList.value[i]
             }
-            _issueList.value.removeIf {
+            _openIssueList.value.removeIf {
                 it.id == checkList.value[i]
             }
             _closeIssueList.value.add(str[0])
@@ -70,7 +56,7 @@ class IssueHomeViewModel : ViewModel() {
 
     fun removeIssueList() {
         for (i in 0 until _checkList.value.size) {
-            _issueList.value.removeIf {
+            _openIssueList.value.removeIf {
                 it.id == checkList.value[i]
             }
         }

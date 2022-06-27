@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.issue_tracker.R
 import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
-import com.example.issue_tracker.domain.model.Issue
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
 import kotlinx.coroutines.async
@@ -70,9 +69,9 @@ class IssueHomeFragment : Fragment() {
         closeEditMode()
         removeIssue()
         closeIssueList()
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                async { loadStateList() }
                 async { loadLabelList() }
                 async { loadMileStoneList() }
                 async { loadUserList() }
@@ -85,7 +84,7 @@ class IssueHomeFragment : Fragment() {
         }
     }
 
-    private fun setDefaultFilterMenu(){
+    private fun setDefaultFilterMenu() {
         val menuList = mutableListOf(getString(R.string.spinner_default))
         setSpinner(menuList, SpinnerType.STATE)
         setSpinner(menuList, SpinnerType.WRITER)
@@ -93,7 +92,7 @@ class IssueHomeFragment : Fragment() {
         setSpinner(menuList, SpinnerType.MILESTONE)
     }
 
-    private fun setDefaultFilterSelection(){
+    private fun setDefaultFilterSelection() {
         binding.spinnerIssueState.setSelection(0)
         binding.spinnerIssueMilestone.setSelection(0)
         binding.spinnerIssueAssignee.setSelection(0)
@@ -101,21 +100,11 @@ class IssueHomeFragment : Fragment() {
     }
 
     private suspend fun loadIssueList() {
-        viewModel.issueList.collect {
+        viewModel.openIssueList.collect {
             adapter.submitList(it)
         }
     }
 
-    private suspend fun loadStateList() {
-        val stateList = mutableListOf<String>()
-        viewModel.stateList.collect {
-            it.forEach { state ->
-                stateList.add(state.value)
-            }
-            setSpinner(stateList, SpinnerType.STATE)
-        }
-
-    }
     private suspend fun loadUserList() {
         val userList = mutableListOf(getString(R.string.spinner_default))
         sharedViewModel.userList.collect {
@@ -225,14 +214,10 @@ class IssueHomeFragment : Fragment() {
     private fun settingRecyclerview() {
         adapter.issueAdapterEventListener = object : IssueAdapterEventListener {
 
-            override fun updateIssueState(itemId: Int, boolean: Boolean) {
-//                viewLifecycleOwner.lifecycleScope.launch {
-//                    IssueHomeViewModel.updateIssueSate(itemId, boolean)
-//                }
-            }
-
             override fun switchToEditMode(itemId: Int) {
                 viewModel.clearCheckList()
+                setSelectedIssueCount()
+                binding.rvIssue.setPadding(0, 160, 0, 0)
                 adapter.isEditMode = true
                 binding.tbIssues.visibility = View.GONE
                 binding.clIssueEdit.visibility = View.VISIBLE
@@ -255,10 +240,6 @@ class IssueHomeFragment : Fragment() {
                     Log.d("TEST", "체크박스해제${viewModel.checkList.value.size}")
                 }
             }
-
-            override fun getIntoDetail(issue: Issue) {
-                TODO("Not yet implemented")
-            }
         }
     }
 
@@ -275,6 +256,7 @@ class IssueHomeFragment : Fragment() {
     private fun closeEditMode() {
         binding.btnIssueEditClose.setOnClickListener {
             adapter.isEditMode = false
+            binding.rvIssue.setPadding(0, 0, 0, 0)
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
@@ -286,11 +268,12 @@ class IssueHomeFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.removeIssueList()
             }
+            binding.rvIssue.setPadding(0, 0, 0, 0)
             adapter.isEditMode = false
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
-            Log.d("TEST", "삭제후 이슈리스트 사이즈${viewModel.issueList.value.size}")
+            Log.d("TEST", "삭제후 이슈리스트 사이즈${viewModel.openIssueList.value.size}")
         }
     }
 
@@ -299,6 +282,7 @@ class IssueHomeFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.closeIssueList()
             }
+            binding.rvIssue.setPadding(0, 0, 0, 0)
             adapter.isEditMode = false
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE

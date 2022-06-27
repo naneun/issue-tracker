@@ -1,5 +1,6 @@
 package com.example.issue_tracker.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.issue_tracker.domain.model.Label
 import com.example.issue_tracker.domain.model.MileStone
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlin.random.Random
 
 class HomeViewModel : ViewModel() {
-    private val _labelList = MutableStateFlow<List<Label>>(listOf())
+    private val _labelList = MutableStateFlow<MutableList<Label>>(mutableListOf())
     val labelList: StateFlow<List<Label>> = _labelList
 
     private val _mileStoneList = MutableStateFlow<List<MileStone>>(listOf())
@@ -18,12 +19,19 @@ class HomeViewModel : ViewModel() {
     private val _userList = MutableStateFlow<List<User>>(listOf())
     val userList: StateFlow<List<User>> = _userList
 
+    private val _editCheckList = MutableStateFlow<MutableList<Int>>(mutableListOf())
+    val editCheckList: StateFlow<List<Int>> = _editCheckList
+
+    private val _labelEditMode = MutableStateFlow<Boolean>(false)
+//    val labelEditMode: StateFlow<Boolean> = _labelEditMode
+
+    var labelEditMode = false
+
     init {
         makeDummyLabels()
         makeDummyMileStones()
         makeDummyUser()
     }
-
 
     private fun makeDummyUser() {
         val users = mutableListOf<User>()
@@ -61,5 +69,33 @@ class HomeViewModel : ViewModel() {
             milestones.add(MileStone(i, "마일스톤 제목${i}", "마일스톤 더미 콘테츠", "06-14", 2, 2))
         }
         _mileStoneList.value = milestones
+    }
+
+    fun clearCheckList() {
+        _editCheckList.value.clear()
+    }
+
+    fun addCheckList(itemId: Int) {
+        _editCheckList.value.add(itemId)
+    }
+
+    fun removeCheckList(itemId: Int) {
+        _editCheckList.value.removeIf {
+            it == itemId
+        }
+    }
+
+    fun removeLabelList() {
+        for (i in 0 until _editCheckList.value.size) {
+            _labelList.value.removeIf {
+                it.id == _editCheckList.value[i]
+            }
+        }
+    }
+
+    fun labelChangeMode() {
+//        _labelEditMode.value = !_labelEditMode.value
+        labelEditMode = !labelEditMode
+        Log.d("TEST", "viewModelBoolean: ${labelEditMode}")
     }
 }

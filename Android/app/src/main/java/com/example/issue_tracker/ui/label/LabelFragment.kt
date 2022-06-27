@@ -1,16 +1,26 @@
 package com.example.issue_tracker.ui.label
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentLabelBinding
 import com.example.issue_tracker.domain.model.Label
+import com.example.issue_tracker.ui.HomeViewModel
+import com.example.issue_tracker.ui.issue.home.IssueHomeViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class LabelFragment : Fragment() {
@@ -18,6 +28,7 @@ class LabelFragment : Fragment() {
     private lateinit var binding:FragmentLabelBinding
     private lateinit var adapter: LabelAdapter
     private lateinit var navigator: NavController
+    private val viewModel: HomeViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,40 +39,91 @@ class LabelFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter= LabelAdapter()
+        adapter= LabelAdapter(
+            switchEditMode = { switchToEditMode(it) },
+            addCheckList = { addCheckList(it) },
+            deleteCheckList = { deleteCheckList(it) }
+        )
+
         navigator= Navigation.findNavController(view)
-        moveToMakeLabel()
         binding.rvLabel.adapter= adapter
-        adapter.submitList(makeDummyLabel())
 
-    }
 
-    private fun makeDummyLabel(): MutableList<Label> {
-        val labels= mutableListOf<Label>()
-        for(i in 0 .. 10){
-            labels.add(Label(i,"제목", "내용입니다", randomHexColor()))
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                async { loadIssueList() }
+            }
         }
-        return labels
+        moveToMakeLabel()
+        closeToEditMode()
+        removeIssue()
     }
 
-    private fun randomHexColor(): String {
-        val redValue= Random.nextInt(256).toString(16)
-        val greenValue= Random.nextInt(256).toString(16)
-        val blueValue = Random.nextInt(256).toString(16)
-        return "FF${checkHexLength(redValue)}${checkHexLength(greenValue)}${checkHexLength(blueValue)}"
-    }
-
-    private fun checkHexLength(RGBValue:String):String{
-        return if(RGBValue.length<2){
-            "0${RGBValue}"
-        } else{
-            RGBValue
+    private suspend fun loadIssueList() {
+        viewModel.labelList.collect {
+            adapter.submitList(it)
         }
     }
 
     private fun moveToMakeLabel(){
         binding.iBtnLabelAdd.setOnClickListener {
             navigator.navigate(R.id.action_navigation_label_to_labelWriteFragment)
+        }
+    }
+
+    private fun switchToEditMode(checkbox: CheckBox) {
+        viewModel.clearCheckList()
+//        viewModel.labelChangeMode()
+        checkbox.visibility = View.VISIBLE
+        binding.clLabelToolbarOrigin.visibility = View.GONE
+        binding.clLabelToolbarEdit.visibility = View.VISIBLE
+        setSelectedIssueCount()
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun closeToEditMode() {
+        binding.btnLabelEditClose.setOnClickListener {
+//            viewModel.labelChangeMode()
+            binding.clLabelToolbarOrigin.visibility = View.VISIBLE
+            binding.clLabelToolbarEdit.visibility = View.GONE
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun addCheckList(itemId: Int) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.addCheckList(itemId)
+            setSelectedIssueCount()
+        }
+    }
+
+    private fun deleteCheckList(itemId: Int) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.removeCheckList(itemId)
+            setSelectedIssueCount()
+        }
+    }
+
+    private fun setSelectedIssueCount() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.editCheckList.collect {
+                    binding.tvLabelCount.text = it.size.toString()
+                }
+            }
+        }
+    }
+
+    private fun removeIssue() {
+        binding.btnLabelRemove.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.removeLabelList()
+            }
+//            viewModel.labelChangeMode()
+            binding.clLabelToolbarOrigin.visibility = View.VISIBLE
+            binding.clLabelToolbarEdit.visibility = View.GONE
+            adapter.notifyDataSetChanged()
+            Log.d("TEST", "삭제후 이슈리스트 사이즈${viewModel.labelList.value.size}")
         }
     }
 }

@@ -68,8 +68,8 @@ public class IssueServiceImpl implements IssueService {
 
 	@Override
 	@Transactional
-	public IssueResponse modifyIssue(IssueModifyRequest issueModifyRequest) {
-		Issue issue = issueRepository.findById(issueModifyRequest.getId())
+	public IssueResponse modifyIssue(Long issueId, IssueModifyRequest issueModifyRequest) {
+		Issue issue = issueRepository.findById(issueId)
 			.orElseThrow(IssueException::new);
 
 		Issue modified = createIssue(issueModifyRequest);

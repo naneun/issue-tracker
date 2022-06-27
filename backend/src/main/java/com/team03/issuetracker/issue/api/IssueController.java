@@ -69,11 +69,11 @@ public class IssueController {
 		produces = "application/json",
 		response = IssueResponse.class
 	)
-	@PatchMapping
-	public ResponseEntity<IssueResponse> modifyIssue(
+	@PatchMapping("/{id}")
+	public ResponseEntity<IssueResponse> modifyIssue(@PathVariable Long id,
 		@RequestBody IssueModifyRequest issueModifyRequest) {
 
-		return ResponseEntity.ok(issueService.modifyIssue(issueModifyRequest));
+		return ResponseEntity.ok(issueService.modifyIssue(id, issueModifyRequest));
 	}
 
 	@ApiOperation(

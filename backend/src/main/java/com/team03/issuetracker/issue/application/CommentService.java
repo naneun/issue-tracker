@@ -1,6 +1,5 @@
 package com.team03.issuetracker.issue.application;
 
-import com.team03.issuetracker.issue.domain.dto.comment.request.CommentAddEmojiRequest;
 import com.team03.issuetracker.issue.domain.dto.comment.request.CommentAddRequest;
 import com.team03.issuetracker.issue.domain.dto.comment.request.CommentModifyRequest;
 import com.team03.issuetracker.issue.domain.dto.comment.response.CommentResponse;
@@ -31,12 +30,12 @@ public interface CommentService {
 	 *
 	 * @param commentModifyRequest { String content; }
 	 */
-	CommentResponse modifyComment(Long issueId, CommentModifyRequest commentModifyRequest);
+	CommentResponse modifyComment(Long issueId, Long commentId,
+		CommentModifyRequest commentModifyRequest);
 
 	/**
 	 * issueId 에 해당하는 이슈에 등록된 commentId 에 해당하는 코멘트를 삭제한다.
 	 *
-	 * @param issueId
 	 * @param commentId
 	 */
 	CommentResponse deleteCommentById(Long issueId, Long commentId);
@@ -44,8 +43,8 @@ public interface CommentService {
 	/**
 	 * commentId 에 해당하는 코멘트에 emojiId 에 해당하는 이모지를 등록한다.
 	 *
-	 * @param commentAddEmojiRequest
+	 * @param commentId
+	 * @param emojiId
 	 */
-	CommentResponse addEmojiToComment(Long commentId,
-		CommentAddEmojiRequest commentAddEmojiRequest);
+	CommentResponse addEmojiToComment(Long commentId, Long emojiId);
 }

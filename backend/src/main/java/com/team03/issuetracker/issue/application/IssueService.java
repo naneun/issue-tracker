@@ -40,7 +40,7 @@ public interface IssueService {
 	 *
 	 * @param issueModifyRequest { }
 	 */
-	IssueResponse modifyIssue(IssueModifyRequest issueModifyRequest);
+	IssueResponse modifyIssue(Long issueId, IssueModifyRequest issueModifyRequest);
 
 	/**
 	 * 이슈 상태를 일괄 변경한다.

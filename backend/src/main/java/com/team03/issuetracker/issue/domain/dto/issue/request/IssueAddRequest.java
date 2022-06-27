@@ -7,6 +7,6 @@ public class IssueAddRequest extends IssueRequestDto {
 	public IssueAddRequest(@NotBlank String title, @NotBlank String content, Long labelId,
 		Long milestoneId, Long assigneeId) {
 
-		super(null, title, content, labelId, milestoneId, assigneeId);
+		super(title, content, labelId, milestoneId, assigneeId);
 	}
 }

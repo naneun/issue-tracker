@@ -66,7 +66,7 @@ class LabelServiceTest {
 		Long id = 1L;
 		LabelModifyRequest modifyRequest = new LabelModifyRequest("수정 제목", "수정 설명", "#ffffff");
 		Label registeredLabel = labelRepository.findById(id).orElseThrow(LabelException::new);
-		Label updatedLabel = Label.of(1L, "수정 제목", "수정 설명", "#ffffff");
+		Label updatedLabel = Label.of(1L, "수정 제목", "수정 설명", "#ffffff", List.of());
 
 		// when
 		LabelResponse labelResponse = labelServiceImpl.modifyLabel(id, modifyRequest);

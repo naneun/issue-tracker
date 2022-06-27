@@ -1,7 +1,6 @@
 package com.team03.issuetracker.issue.application.impl;
 
 import com.team03.issuetracker.issue.application.LabelService;
-import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.Label;
 import com.team03.issuetracker.issue.domain.dto.label.LabelCreateRequest;
 import com.team03.issuetracker.issue.domain.dto.label.LabelModifyRequest;
@@ -53,17 +52,21 @@ public class LabelServiceImpl implements LabelService {
 	}
 
 	@Override
-	public List<Long> deleteById(List<Long> ids) {
+	public List<Long> deleteById(List<Long> labelIds) {
 
-		List<Issue> issues = ids.stream()
-			.map(issueRepository::findAllByLabelId)
-			.flatMap(Collection::stream)
+		List<Label> labels = labelIds.stream()
+			.map(labelRepository::findById)
+			.map(label -> label.orElseThrow(LabelException::new))
 			.collect(Collectors.toList());
 
-		issues.forEach(issue -> issue.changeLabel(null));
+		labels.stream().map(Label::getIssues)
+			.flatMap(Collection::stream)
+			.collect(Collectors.toList())
+			.forEach(issue -> issue.changeLabel(null));
 
-		labelRepository.deleteAllById(ids);
+		labelRepository.deleteAllById(labelIds);
 
-		return ids;
+		return labels.stream().map(Label::getId)
+			.collect(Collectors.toList());
 	}
 }

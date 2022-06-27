@@ -1,15 +1,10 @@
 package com.team03.issuetracker.issue.domain;
 
 import com.team03.issuetracker.issue.domain.dto.label.LabelModifyRequest;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
@@ -17,38 +12,50 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Label {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private String description;
-    private String backgroundColor;
+	@OneToMany(mappedBy = "label", fetch = FetchType.LAZY)
+	@ToString.Exclude
+	private final List<Issue> issues = new ArrayList<>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String title;
+	private String description;
+	private String backgroundColor;
 
-    /********************************************************************/
+	/********************************************************************/
 
-    @Builder
-    private Label(Long id, String title, String description, String backgroundColor) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.backgroundColor = backgroundColor;
-    }
+	@Builder
+	private Label(Long id, String title, String description, String backgroundColor,
+		List<Issue> issues) {
 
-    public static Label of(Long id, String title, String description, String backgroundColor) {
-        return Label.builder()
-            .id(id)
-            .title(title)
-            .description(description)
-            .backgroundColor(backgroundColor)
-            .build();
-    }
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.backgroundColor = backgroundColor;
+		if (issues == null) {
+			issues = new ArrayList<>();
+		}
+		this.issues.addAll(issues);
+	}
 
-    /********************************************************************/
+	public static Label of(Long id, String title, String description, String backgroundColor,
+		List<Issue> issues) {
 
-    public Label update(LabelModifyRequest request) {
-        this.title = request.getTitle();
-        this.description = request.getDescription();
-        this.backgroundColor = request.getBackgroundColor();
-        return this;
-    }
+		return Label.builder()
+			.id(id)
+			.title(title)
+			.description(description)
+			.backgroundColor(backgroundColor)
+			.issues(issues)
+			.build();
+	}
+
+	/********************************************************************/
+
+	public Label update(LabelModifyRequest request) {
+		this.title = request.getTitle();
+		this.description = request.getDescription();
+		this.backgroundColor = request.getBackgroundColor();
+		return this;
+	}
 }

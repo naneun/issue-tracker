@@ -1,15 +1,10 @@
 package com.example.issue_tracker.domain.model
 
-sealed class Comment
-
-data class MyComment(
+data class Comment(
     val writer: User,
     val time: String,
+    val editable: Boolean,
     val content: String
-) : Comment()
+)
 
-data class OtherComment(
-    val writer: User,
-    val time: String,
-    val content: String
-) : Comment()
+

@@ -28,10 +28,12 @@ import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 import com.example.issue_tracker.domain.model.Issue
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class IssueHomeFragment : Fragment() {
 
     private lateinit var adapter: IssueAdapter

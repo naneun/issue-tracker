@@ -32,6 +32,7 @@ import com.example.issue_tracker.databinding.FragmentIssueWriteBinding
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.MarkwonPlugin
@@ -39,7 +40,7 @@ import io.noties.markwon.image.ImagesPlugin
 import io.noties.markwon.image.file.FileSchemeHandler
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class IssueWriteFragment : Fragment() {
     private var markDownFlag = false
     private val sharedViewModel: HomeViewModel by activityViewModels()

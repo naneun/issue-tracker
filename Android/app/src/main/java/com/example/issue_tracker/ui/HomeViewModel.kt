@@ -5,11 +5,14 @@ import com.example.issue_tracker.domain.model.IssueState
 import com.example.issue_tracker.domain.model.Label
 import com.example.issue_tracker.domain.model.MileStone
 import com.example.issue_tracker.domain.model.User
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 import kotlin.random.Random
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor() : ViewModel() {
     private val _labelList = MutableStateFlow<List<Label>>(listOf())
     val labelList: StateFlow<List<Label>> = _labelList
 

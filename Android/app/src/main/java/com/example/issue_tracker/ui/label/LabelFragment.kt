@@ -11,8 +11,10 @@ import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentLabelBinding
 import com.example.issue_tracker.domain.model.Label
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
+@AndroidEntryPoint
 class LabelFragment : Fragment() {
 
     private lateinit var binding:FragmentLabelBinding

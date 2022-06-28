@@ -1,14 +1,15 @@
 package com.example.issue_tracker.ui.issue.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.issue_tracker.domain.model.Issue
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class IssueHomeViewModel : ViewModel() {
+@HiltViewModel
+class IssueHomeViewModel @Inject constructor() : ViewModel() {
 
 
     private val _issueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())

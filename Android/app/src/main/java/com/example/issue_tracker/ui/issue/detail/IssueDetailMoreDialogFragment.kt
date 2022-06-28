@@ -11,7 +11,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentIssueDetailMoreDialogBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class IssueDetailMoreDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentIssueDetailMoreDialogBinding

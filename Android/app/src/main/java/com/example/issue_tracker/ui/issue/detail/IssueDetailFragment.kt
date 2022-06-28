@@ -13,7 +13,9 @@ import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueDetailBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class IssueDetailFragment : Fragment() {
     private lateinit var binding: FragmentIssueDetailBinding
     private val viewModel: IssueDetailViewModel by viewModels()

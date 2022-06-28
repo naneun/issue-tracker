@@ -24,7 +24,6 @@ class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(itemIssue: Issue, itemClick: (selectedIssueID: Int) -> Unit) {
 
-
             if (itemIssue.editable) {
                 binding.cbIssueSelector.visibility = View.VISIBLE
                 binding.cbIssueSelector.isChecked = false

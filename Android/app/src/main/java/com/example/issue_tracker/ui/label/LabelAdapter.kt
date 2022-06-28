@@ -1,7 +1,9 @@
 package com.example.issue_tracker.ui.label
 
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
@@ -12,9 +14,10 @@ import com.example.issue_tracker.databinding.ItemLabelBinding
 import com.example.issue_tracker.domain.model.Label
 
 class LabelAdapter(
-    val switchEditMode: (CheckBox) -> Unit,
+    val switchEditMode: () -> Unit,
     val addCheckList: (itemId: Int) -> Unit,
-    val deleteCheckList: (itemId: Int) -> Unit
+    val deleteCheckList: (itemId: Int) -> Unit,
+    val checkBox: (checkBox: CheckBox) -> Unit
 ) : ListAdapter<Label, LabelAdapter.ViewHolder>(LabelDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelAdapter.ViewHolder {
@@ -34,16 +37,10 @@ class LabelAdapter(
             binding.label = item
             binding.labelColor = item.color.toLong(16).toInt()
 
-//            if (editMode) {
-//                binding.clLabelSelector.visibility = View.VISIBLE
-//            } else {
-//                binding.clLabelSelector.visibility = View.GONE
-//                binding.clLabelSelector.isChecked = false
-//            }
+            checkBox(binding.clLabelSelector)
 
             binding.clLabel.setOnLongClickListener {
-                switchEditMode(binding.clLabelSelector)
-                notifyDataSetChanged()
+                switchEditMode()
                 true
             }
 

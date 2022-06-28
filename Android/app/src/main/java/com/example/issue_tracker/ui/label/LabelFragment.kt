@@ -2,12 +2,12 @@ package com.example.issue_tracker.ui.label
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,16 +16,13 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentLabelBinding
-import com.example.issue_tracker.domain.model.Label
 import com.example.issue_tracker.ui.HomeViewModel
-import com.example.issue_tracker.ui.issue.home.IssueHomeViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class LabelFragment : Fragment() {
 
-    private lateinit var binding:FragmentLabelBinding
+    private lateinit var binding: FragmentLabelBinding
     private lateinit var adapter: LabelAdapter
     private lateinit var navigator: NavController
     private val viewModel: HomeViewModel by viewModels()
@@ -33,20 +30,21 @@ class LabelFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= DataBindingUtil.inflate(inflater, R.layout.fragment_label, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_label, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter= LabelAdapter(
-            switchEditMode = { switchToEditMode(it) },
+        adapter = LabelAdapter(
+            switchEditMode = { switchToEditMode() },
             addCheckList = { addCheckList(it) },
-            deleteCheckList = { deleteCheckList(it) }
+            deleteCheckList = { deleteCheckList(it) },
+            checkBox = { checkBox(it) }
         )
 
-        navigator= Navigation.findNavController(view)
-        binding.rvLabel.adapter= adapter
+        navigator = Navigation.findNavController(view)
+        binding.rvLabel.adapter = adapter
 
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -56,7 +54,7 @@ class LabelFragment : Fragment() {
         }
         moveToMakeLabel()
         closeToEditMode()
-        removeIssue()
+        removeLabel()
     }
 
     private suspend fun loadIssueList() {
@@ -65,16 +63,15 @@ class LabelFragment : Fragment() {
         }
     }
 
-    private fun moveToMakeLabel(){
+    private fun moveToMakeLabel() {
         binding.iBtnLabelAdd.setOnClickListener {
             navigator.navigate(R.id.action_navigation_label_to_labelWriteFragment)
         }
     }
 
-    private fun switchToEditMode(checkbox: CheckBox) {
+    private fun switchToEditMode() {
         viewModel.clearCheckList()
-//        viewModel.labelChangeMode()
-        checkbox.visibility = View.VISIBLE
+        viewModel.labelEditModeOn()
         binding.clLabelToolbarOrigin.visibility = View.GONE
         binding.clLabelToolbarEdit.visibility = View.VISIBLE
         setSelectedIssueCount()
@@ -83,7 +80,7 @@ class LabelFragment : Fragment() {
 
     private fun closeToEditMode() {
         binding.btnLabelEditClose.setOnClickListener {
-//            viewModel.labelChangeMode()
+            viewModel.labelEditModeOff()
             binding.clLabelToolbarOrigin.visibility = View.VISIBLE
             binding.clLabelToolbarEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
@@ -93,6 +90,7 @@ class LabelFragment : Fragment() {
     private fun addCheckList(itemId: Int) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.addCheckList(itemId)
+            viewModel.labelEditModeOn()
             setSelectedIssueCount()
         }
     }
@@ -100,7 +98,18 @@ class LabelFragment : Fragment() {
     private fun deleteCheckList(itemId: Int) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.removeCheckList(itemId)
+            viewModel.labelEditModeOff()
             setSelectedIssueCount()
+        }
+    }
+
+    private fun checkBox(view: CheckBox) {
+        if (viewModel.labelEditMode.value) {
+            view.visibility = View.VISIBLE
+            view.isChecked = false
+        } else {
+            view.visibility = View.GONE
+            view.isChecked = false
         }
     }
 
@@ -114,16 +123,16 @@ class LabelFragment : Fragment() {
         }
     }
 
-    private fun removeIssue() {
+    private fun removeLabel() {
         binding.btnLabelRemove.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.removeLabelList()
             }
-//            viewModel.labelChangeMode()
             binding.clLabelToolbarOrigin.visibility = View.VISIBLE
             binding.clLabelToolbarEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
-            Log.d("TEST", "삭제후 이슈리스트 사이즈${viewModel.labelList.value.size}")
+            Log.d("TEST", "${viewModel.labelEditMode.value}")
+            Log.d("TEST", "${viewModel.labelList.value.size}")
         }
     }
 }

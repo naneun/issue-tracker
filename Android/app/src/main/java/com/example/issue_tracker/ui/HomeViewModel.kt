@@ -23,9 +23,7 @@ class HomeViewModel : ViewModel() {
     val editCheckList: StateFlow<List<Int>> = _editCheckList
 
     private val _labelEditMode = MutableStateFlow<Boolean>(false)
-//    val labelEditMode: StateFlow<Boolean> = _labelEditMode
-
-    var labelEditMode = false
+    val labelEditMode: StateFlow<Boolean> = _labelEditMode
 
     init {
         makeDummyLabels()
@@ -93,9 +91,11 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun labelChangeMode() {
-//        _labelEditMode.value = !_labelEditMode.value
-        labelEditMode = !labelEditMode
-        Log.d("TEST", "viewModelBoolean: ${labelEditMode}")
+    fun labelEditModeOn() {
+        _labelEditMode.value = true
+    }
+
+    fun labelEditModeOff() {
+        _labelEditMode.value = false
     }
 }

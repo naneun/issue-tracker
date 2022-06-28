@@ -147,14 +147,6 @@ public class Issue extends BaseTimeEntity {
         this.assignee = assignee;
     }
 
-    public void appendComment(Comment comment) {
-        comments.add(comment);
-    }
-
-    public void removeComment(Comment comment) {
-        comments.remove(comment);
-    }
-
     /********************************************************************/
 
     public Issue merge(Issue updated) {

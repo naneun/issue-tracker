@@ -44,9 +44,9 @@ public class CommentServiceImpl implements CommentService {
 			.orElseThrow(IssueException::new);
 
 		Comment comment = commentAddRequest.toEntity();
-		commentRepository.save(comment);
+		comment.fixIssue(issue);
 
-		issue.appendComment(comment);
+		commentRepository.save(comment);
 
 		return CommentResponse.from(comment);
 	}
@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
 	public CommentResponse modifyComment(Long issueId, Long commentId,
 		CommentModifyRequest commentModifyRequest) {
 
-		Comment comment = commentRepository.findById(issueId)
+		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(CommentException::new);
 
 		Comment modified = commentModifyRequest.toEntity();
@@ -72,8 +72,6 @@ public class CommentServiceImpl implements CommentService {
 
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(CommentException::new);
-
-		issue.removeComment(comment);
 
 		commentRepository.deleteById(comment.getId());
 

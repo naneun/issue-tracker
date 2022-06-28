@@ -78,6 +78,10 @@ public class Comment {
 
     /********************************************************************/
 
+    public void fixIssue(Issue issue) {
+        this.issue = issue;
+    }
+
     public void changeContent(String content) {
         this.content = content;
     }

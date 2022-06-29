@@ -12,9 +12,10 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentLabelWriteBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
-
+@AndroidEntryPoint
 class LabelWriteFragment : Fragment() {
 
     private lateinit var binding: FragmentLabelWriteBinding

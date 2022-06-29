@@ -11,8 +11,10 @@ import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentLabelBinding
 import com.example.issue_tracker.domain.model.Label
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
+@AndroidEntryPoint
 class LabelFragment : Fragment() {
 
     private lateinit var binding:FragmentLabelBinding
@@ -39,7 +41,7 @@ class LabelFragment : Fragment() {
     private fun makeDummyLabel(): MutableList<Label> {
         val labels= mutableListOf<Label>()
         for(i in 0 .. 10){
-            labels.add(Label(i,"제목", "내용입니다", randomHexColor()))
+            labels.add(Label("제목", "내용입니다", randomHexColor()))
         }
         return labels
     }

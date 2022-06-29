@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.issue_tracker.domain.model.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class IssueDetailViewModel:ViewModel() {
+@HiltViewModel
+class IssueDetailViewModel @Inject constructor():ViewModel() {
 
     private val _issueDetail = MutableLiveData<IssueDetail>()
     val issueDetail:LiveData<IssueDetail> = _issueDetail

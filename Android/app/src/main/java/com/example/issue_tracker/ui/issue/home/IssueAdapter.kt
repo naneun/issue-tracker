@@ -24,7 +24,6 @@ class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(itemIssue: Issue, itemClick: (selectedIssueID: Int) -> Unit) {
 
-
             if (itemIssue.editable) {
                 binding.cbIssueSelector.visibility = View.VISIBLE
                 binding.cbIssueSelector.isChecked = false
@@ -37,7 +36,7 @@ class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
                 itemClick.invoke(itemIssue.id)
             }
             binding.itemIssue = itemIssue
-
+            binding.labelColor= "FF${itemIssue.label.color.replace("#","")}".toLong(16).toInt()
             binding.clSwipeView.setOnLongClickListener {
                 issueAdapterEventListener?.switchToEditMode(itemIssue.id)
                 issueAdapterEventListener

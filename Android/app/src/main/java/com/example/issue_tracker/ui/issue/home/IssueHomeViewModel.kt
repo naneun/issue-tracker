@@ -1,14 +1,19 @@
 package com.example.issue_tracker.ui.issue.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.issue_tracker.domain.model.Issue
+import com.example.issue_tracker.domain.repository.IssueRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class IssueHomeViewModel : ViewModel() {
+@HiltViewModel
+class IssueHomeViewModel @Inject constructor(private val repository: IssueRepository) :
+    ViewModel() {
 
 
     private val _issueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
@@ -24,17 +29,14 @@ class IssueHomeViewModel : ViewModel() {
     val editMode = _editMode.asStateFlow()
 
     init {
-        makeDummyIssueList()
+        loadOpenIssueList()
     }
 
-    private fun makeDummyIssueList() {
-        _issueList.value = mutableListOf<Issue>(
-            Issue(1, "마일스톤", "제목", "설명", "label"),
-            Issue(2, "마스터즈 코스1", "이슈트래커1", "6월 13일에서 20일까지", "ABCDEF"),
-            Issue(3, "마스터즈 코스2", "이슈트래커2", "7월 9일에서 12일까지", "asdfef")
-        )
+    private fun loadOpenIssueList() {
+        viewModelScope.launch {
+            _issueList.emit(repository.getIssueList().toMutableList())
+        }
     }
-
 
     fun addCheckList(itemId: Int) {
         _checkList.value.add(itemId)

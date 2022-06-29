@@ -7,12 +7,14 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/images")
 public class ImageController {
 
 	private final ImageUploader s3Uploader;
@@ -23,7 +25,7 @@ public class ImageController {
 		produces = "application/json",
 		response = String.class
 	)
-	@PostMapping("/images")
+	@PostMapping
 	public ResponseEntity<String> upload(@RequestPart("image") MultipartFile multipartFile)
 		throws FileUploadException {
 
@@ -35,7 +37,7 @@ public class ImageController {
 		notes = "AWS S3 버킷에 업로드한 이미지를 삭제한다.",
 		produces = "application/json"
 	)
-	@DeleteMapping("/images")
+	@DeleteMapping
 	public ResponseEntity<Void> delete(String imageKey) {
 		s3Uploader.deleteImage(imageKey);
 		return ResponseEntity.ok().build();

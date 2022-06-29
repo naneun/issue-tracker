@@ -1,11 +1,9 @@
 package com.example.issue_tracker.ui.login
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.JsonReader
 import android.util.Log
 import android.webkit.*
 import androidx.activity.viewModels
@@ -77,11 +75,11 @@ class LogInActivity : AppCompatActivity() {
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
-
             val code = Uri.parse(url).getQueryParameters("code")
             if(!code.isNullOrEmpty()) {
                 AccessToken.code = code[0]
                 binding.wvLogin.loadUrl("javascript:window.HTMLOUT.showHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+                //viewModel.getAccessToken()
                 moveToMain()
             }
         }
@@ -97,7 +95,6 @@ class LogInActivity : AppCompatActivity() {
             val json = JSONObject(data)
             val token= json.get("jwtAccessToken")
             AccessToken.token= token.toString()
-
         }
     }
 }

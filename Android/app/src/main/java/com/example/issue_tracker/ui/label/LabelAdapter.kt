@@ -29,7 +29,7 @@ class LabelAdapter() : ListAdapter<Label, LabelAdapter.ViewHolder>(LabelDiffUtil
 
     companion object LabelDiffUtil:DiffUtil.ItemCallback<Label>(){
         override fun areItemsTheSame(oldItem: Label, newItem: Label): Boolean {
-            return oldItem.id==newItem.id
+            return oldItem==newItem
 
         }
 

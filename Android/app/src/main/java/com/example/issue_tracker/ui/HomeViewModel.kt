@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private fun makeDummyLabels() {
         val labels = mutableListOf<Label>()
         for (i in 0..10) {
-            labels.add(Label(i, "제목${i}", "내용입니다", randomHexColor()))
+            labels.add(Label( "제목${i}", "내용입니다", randomHexColor()))
         }
         _labelList.value = labels
     }

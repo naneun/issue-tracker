@@ -36,7 +36,7 @@ class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
                 itemClick.invoke(itemIssue.id)
             }
             binding.itemIssue = itemIssue
-
+            binding.labelColor= "FF${itemIssue.label.color.replace("#","")}".toLong(16).toInt()
             binding.clSwipeView.setOnLongClickListener {
                 issueAdapterEventListener?.switchToEditMode(itemIssue.id)
                 issueAdapterEventListener

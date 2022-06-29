@@ -41,7 +41,7 @@ class LabelFragment : Fragment() {
     private fun makeDummyLabel(): MutableList<Label> {
         val labels= mutableListOf<Label>()
         for(i in 0 .. 10){
-            labels.add(Label(i,"제목", "내용입니다", randomHexColor()))
+            labels.add(Label("제목", "내용입니다", randomHexColor()))
         }
         return labels
     }

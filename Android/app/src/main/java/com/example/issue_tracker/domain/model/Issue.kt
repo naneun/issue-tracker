@@ -5,6 +5,7 @@ data class Issue(
     val milestone: String,
     val title: String,
     val description: String,
-    val label: String,
-    var editable:Boolean = false
+    val label: Label,
+    var editable:Boolean = false,
+
 )

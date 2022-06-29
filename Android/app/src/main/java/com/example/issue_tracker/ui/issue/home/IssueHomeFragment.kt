@@ -121,6 +121,7 @@ class IssueHomeFragment : Fragment() {
 
     private suspend fun loadIssueList() {
         viewModel.issueList.collect {
+            println(it)
             adapter.submitList(it)
         }
     }

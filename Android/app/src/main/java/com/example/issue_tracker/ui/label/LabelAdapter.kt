@@ -17,7 +17,7 @@ class LabelAdapter(
     val switchEditMode: () -> Unit,
     val addCheckList: (itemId: Int) -> Unit,
     val deleteCheckList: (itemId: Int) -> Unit,
-    val checkBox: (checkBox: CheckBox) -> Unit
+    val switchCheckBox: (checkBox: CheckBox) -> Unit
 ) : ListAdapter<Label, LabelAdapter.ViewHolder>(LabelDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelAdapter.ViewHolder {
@@ -35,9 +35,9 @@ class LabelAdapter(
 
         fun bind(item: Label) {
             binding.label = item
-            binding.labelColor = item.color.toLong(16).toInt()
+            binding.labelColor = item.backgroundColor.toLong(16).toInt()
 
-            checkBox(binding.clLabelSelector)
+            switchCheckBox(binding.clLabelSelector)
 
             binding.clLabel.setOnLongClickListener {
                 switchEditMode()

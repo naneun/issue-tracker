@@ -1,6 +1,5 @@
 package com.example.issue_tracker.ui.issue.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.issue_tracker.domain.model.Issue
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +56,7 @@ class IssueHomeViewModel : ViewModel() {
     fun removeIssueList() {
         for (i in 0 until _checkList.value.size) {
             _openIssueList.value.removeIf {
-                it.id == checkList.value[i]
+                it.id == _checkList.value[i]
             }
         }
     }

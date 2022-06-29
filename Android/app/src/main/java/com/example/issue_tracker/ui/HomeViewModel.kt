@@ -1,6 +1,5 @@
 package com.example.issue_tracker.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.issue_tracker.domain.model.Label
 import com.example.issue_tracker.domain.model.MileStone
@@ -89,6 +88,7 @@ class HomeViewModel : ViewModel() {
                 it.id == _editCheckList.value[i]
             }
         }
+        _labelEditMode.value = false
     }
 
     fun labelEditModeOn() {

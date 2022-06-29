@@ -40,7 +40,7 @@ class LabelFragment : Fragment() {
             switchEditMode = { switchToEditMode() },
             addCheckList = { addCheckList(it) },
             deleteCheckList = { deleteCheckList(it) },
-            checkBox = { checkBox(it) }
+            switchCheckBox = { switchCheckBox(it) }
         )
 
         navigator = Navigation.findNavController(view)
@@ -103,7 +103,7 @@ class LabelFragment : Fragment() {
         }
     }
 
-    private fun checkBox(view: CheckBox) {
+    private fun switchCheckBox(view: CheckBox) {
         if (viewModel.labelEditMode.value) {
             view.visibility = View.VISIBLE
             view.isChecked = false

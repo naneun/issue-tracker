@@ -54,7 +54,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:maxLines="1"
-            android:text="@{label.content}"
+            android:text="@{label.description}"
             app:layout_constraintStart_toEndOf="@id/cl_label_selector"
             app:layout_constraintTop_toBottomOf="@id/btn_label_preview" />
 

@@ -14,7 +14,7 @@ data class IssueDtoItem(
     @SerializedName("content")
     val content: String,
     @SerializedName("label")
-    val label: com.example.issue_tracker.data.dto.IssueLabel,
+    val label:IssueLabel,
     @SerializedName("milestone")
     val milestone: Milestone,
     @SerializedName("title")

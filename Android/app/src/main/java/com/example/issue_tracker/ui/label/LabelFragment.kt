@@ -38,6 +38,7 @@ class LabelFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.loadLabelList()
         adapter = LabelAdapter(
             switchEditMode = { switchToEditMode() },
             addCheckList = { addCheckList(it) },

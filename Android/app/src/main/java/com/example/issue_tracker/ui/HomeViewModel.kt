@@ -13,7 +13,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
-    private val _labelList = MutableStateFlow<List<Label>>(listOf())
+    private val _labelList = MutableStateFlow<MutableList<Label>>(mutableListOf())
     val labelList: StateFlow<List<Label>> = _labelList
 
     private val _mileStoneList = MutableStateFlow<List<MileStone>>(listOf())
@@ -22,9 +22,14 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private val _userList = MutableStateFlow<List<User>>(listOf())
     val userList: StateFlow<List<User>> = _userList
 
+    private val _editCheckList = MutableStateFlow<MutableList<Int>>(mutableListOf())
+    val editCheckList: StateFlow<List<Int>> = _editCheckList
+
+    private val _labelEditMode = MutableStateFlow<Boolean>(false)
+    val labelEditMode: StateFlow<Boolean> = _labelEditMode
+
     private val _stateList = MutableStateFlow<List<IssueState>>(listOf())
     val stateList: StateFlow<List<IssueState>> = _stateList
-
 
     init {
         makeDummyLabels()
@@ -42,6 +47,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             IssueState.CLOSE
         )
     }
+
     private fun makeDummyUser() {
         val users = mutableListOf<User>()
         for (i in 0..10) {
@@ -52,7 +58,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private fun makeDummyLabels() {
         val labels = mutableListOf<Label>()
         for (i in 0..10) {
-            labels.add(Label( "제목${i}", "내용입니다", randomHexColor()))
+            labels.add(Label(i, "제목${i}", "내용입니다", randomHexColor()))
         }
         _labelList.value = labels
     }
@@ -78,5 +84,36 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             milestones.add(MileStone(i, "마일스톤 제목${i}", "마일스톤 더미 콘테츠", "06-14", 2, 2))
         }
         _mileStoneList.value = milestones
+    }
+
+    fun clearCheckList() {
+        _editCheckList.value.clear()
+    }
+
+    fun addCheckList(itemId: Int) {
+        _editCheckList.value.add(itemId)
+    }
+
+    fun removeCheckList(itemId: Int) {
+        _editCheckList.value.removeIf {
+            it == itemId
+        }
+    }
+
+    fun removeLabelList() {
+        for (i in 0 until _editCheckList.value.size) {
+            _labelList.value.removeIf {
+                it.id == _editCheckList.value[i]
+            }
+        }
+        _labelEditMode.value = false
+    }
+
+    fun labelEditModeOn() {
+        _labelEditMode.value = true
+    }
+
+    fun labelEditModeOff() {
+        _labelEditMode.value = false
     }
 }

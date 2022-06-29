@@ -26,9 +26,9 @@ class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
 
             if (itemIssue.editable) {
                 binding.cbIssueSelector.visibility = View.VISIBLE
-                binding.cbIssueSelector.isChecked = false
             } else {
                 binding.cbIssueSelector.visibility = View.GONE
+                binding.cbIssueSelector.isChecked = false
             }
 
 
@@ -36,7 +36,7 @@ class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
                 itemClick.invoke(itemIssue.id)
             }
             binding.itemIssue = itemIssue
-            binding.labelColor= "FF${itemIssue.label.color.replace("#","")}".toLong(16).toInt()
+            binding.labelColor= "FF${itemIssue.label.backgroundColor.replace("#","")}".toLong(16).toInt()
             binding.clSwipeView.setOnLongClickListener {
                 issueAdapterEventListener?.switchToEditMode(itemIssue.id)
                 issueAdapterEventListener
@@ -47,13 +47,13 @@ class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
                 if (isChecked) {
                     issueAdapterEventListener?.addInCheckList(itemIssue.id)
                     binding.cbIssueSelector.setBackgroundColor(0xffF2F2F7.toInt())
-                    binding.cbIssueSelector.buttonTintList =
-                        ColorStateList.valueOf(0xff007AFF.toInt())
+                    binding.clSwipeView.setBackgroundColor(0xffF2F2F7.toInt())
+                    binding.cbIssueSelector.buttonTintList = ColorStateList.valueOf(0xff007AFF.toInt())
                 } else {
                     issueAdapterEventListener?.deleteInCheckList(itemIssue.id)
                     binding.cbIssueSelector.setBackgroundColor(0xffffffff.toInt())
-                    binding.cbIssueSelector.buttonTintList =
-                        ColorStateList.valueOf(0xffD5D5DB.toInt())
+                    binding.clSwipeView.setBackgroundColor(0xffffffff.toInt())
+                    binding.cbIssueSelector.buttonTintList = ColorStateList.valueOf(0xffD5D5DB.toInt())
                 }
             }
         }

@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.issue_tracker.common.AccessToken
 import com.example.issue_tracker.databinding.ActivityMainBinding
 import com.example.issue_tracker.ui.HomeViewModel
 import com.example.issue_tracker.ui.common.SharedPreferenceManager

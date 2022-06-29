@@ -15,15 +15,14 @@ import javax.inject.Inject
 class IssueHomeViewModel @Inject constructor(private val repository: IssueRepository) :
     ViewModel() {
 
-
-    private val _issueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
-    val issueList: StateFlow<List<Issue>> = _issueList
-
-    private val _checkList = MutableStateFlow<MutableList<Int>>(mutableListOf())
-    val checkList: StateFlow<List<Int>> = _checkList
+    private val _openIssueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
+    val openIssueList: StateFlow<List<Issue>> = _openIssueList
 
     private val _closeIssueList = MutableStateFlow<MutableList<Issue>>(mutableListOf())
     val closeIssueList: StateFlow<List<Issue>> = _closeIssueList
+
+    private val _checkList = MutableStateFlow<MutableList<Int>>(mutableListOf())
+    val checkList: StateFlow<List<Int>> = _checkList
 
     private val _editMode = MutableStateFlow<Boolean>(false)
     val editMode = _editMode.asStateFlow()
@@ -34,7 +33,7 @@ class IssueHomeViewModel @Inject constructor(private val repository: IssueReposi
 
     private fun loadOpenIssueList() {
         viewModelScope.launch {
-            _issueList.emit(repository.getIssueList().toMutableList())
+            _openIssueList.emit(repository.getIssueList().toMutableList())
         }
     }
 
@@ -54,10 +53,10 @@ class IssueHomeViewModel @Inject constructor(private val repository: IssueReposi
 
     fun closeIssueList() {
         for (i in 0 until _checkList.value.size) {
-            val str = _issueList.value.filter {
+            val str = _openIssueList.value.filter {
                 it.id == _checkList.value[i]
             }
-            _issueList.value.removeIf {
+            _openIssueList.value.removeIf {
                 it.id == checkList.value[i]
             }
             _closeIssueList.value.add(str[0])
@@ -66,8 +65,8 @@ class IssueHomeViewModel @Inject constructor(private val repository: IssueReposi
 
     fun removeIssueList() {
         for (i in 0 until _checkList.value.size) {
-            _issueList.value.removeIf {
-                it.id == checkList.value[i]
+            _openIssueList.value.removeIf {
+                it.id == _checkList.value[i]
             }
         }
     }

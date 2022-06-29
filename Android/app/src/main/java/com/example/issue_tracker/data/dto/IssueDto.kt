@@ -33,4 +33,4 @@ data class Milestone(
     val title: String
 )
 
-fun IssueDtoItem.toIssue():Issue= Issue(id, milestone.title,title,content, Label( label.title,"",label.backgroundColor))
+fun IssueDtoItem.toIssue():Issue= Issue(id, milestone.title,title,content, Label(0, label.title,"",label.backgroundColor))

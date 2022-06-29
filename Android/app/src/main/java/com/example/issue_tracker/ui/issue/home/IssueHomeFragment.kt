@@ -25,12 +25,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.issue_tracker.R
 import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
-import com.example.issue_tracker.domain.model.Issue
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -87,7 +85,6 @@ class IssueHomeFragment : Fragment() {
         }
     }
 
-
     private fun setEditMode(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.editMode.collect {editable->
@@ -120,7 +117,7 @@ class IssueHomeFragment : Fragment() {
     }
 
     private suspend fun loadIssueList() {
-        viewModel.issueList.collect {
+        viewModel.openIssueList.collect {
             println(it)
             adapter.submitList(it)
         }
@@ -248,13 +245,6 @@ class IssueHomeFragment : Fragment() {
     private fun settingRecyclerview() {
         adapter.issueAdapterEventListener = object : IssueAdapterEventListener {
 
-
-            override fun updateIssueState(itemId: Int, boolean: Boolean) {
-//                viewLifecycleOwner.lifecycleScope.launch {
-//                    IssueHomeViewModel.updateIssueSate(itemId, boolean)
-//                }
-            }
-
             override fun switchToEditMode(itemId: Int) {
                 viewModel.clearCheckList()
                 viewModel.turnOnEditMode()
@@ -279,10 +269,6 @@ class IssueHomeFragment : Fragment() {
                     setSelectedIssueCount()
                     Log.d("TEST", "체크박스해제${viewModel.checkList.value.size}")
                 }
-            }
-
-            override fun getIntoDetail(issue: Issue) {
-                TODO("Not yet implemented")
             }
         }
     }
@@ -312,11 +298,12 @@ class IssueHomeFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.removeIssueList()
             }
+            binding.rvIssue.setPadding(0, 0, 0, 0)
             viewModel.turnOffEditMode()
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
-            Log.d("TEST", "삭제후 이슈리스트 사이즈${viewModel.issueList.value.size}")
+            Log.d("TEST", "삭제후 이슈리스트 사이즈${viewModel.openIssueList.value.size}")
         }
     }
 
@@ -325,6 +312,7 @@ class IssueHomeFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.closeIssueList()
             }
+            binding.rvIssue.setPadding(0, 0, 0, 0)
             viewModel.turnOffEditMode()
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE

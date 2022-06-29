@@ -3,7 +3,9 @@ package com.example.issue_tracker.ui.issue.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.issue_tracker.domain.model.*
+import com.example.issue_tracker.domain.model.Comment
+import com.example.issue_tracker.domain.model.IssueDetail
+import com.example.issue_tracker.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDateTime
 import javax.inject.Inject

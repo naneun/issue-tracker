@@ -32,7 +32,7 @@ class LabelAdapter(
 
         fun bind(item: Label) {
             binding.label = item
-            binding.labelColor = item.backgroundColor.toLong(16).toInt()
+            binding.labelColor = item.backgroundColor.replace("#","FF").toLong(16).toInt()
 
             switchCheckBox(binding.clLabelSelector)
 

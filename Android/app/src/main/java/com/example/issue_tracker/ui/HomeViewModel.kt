@@ -1,18 +1,21 @@
 package com.example.issue_tracker.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.issue_tracker.domain.model.IssueState
 import com.example.issue_tracker.domain.model.Label
 import com.example.issue_tracker.domain.model.MileStone
 import com.example.issue_tracker.domain.model.User
+import com.example.issue_tracker.domain.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(private val repository: HomeRepository) : ViewModel() {
     private val _labelList = MutableStateFlow<MutableList<Label>>(mutableListOf())
     val labelList: StateFlow<List<Label>> = _labelList
 
@@ -32,10 +35,16 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     val stateList: StateFlow<List<IssueState>> = _stateList
 
     init {
-        makeDummyLabels()
+        loadLabelList()
         makeDummyMileStones()
         makeDummyUser()
         initStateList()
+    }
+
+     fun loadLabelList(){
+        viewModelScope.launch {
+            _labelList.emit(repository.getLabelList().toMutableList())
+        }
     }
 
     private fun initStateList() {
@@ -53,14 +62,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         for (i in 0..10) {
             users.add(User(i, "User${i}", "https://images.unsplash.com/photo-1655057011043-158c48f3809d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDEyfHhqUFI0aGxrQkdBfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60")) }
         _userList.value = users
-    }
-
-    private fun makeDummyLabels() {
-        val labels = mutableListOf<Label>()
-        for (i in 0..10) {
-            labels.add(Label(i, "제목${i}", "내용입니다", randomHexColor()))
-        }
-        _labelList.value = labels
     }
 
     private fun randomHexColor(): String {

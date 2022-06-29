@@ -37,7 +37,8 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_label_preview"
-            style="@style/Subtitle1.Black"
+            style="@style/Subtitle2.White"
+            android:paddingHorizontal="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

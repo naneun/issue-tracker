@@ -3,6 +3,7 @@ package com.example.issue_tracker.di
 import com.example.issue_tracker.common.AccessToken
 import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.data.remote.issue.IssueApi
+import com.example.issue_tracker.data.remote.label.LabelApi
 import com.example.issue_tracker.data.remote.login.LoginApi
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -65,9 +66,13 @@ object NetworkModule {
     fun loginService(@LoginRetrofit retrofit: Retrofit): LoginApi =
         retrofit.create(LoginApi::class.java)
 
+    @Singleton
+    @Provides
+    fun issueService(@IssueRetrofit retrofit: Retrofit): IssueApi =
+        retrofit.create(IssueApi::class.java)
 
     @Singleton
     @Provides
-    fun issueService(@IssueRetrofit retrofit: Retrofit): IssueApi = retrofit.create(IssueApi::class.java)
+    fun labelService(@IssueRetrofit retrofit: Retrofit): LabelApi = retrofit.create(LabelApi::class.java)
 
 }

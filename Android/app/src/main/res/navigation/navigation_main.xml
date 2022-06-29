@@ -48,7 +48,11 @@
     <fragment
         android:id="@+id/labelWriteFragment"
         android:name="com.example.issue_tracker.ui.label.LabelWriteFragment"
-        android:label="LabelWriteFragment" />
+        android:label="LabelWriteFragment" >
+        <action
+            android:id="@+id/action_labelWriteFragment_to_navigation_label"
+            app:destination="@id/navigation_label" />
+    </fragment>
     <fragment
         android:id="@+id/issueWriteFragment"
         android:name="com.example.issue_tracker.ui.issue.write.IssueWriteFragment"

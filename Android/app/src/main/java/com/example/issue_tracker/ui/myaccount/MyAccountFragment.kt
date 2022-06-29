@@ -9,8 +9,9 @@ import androidx.fragment.app.Fragment
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentMyAccountBinding
 import com.example.issue_tracker.domain.model.MyAccount
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MyAccountFragment : Fragment() {
 
     private lateinit var binding: FragmentMyAccountBinding

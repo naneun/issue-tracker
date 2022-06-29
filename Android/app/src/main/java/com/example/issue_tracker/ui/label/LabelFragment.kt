@@ -17,9 +17,11 @@ import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentLabelBinding
 import com.example.issue_tracker.ui.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LabelFragment : Fragment() {
 
     private lateinit var binding: FragmentLabelBinding

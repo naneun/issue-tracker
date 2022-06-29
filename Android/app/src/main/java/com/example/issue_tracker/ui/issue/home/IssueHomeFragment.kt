@@ -27,9 +27,11 @@ import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class IssueHomeFragment : Fragment() {
 
     private lateinit var adapter: IssueAdapter
@@ -69,18 +71,33 @@ class IssueHomeFragment : Fragment() {
         closeEditMode()
         removeIssue()
         closeIssueList()
+        setEditMode()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                async { loadLabelList() }
-                async { loadMileStoneList() }
-                async { loadUserList() }
+                async { loadFilterMenu()}
                 async { loadIssueList() }
             }
         }
 
         binding.etlSearch.setEndIconOnClickListener {
             //To do: Search 로직 (백엔드 API와 협의 필요)
+        }
+    }
+
+    private fun setEditMode(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.editMode.collect {editable->
+                adapter.currentList.forEach {
+                    it.editable = editable
+                }
+            }
+        }
+    }
+
+    private fun initEditMode(){
+        adapter.currentList.forEach {
+            it.editable=false
         }
     }
 
@@ -101,8 +118,27 @@ class IssueHomeFragment : Fragment() {
 
     private suspend fun loadIssueList() {
         viewModel.openIssueList.collect {
+            println(it)
             adapter.submitList(it)
         }
+    }
+
+    private suspend fun loadFilterMenu(){
+        loadStateList()
+        loadUserList()
+        loadLabelList()
+        loadMileStoneList()
+    }
+
+    private suspend fun loadStateList() {
+        val stateList = mutableListOf<String>()
+        sharedViewModel.stateList.collect {
+            it.forEach { state ->
+                stateList.add(state.value)
+            }
+            setSpinner(stateList, SpinnerType.STATE)
+        }
+
     }
 
     private suspend fun loadUserList() {
@@ -144,12 +180,7 @@ class IssueHomeFragment : Fragment() {
             else -> binding.spinnerIssueAssignee
         }
         val adapter =
-            ArrayAdapter(
-                requireContext(),
-                R.layout.item_spinner_filter,
-                R.id.tv_filter_value,
-                list
-            )
+            ArrayAdapter(requireContext(), R.layout.item_spinner_filter, R.id.tv_filter_value, list)
         spinner.adapter = adapter
         spinner.setSelection(0)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -216,11 +247,10 @@ class IssueHomeFragment : Fragment() {
 
             override fun switchToEditMode(itemId: Int) {
                 viewModel.clearCheckList()
-                setSelectedIssueCount()
-                binding.rvIssue.setPadding(0, 160, 0, 0)
-                adapter.isEditMode = true
+                viewModel.turnOnEditMode()
                 binding.tbIssues.visibility = View.GONE
                 binding.clIssueEdit.visibility = View.VISIBLE
+                binding.rvIssue.setPadding(0, 200, 0, 0)
                 adapter.notifyDataSetChanged()
                 Log.d("TEST", "체크박스 사이즈${viewModel.checkList.value.size}")
             }
@@ -255,10 +285,10 @@ class IssueHomeFragment : Fragment() {
 
     private fun closeEditMode() {
         binding.btnIssueEditClose.setOnClickListener {
-            adapter.isEditMode = false
-            binding.rvIssue.setPadding(0, 0, 0, 0)
+            viewModel.turnOffEditMode()
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
+            binding.rvIssue.setPadding(0, 0, 0, 0)
             adapter.notifyDataSetChanged()
         }
     }
@@ -269,7 +299,7 @@ class IssueHomeFragment : Fragment() {
                 viewModel.removeIssueList()
             }
             binding.rvIssue.setPadding(0, 0, 0, 0)
-            adapter.isEditMode = false
+            viewModel.turnOffEditMode()
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
@@ -283,7 +313,7 @@ class IssueHomeFragment : Fragment() {
                 viewModel.closeIssueList()
             }
             binding.rvIssue.setPadding(0, 0, 0, 0)
-            adapter.isEditMode = false
+            viewModel.turnOffEditMode()
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
@@ -311,6 +341,7 @@ class IssueHomeFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         changeStatusBarWhite()
+        initEditMode()
     }
 
 }

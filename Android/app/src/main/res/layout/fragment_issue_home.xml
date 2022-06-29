@@ -243,8 +243,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/skyBlue"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingVertical="16dp"
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent">
 

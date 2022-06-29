@@ -10,7 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.issue_tracker.databinding.ActivityMainBinding
 import com.example.issue_tracker.ui.HomeViewModel
+import com.example.issue_tracker.ui.common.SharedPreferenceManager
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: HomeViewModel by viewModels()
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         setContentView(binding.root)
+        SharedPreferenceManager.initSharedPreferences(getSharedPreferences("LoginSharedPreference", AppCompatActivity.MODE_PRIVATE))
         setupNav()
     }
 

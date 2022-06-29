@@ -1,6 +1,6 @@
 spring:
   config:
-    import: classpath:auth-local.yml, classpath:aws.yml
+    import: classpath:auth-prod.yml, classpath:aws.yml
 
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver

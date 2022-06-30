@@ -7,4 +7,8 @@ class IssueRemoteDataSource(private val api:IssueApi):IssueDataSource {
         return api.getIssueList(state)
     }
 
+    override suspend fun filterIssueList(state: String, writeId: Int?, labelId: Int?, mileStoneId: Int?): IssueDto {
+        return api.filterIssueList(state,writeId,labelId,mileStoneId)
+    }
+
 }

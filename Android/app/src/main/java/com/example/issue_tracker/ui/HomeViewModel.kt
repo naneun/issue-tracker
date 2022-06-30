@@ -12,6 +12,7 @@ import com.example.issue_tracker.domain.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -127,5 +128,41 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     fun checkLogin():Boolean{
         println(_loginUser.value)
         return _loginUser.value!=null
+    }
+
+    fun getWriterID(name:String): Int {
+        _userList.value.forEach {
+            if(it.name==name){
+                return it.id
+            }
+        }
+        return -1
+    }
+
+    fun getLabelID(title:String):Int{
+        _labelList.value.forEach {
+            if(it.title==title){
+                return it.id
+            }
+        }
+        return -1
+    }
+
+    fun getMileStoneID(title:String): Int {
+        _mileStoneList.value.forEach {
+            if(it.title==title){
+                return it.id
+            }
+        }
+        return -1
+    }
+
+    fun getIssueState(title: String) : IssueState{
+        _stateList.value.forEach {
+            if(it.value == title){
+                return it
+            }
+        }
+        return IssueState.OPEN
     }
 }

@@ -8,4 +8,7 @@ interface IssueApi {
 
     @GET("api/issues")
     suspend fun getIssueList(@Query("state") state:String):IssueDto
+
+    @GET("api/search/issues")
+    suspend fun filterIssueList(@Query("state") state: String, @Query("creatorId") writerId:Int?=null ,@Query("labelId") labelId:Int?=null , @Query("milestoneId") mileStoneId:Int?=null):IssueDto
 }

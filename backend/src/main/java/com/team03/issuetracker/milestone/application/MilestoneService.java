@@ -11,7 +11,7 @@ public interface MilestoneService {
 
 	List<MilestoneResponse> findAll();
 
-	MilestoneResponse update(Long id, MilestoneModifyRequest request);
+	MilestoneResponse modifyMilestone(Long id, MilestoneModifyRequest request);
 
 	List<Long> deleteById(List<Long> ids);
 }

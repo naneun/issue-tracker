@@ -19,5 +19,4 @@ public interface IssueRepository extends JpaRepository<Issue, Long>, IssueReposi
 		"comments"})
 	List<Issue> findByState(@Param("state") IssueState state);
 
-	List<Issue> findAllByLabelId(Long id);
 }

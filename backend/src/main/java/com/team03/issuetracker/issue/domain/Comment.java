@@ -19,6 +19,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -77,11 +78,24 @@ public class Comment {
 
     /********************************************************************/
 
+    public void fixIssue(Issue issue) {
+        this.issue = issue;
+    }
+
     public void changeContent(String content) {
         this.content = content;
     }
 
     public void addEmoji(Emoji emoji) {
         this.emoji = emoji;
+    }
+
+    /********************************************************************/
+
+    public Comment merge(Comment updated) {
+        if (Strings.isNotBlank(updated.content)) {
+            content = updated.content;
+        }
+        return this;
     }
 }

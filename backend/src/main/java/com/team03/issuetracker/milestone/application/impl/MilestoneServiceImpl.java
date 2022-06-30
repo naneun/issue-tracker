@@ -1,6 +1,5 @@
 package com.team03.issuetracker.milestone.application.impl;
 
-import com.team03.issuetracker.issue.repository.IssueRepository;
 import com.team03.issuetracker.milestone.application.MilestoneService;
 import com.team03.issuetracker.milestone.domain.Milestone;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneCreateRequest;
@@ -8,6 +7,7 @@ import com.team03.issuetracker.milestone.domain.dto.MilestoneModifyRequest;
 import com.team03.issuetracker.milestone.domain.dto.MilestoneResponse;
 import com.team03.issuetracker.milestone.exception.MilestoneException;
 import com.team03.issuetracker.milestone.repository.MilestoneRepository;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MilestoneServiceImpl implements MilestoneService {
 
 	private final MilestoneRepository milestoneRepository;
-	private final IssueRepository issueRepository;
 
 	@Override
 	public MilestoneResponse addMilestone(MilestoneCreateRequest createRequest) {
@@ -42,18 +41,25 @@ public class MilestoneServiceImpl implements MilestoneService {
 
 	@Override
 	@Transactional
-	public MilestoneResponse update(Long id, MilestoneModifyRequest request) {
+	public MilestoneResponse modifyMilestone(Long id, MilestoneModifyRequest request) {
 		Milestone foundMilestone = milestoneRepository.findById(id).orElseThrow(MilestoneException::new);
-		Milestone updatedMilestone = foundMilestone.update(request);
-		return new MilestoneResponse(updatedMilestone);
+		return new MilestoneResponse(foundMilestone.update(request));
 	}
 
 	@Override
 	@Transactional
 	public List<Long> deleteById(List<Long> ids) {
 
-		milestoneRepository.findAllById(ids)
-			.forEach(Milestone::truncateIssues);
+		List<Milestone> milestones = ids.stream()
+			.map(milestoneRepository::findById)
+			.map(milestone -> milestone.orElseThrow(MilestoneException::new))
+			.collect(Collectors.toList());
+
+		milestones.stream()
+			.map(Milestone::getIssues)
+			.flatMap(Collection::stream)
+			.collect(Collectors.toList())
+			.forEach(issue -> issue.changeMilestone(null));
 
 		milestoneRepository.deleteAllById(ids);
 

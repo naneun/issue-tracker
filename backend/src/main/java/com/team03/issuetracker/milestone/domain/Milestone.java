@@ -70,11 +70,6 @@ public class Milestone {
 		this.issues.add(issue);
 	}
 
-	public void truncateIssues() {
-		this.issues.forEach(issue -> issue.changeMilestone(null));
-		this.issues.clear();
-	}
-
 	public void removeIssue(Issue issue) {
 		this.issues.remove(issue);
 		issue.changeMilestone(null);

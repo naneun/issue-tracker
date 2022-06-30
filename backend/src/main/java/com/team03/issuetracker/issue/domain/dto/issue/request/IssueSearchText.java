@@ -1,4 +1,4 @@
-package com.team03.issuetracker.issue.domain.dto.issue;
+package com.team03.issuetracker.issue.domain.dto.issue.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

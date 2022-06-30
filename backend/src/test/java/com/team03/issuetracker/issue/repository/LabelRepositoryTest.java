@@ -34,8 +34,8 @@ class LabelRepositoryTest {
         this.entityManager = entityManager;
 
         registeredLabels = List.of(
-            Label.of(1L, "Label", "레이블에 대한 설명", "#b7bcc4"),
-            Label.of(2L, "Documentation", "개발 내용을 문서화", "#041c42")
+            Label.of(1L, "Label", "레이블에 대한 설명", "#b7bcc4", List.of()),
+            Label.of(2L, "Documentation", "개발 내용을 문서화", "#041c42", List.of())
         );
     }
 
@@ -54,7 +54,7 @@ class LabelRepositoryTest {
     void 라벨을_생성한다() {
 
         // given
-        Label label = Label.of(null, "제목", "설명", "#000000");
+        Label label = Label.of(null, "제목", "설명", "#000000", List.of());
 
         // when
         labelRepository.save(label);

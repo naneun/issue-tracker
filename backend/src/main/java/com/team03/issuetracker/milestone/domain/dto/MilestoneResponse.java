@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class MilestoneResponse {
 
+	private Long id;
 	private String title;
 	private String description;
 	private LocalDate dueDate;
@@ -14,6 +15,7 @@ public class MilestoneResponse {
 	private Long closedIssueCount;
 
 	public MilestoneResponse(Milestone milestone) {
+		this.id = milestone.getId();
 		this.title = milestone.getTitle();
 		this.description = milestone.getDescription();
 		this.dueDate = milestone.getDueDate();

@@ -11,7 +11,7 @@ public interface LabelService {
 
 	List<LabelResponse> findAll();
 
-	LabelResponse update(Long id, LabelModifyRequest modifyRequest);
+	LabelResponse modifyLabel(Long id, LabelModifyRequest modifyRequest);
 
 	List<Long> deleteById(List<Long> ids);
 }

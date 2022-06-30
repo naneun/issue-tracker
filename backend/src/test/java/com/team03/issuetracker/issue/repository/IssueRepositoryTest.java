@@ -12,7 +12,7 @@ import com.team03.issuetracker.issue.domain.Comment;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
 import com.team03.issuetracker.issue.domain.Label;
-import com.team03.issuetracker.issue.domain.dto.issue.IssueSearchCondition;
+import com.team03.issuetracker.issue.domain.dto.issue.request.IssueSearchCondition;
 import com.team03.issuetracker.issue.exception.IssueException;
 import com.team03.issuetracker.milestone.domain.Milestone;
 import java.util.ArrayList;

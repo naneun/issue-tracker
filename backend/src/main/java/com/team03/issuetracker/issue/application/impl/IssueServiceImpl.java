@@ -1,22 +1,31 @@
 package com.team03.issuetracker.issue.application.impl;
 
+import com.team03.issuetracker.common.domain.Member;
+import com.team03.issuetracker.common.exception.MemberException;
+import com.team03.issuetracker.common.repository.MemberRepository;
 import com.team03.issuetracker.issue.application.IssueService;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.IssueState;
-import com.team03.issuetracker.issue.domain.dto.issue.IssueAddRequest;
-import com.team03.issuetracker.issue.domain.dto.issue.IssueModifyRequest;
-import com.team03.issuetracker.issue.domain.dto.issue.IssueResponse;
-import com.team03.issuetracker.issue.domain.dto.issue.IssueSearchCondition;
-import com.team03.issuetracker.issue.domain.dto.issue.IssueSearchText;
-import com.team03.issuetracker.issue.domain.dto.issue.IssueSimpleResponse;
+import com.team03.issuetracker.issue.domain.Label;
+import com.team03.issuetracker.issue.domain.dto.issue.request.IssueAddRequest;
+import com.team03.issuetracker.issue.domain.dto.issue.request.IssueModifyRequest;
+import com.team03.issuetracker.issue.domain.dto.issue.request.IssueRequestDto;
+import com.team03.issuetracker.issue.domain.dto.issue.request.IssueSearchCondition;
+import com.team03.issuetracker.issue.domain.dto.issue.request.IssueSearchText;
+import com.team03.issuetracker.issue.domain.dto.issue.response.IssueDetailResponse;
+import com.team03.issuetracker.issue.domain.dto.issue.response.IssueResponse;
+import com.team03.issuetracker.issue.domain.dto.issue.response.IssueSimpleResponse;
 import com.team03.issuetracker.issue.exception.IssueException;
+import com.team03.issuetracker.issue.exception.LabelException;
 import com.team03.issuetracker.issue.repository.IssueRepository;
+import com.team03.issuetracker.issue.repository.LabelRepository;
+import com.team03.issuetracker.milestone.domain.Milestone;
+import com.team03.issuetracker.milestone.exception.MilestoneException;
+import com.team03.issuetracker.milestone.repository.MilestoneRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +36,9 @@ public class IssueServiceImpl implements IssueService {
 
 	private final IssueRepository issueRepository;
 
-	@Qualifier("addRequestToIssueMapper")
-	private final ModelMapper requestMapper;
-
-	@Qualifier("modifiedRequestToIssueMapper")
-	private final ModelMapper modifiedMapper;
+	private final LabelRepository labelRepository;
+	private final MilestoneRepository milestoneRepository;
+	private final MemberRepository memberRepository;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -42,9 +49,18 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public IssueDetailResponse findDetailById(Long id) {
+		Issue issue = issueRepository.findById(id)
+			.orElseThrow(IssueException::new);
+
+		return IssueDetailResponse.from(issue);
+	}
+
+	@Override
 	@Transactional
 	public IssueResponse addIssue(IssueAddRequest issueAddRequest) {
-		Issue issue = requestMapper.map(issueAddRequest, Issue.class);
+		Issue issue = createIssue(issueAddRequest);
 		issueRepository.save(issue);
 
 		return IssueResponse.from(issue);
@@ -52,18 +68,38 @@ public class IssueServiceImpl implements IssueService {
 
 	@Override
 	@Transactional
-	public IssueResponse modifyIssue(IssueModifyRequest issueModifyRequest) {
-		Issue issue = issueRepository.findById(issueModifyRequest.getId())
+	public IssueResponse modifyIssue(Long issueId, IssueModifyRequest issueModifyRequest) {
+		Issue issue = issueRepository.findById(issueId)
 			.orElseThrow(IssueException::new);
 
-		Issue modified = modifiedMapper.map(issueModifyRequest, Issue.class);
+		Issue modified = createIssue(issueModifyRequest);
 
 		return IssueResponse.from(issue.merge(modified));
 	}
 
+
+	/**
+	 * Dto(Request) -> Entity(Issue)
+	 *
+	 * @param issueRequestDto
+	 * @return
+	 */
+	private Issue createIssue(IssueRequestDto issueRequestDto) {
+		Label label = labelRepository.findById(issueRequestDto.getLabelId())
+			.orElseThrow(LabelException::new);
+
+		Milestone milestone = milestoneRepository.findById(issueRequestDto.getMilestoneId())
+			.orElseThrow(MilestoneException::new);
+
+		Member assignee = memberRepository.findById(issueRequestDto.getAssigneeId())
+			.orElseThrow(MemberException::new);
+
+		return issueRequestDto.toEntity(label, milestone, assignee);
+	}
+
 	@Override
 	@Transactional
-	public List<IssueResponse> changeStateById(List<Long> checkedIds) {
+	public List<IssueResponse> changeState(List<Long> checkedIds) {
 		List<Issue> issues = issueRepository.findAllById(checkedIds);
 		issues.forEach(Issue::changeState);
 
@@ -85,9 +121,11 @@ public class IssueServiceImpl implements IssueService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<IssueSimpleResponse> findBySearchCondition(
-		IssueSearchCondition issueSearchCondition) {
-		// TODO
-		return null;
+		IssueSearchCondition searchCondition) {
+
+		return issueRepository.findBySearchCondition(searchCondition).stream()
+			.map(IssueSimpleResponse::new)
+			.collect(Collectors.toList());
 	}
 
 	@Override

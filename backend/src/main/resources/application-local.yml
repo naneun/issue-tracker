@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: classpath:auth-local.yml, classpath:aws.yml
+
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3307/testdb
@@ -12,3 +15,20 @@ spring:
   redis:
     host: localhost
     port: 6379
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+    properties:
+      hibernate:
+        format_sql: true
+
+        jdbc:
+          batch_size: 1000
+
+    defer-datasource-initialization: true
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type.descriptor.sql: trace

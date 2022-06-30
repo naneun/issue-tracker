@@ -1,4 +1,4 @@
-package com.team03.issuetracker.issue.domain.dto.issue;
+package com.team03.issuetracker.issue.domain.dto.issue.response;
 
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.Label;
@@ -10,15 +10,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueSimpleResponse {
 
-    private final MilestoneResponseOfSimpleIssue milestone;
+    private final Long issueId;
     private final String title;
     private final String content;
+    private final MilestoneResponseOfSimpleIssue milestone;
     private final LabelResponseOfSimpleIssue label;
 
     public IssueSimpleResponse(Issue issue) {
-        this.milestone = MilestoneResponseOfSimpleIssue.from(issue.getMilestone());
+        this.issueId = issue.getId();
         this.title = issue.getTitle();
         this.content = issue.getContent();
+        this.milestone = MilestoneResponseOfSimpleIssue.from(issue.getMilestone());
         this.label = LabelResponseOfSimpleIssue.from(issue.getLabel());
     }
 

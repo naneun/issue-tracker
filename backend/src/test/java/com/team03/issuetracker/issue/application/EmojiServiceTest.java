@@ -7,6 +7,7 @@ import com.team03.issuetracker.issue.repository.EmojiRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -15,6 +16,7 @@ class EmojiServiceTest {
     final EmojiService emojiService;
     final EmojiRepository emojiRepository;
 
+    @Autowired
     public EmojiServiceTest(EmojiService emojiService, EmojiRepository emojiRepository) {
         this.emojiService = emojiService;
         this.emojiRepository = emojiRepository;

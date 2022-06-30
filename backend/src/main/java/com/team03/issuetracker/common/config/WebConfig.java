@@ -42,7 +42,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addWebRequestInterceptor(openEntityManagerInViewInterceptor);
 
         registry.addInterceptor(loginInterceptor)
-            .addPathPatterns("/api/**");
+            .addPathPatterns("/skip/**");
+//            .addPathPatterns("/api/**");
     }
 
     @Override

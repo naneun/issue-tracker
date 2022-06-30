@@ -30,9 +30,9 @@ jobs:
       - name: Swap environment variables
         working-directory: ./backend/src/main/resources
         run: |
-          echo "${{ secrets.APPLICATION_YML }}" > ./application-prod.yml
-          echo "${{ secrets.AUTH_YML }}" > ./auth-prod.yml
-          echo "${{ secrets.AWS_YML }}" > ./aws.yml
+          echo "${{ secrets.APPLICATION_YML_BC }}" > ./application-prod.yml
+          echo "${{ secrets.AUTH_YML_BC }}" > ./auth-prod.yml
+          echo "${{ secrets.AWS_YML_BC }}" > ./aws.yml
 
       #     깃헙에서 테스트가 돌아가게 하려면 어떻게 해야하지? 일단은 안돼서 build 대신 bootJar로 변경
       - name: Build with Gradle
@@ -66,8 +66,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME_BC }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD_BC }}
 
       - name: Build and push
         uses: docker/build-push-action@v3
@@ -87,11 +87,11 @@ jobs:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.PUBLIC_EC2_IP }}
+          host: ${{ secrets.PUBLIC_EC2_IP_BC }}
           username: ubuntu
-          key: ${{ secrets.PUBLIC_EC2_SSH_KEY }}
+          key: ${{ secrets.PUBLIC_EC2_SSH_KEY_BC }}
           script: |
-            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/issue_tracker:latest
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME_BC }}/issue_tracker:latest
             sudo docker stop $(sudo docker ps -a -q) || true
             sudo docker system prune -f
-            sudo docker run -d -p 80:8080 -e PROFILE=prod gruzzimo/issue_tracker
+            sudo docker run -d -p 80:8080 -e PROFILE=prod ${{ secrets.DOCKERHUB_USERNAME_BC }}/issue_tracker

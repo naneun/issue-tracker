@@ -64,20 +64,6 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
         _userList.value = users
     }
 
-    private fun randomHexColor(): String {
-        val redValue = Random.nextInt(256).toString(16)
-        val greenValue = Random.nextInt(256).toString(16)
-        val blueValue = Random.nextInt(256).toString(16)
-        return "FF${checkHexLength(redValue)}${checkHexLength(greenValue)}${checkHexLength(blueValue)}"
-    }
-
-    private fun checkHexLength(RGBValue: String): String {
-        return if (RGBValue.length < 2) {
-            "0${RGBValue}"
-        } else {
-            RGBValue
-        }
-    }
 
     private fun makeDummyMileStones() {
         val milestones = mutableListOf<MileStone>()
@@ -102,12 +88,11 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     }
 
     fun removeLabelList() {
-        for (i in 0 until _editCheckList.value.size) {
-            _labelList.value.removeIf {
-                it.id == _editCheckList.value[i]
-            }
-        }
         _labelEditMode.value = false
+        viewModelScope.launch {
+            repository.deleteLabels(editCheckList.value)
+            loadLabelList()
+        }
     }
 
     fun labelEditModeOn() {

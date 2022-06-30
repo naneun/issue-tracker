@@ -16,4 +16,8 @@ class HomeRepositoryImpl(private val labelDataSource: LabelDataSource):HomeRepos
         labelDataSource.registerLabel(title,content,color)
     }
 
+    override suspend fun deleteLabels(selectedList: List<Int>) {
+        labelDataSource.deleteLabels(selectedList)
+    }
+
 }

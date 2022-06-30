@@ -2,9 +2,7 @@ package com.example.issue_tracker.data.remote.label
 
 import com.example.issue_tracker.data.dto.LabelDto
 import com.example.issue_tracker.domain.model.LabelRequestDto
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface LabelApi {
     @GET("api/labels")
@@ -12,4 +10,7 @@ interface LabelApi {
 
     @POST("api/labels")
     suspend fun registerLabel(@Body label:LabelRequestDto)
+
+    @DELETE("api/labels")
+    suspend fun deleteLabels(@Query("id") selectedList:List<Int>)
 }

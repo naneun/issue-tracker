@@ -6,4 +6,6 @@ interface HomeRepository {
     suspend fun getLabelList():List<Label>
 
     suspend fun registerLabel(title:String, content:String, color:String)
+
+    suspend fun deleteLabels(selectedList:List<Int>)
 }

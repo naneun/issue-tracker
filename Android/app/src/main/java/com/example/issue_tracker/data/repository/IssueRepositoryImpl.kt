@@ -3,8 +3,10 @@ package com.example.issue_tracker.data.repository
 import com.example.issue_tracker.data.dto.toIssue
 import com.example.issue_tracker.data.remote.issue.IssueDataSource
 import com.example.issue_tracker.domain.model.Issue
+import com.example.issue_tracker.domain.model.IssueRequestDto
 import com.example.issue_tracker.domain.model.IssueState
 import com.example.issue_tracker.domain.repository.IssueRepository
+import okhttp3.MultipartBody
 
 class IssueRepositoryImpl(private val dataSource: IssueDataSource):IssueRepository {
     override suspend fun getIssueList(): List<Issue> {
@@ -24,4 +26,13 @@ class IssueRepositoryImpl(private val dataSource: IssueDataSource):IssueReposito
             }
         }
     }
+
+    override suspend fun registerIssue(issue: IssueRequestDto) {
+        dataSource.registerIssue(issue)
+    }
+
+    override suspend fun loadImage(data: MultipartBody.Part): String {
+        return dataSource.loadImage(data)
+    }
+
 }

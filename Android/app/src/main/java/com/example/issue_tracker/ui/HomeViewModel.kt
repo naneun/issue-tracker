@@ -136,7 +136,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
                 return it.id
             }
         }
-        return -1
+        return 0
     }
 
     fun getLabelID(title:String):Int{
@@ -145,7 +145,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
                 return it.id
             }
         }
-        return -1
+        return 0
     }
 
     fun getMileStoneID(title:String): Int {
@@ -154,7 +154,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
                 return it.id
             }
         }
-        return -1
+        return 0
     }
 
     fun getIssueState(title: String) : IssueState{

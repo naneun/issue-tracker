@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -57,6 +58,7 @@ object NetworkModule {
     @IssueRetrofit
     fun orderRetrofit(@ClientWithToken okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+        .addConverterFactory(ScalarsConverterFactory.create())
         .baseUrl(Constants.BASE_URL)
         .client(okHttpClient)
         .build()

@@ -46,10 +46,12 @@
             app:layout_constraintTop_toTopOf="@id/iv_my_account_profile" />
 
         <TextView
+            android:id="@+id/tv_login_method"
             style="@style/Subtitle1.Black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_google_login"
+            android:drawableStart="@drawable/ic_login_method_github"
+            android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:text="@{account.id}"
             app:layout_constraintStart_toStartOf="@id/tv_my_account_info_title"

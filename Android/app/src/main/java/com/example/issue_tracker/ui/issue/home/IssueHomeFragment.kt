@@ -27,6 +27,8 @@ import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
+import com.example.issue_tracker.ui.common.LoginUser
+import com.example.issue_tracker.ui.common.SharedPreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -72,11 +74,13 @@ class IssueHomeFragment : Fragment() {
         removeIssue()
         closeIssueList()
         setEditMode()
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                async { loadFilterMenu()}
-                async { loadIssueList() }
+                launch { loadUserList()}
+                launch { loadStateList() }
+                launch { loadLabelList() }
+                launch { loadMileStoneList() }
+                launch { loadIssueList() }
             }
         }
 
@@ -85,6 +89,16 @@ class IssueHomeFragment : Fragment() {
         }
     }
 
+
+
+    private fun saveLoginInfo(){
+        if(LoginUser.id!=""){
+            sharedViewModel.saveLoginUser(LoginUser.id.toInt())
+        }
+        if(LoginUser.method !=""){
+            sharedViewModel.saveLoginMethod(LoginUser.method)
+        }
+    }
     private fun setEditMode(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.editMode.collect {editable->
@@ -118,17 +132,10 @@ class IssueHomeFragment : Fragment() {
 
     private suspend fun loadIssueList() {
         viewModel.openIssueList.collect {
-            println(it)
             adapter.submitList(it)
         }
     }
 
-    private suspend fun loadFilterMenu(){
-        loadStateList()
-        loadUserList()
-        loadLabelList()
-        loadMileStoneList()
-    }
 
     private suspend fun loadStateList() {
         val stateList = mutableListOf<String>()
@@ -147,6 +154,7 @@ class IssueHomeFragment : Fragment() {
             it.forEach { user ->
                 userList.add(user.name)
             }
+            saveLoginInfo()
             setSpinner(userList, SpinnerType.WRITER)
         }
     }

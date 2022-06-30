@@ -1,5 +1,7 @@
 package com.example.issue_tracker.ui
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.issue_tracker.domain.model.IssueState
@@ -34,16 +36,29 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     private val _stateList = MutableStateFlow<List<IssueState>>(listOf())
     val stateList: StateFlow<List<IssueState>> = _stateList
 
+    private val _loginUser = MutableLiveData<User>()
+    val loginUser:LiveData<User> = _loginUser
+
+    private val _loginMethod = MutableLiveData<String>()
+    val loginMethod:LiveData<String> = _loginMethod
+
+
     init {
         loadLabelList()
         makeDummyMileStones()
-        makeDummyUser()
+        loadUserList()
         initStateList()
     }
 
      fun loadLabelList(){
         viewModelScope.launch {
             _labelList.emit(repository.getLabelList().toMutableList())
+        }
+    }
+
+    private fun loadUserList(){
+        viewModelScope.launch {
+            _userList.emit(repository.getUserList())
         }
     }
 
@@ -55,13 +70,6 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
             IssueState.WRITE_COMMENT,
             IssueState.CLOSE
         )
-    }
-
-    private fun makeDummyUser() {
-        val users = mutableListOf<User>()
-        for (i in 0..10) {
-            users.add(User(i, "User${i}", "https://images.unsplash.com/photo-1655057011043-158c48f3809d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDEyfHhqUFI0aGxrQkdBfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60")) }
-        _userList.value = users
     }
 
 
@@ -101,5 +109,23 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
     fun labelEditModeOff() {
         _labelEditMode.value = false
+    }
+
+    fun saveLoginUser(id:Int){
+        println(id)
+        _userList.value.forEach {
+            if(it.id == id){
+                _loginUser.value = it
+            }
+        }
+    }
+
+    fun saveLoginMethod(method:String){
+        _loginMethod.value = method
+    }
+
+    fun checkLogin():Boolean{
+        println(_loginUser.value)
+        return _loginUser.value!=null
     }
 }

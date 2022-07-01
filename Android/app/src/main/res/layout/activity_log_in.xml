@@ -81,13 +81,13 @@
             app:layout_constraintTop_toBottomOf="@id/etl_login_pwd" />
 
         <TextView
-            android:id="@+id/tv_register_btn_title"
+            android:id="@+id/tv_withoutLogin_btn_title"
             style="@style/Subtitle2.Primary.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="96dp"
             android:layout_marginTop="42dp"
-            android:text="@string/label_string_register_title"
+            android:text="@string/string_login_without_mode"
             app:layout_constraintStart_toEndOf="@id/tv_login_btn_title"
             app:layout_constraintTop_toBottomOf="@id/etl_login_pwd" />
 
@@ -95,7 +95,7 @@
             android:id="@+id/btn_github_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_register_btn_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_withoutLogin_btn_title"
             android:background="@drawable/btn_black_radius"
             android:paddingHorizontal="16dp"
             android:layout_marginTop="90dp"

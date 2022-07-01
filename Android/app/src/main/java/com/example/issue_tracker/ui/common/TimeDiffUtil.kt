@@ -20,6 +20,13 @@ fun getTimeDiff(dateTimeInfo: String): String {
     return secondsToActionLogTime(seconds)
 }
 
+fun transformStringToTime(time:String): LocalDateTime{
+    val date = time.replace("T", " ")
+    val dataFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    return LocalDateTime.parse(date, dataFormatter)
+}
+
+
 fun secondsToActionLogTime(seconds: Int): String {
     return when {
         seconds > SECONDS_OF_DAY -> "${seconds / SECONDS_OF_DAY}일 전"

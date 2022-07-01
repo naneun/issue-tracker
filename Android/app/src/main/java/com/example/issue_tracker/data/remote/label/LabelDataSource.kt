@@ -7,4 +7,6 @@ interface LabelDataSource {
     suspend fun getLabelList():LabelDto
 
     suspend fun registerLabel(title: String, content: String, color: String)
+
+    suspend fun deleteLabels(selectedList:List<Int>)
 }

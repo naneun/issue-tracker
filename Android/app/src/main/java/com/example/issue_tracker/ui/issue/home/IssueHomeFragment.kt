@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -25,8 +26,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.issue_tracker.R
 import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
+import com.example.issue_tracker.domain.model.IssueState
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
+import com.example.issue_tracker.ui.common.LoginUser
+import com.example.issue_tracker.ui.common.SharedPreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -72,11 +76,17 @@ class IssueHomeFragment : Fragment() {
         removeIssue()
         closeIssueList()
         setEditMode()
-
+        enableApply()
+        enableInitialize()
+        setInitialize()
+        setFilterApply()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                async { loadFilterMenu()}
-                async { loadIssueList() }
+                launch { loadUserList()}
+                launch { loadStateList() }
+                launch { loadLabelList() }
+                launch { loadMileStoneList() }
+                launch { loadIssueList() }
             }
         }
 
@@ -85,6 +95,50 @@ class IssueHomeFragment : Fragment() {
         }
     }
 
+    private fun setInitialize(){
+        binding.btnFilterReset.setOnClickListener {
+            if(it.isEnabled){
+                setDefaultFilterSelection()
+                viewModel.checkFilterChanged()
+                viewModel.checkInitialFlag()
+                viewModel.loadOpenIssueList()
+            }
+        }
+    }
+
+    private fun setFilterApply(){
+        binding.btnFilterApply.setOnClickListener {
+            if(it.isEnabled){
+                viewModel.applyFilter()
+                viewModel.setStateFlagFalse()
+                binding.clIssueList.isVisible = true
+                binding.clFilter.isVisible = false
+                changeStatusBarWhite()
+            }
+        }
+    }
+
+    private fun enableInitialize(){
+        viewModel.initialFlag.observe(viewLifecycleOwner){
+            binding.btnFilterReset.isEnabled = !it
+        }
+    }
+
+    private fun enableApply(){
+        viewModel.changeFlag.observe(viewLifecycleOwner){
+            binding.btnFilterApply.isEnabled = it
+        }
+    }
+
+
+    private fun saveLoginInfo(){
+        if(LoginUser.id!=""){
+            sharedViewModel.saveLoginUser(LoginUser.id.toInt())
+        }
+        if(LoginUser.method !=""){
+            sharedViewModel.saveLoginMethod(LoginUser.method)
+        }
+    }
     private fun setEditMode(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.editMode.collect {editable->
@@ -118,17 +172,10 @@ class IssueHomeFragment : Fragment() {
 
     private suspend fun loadIssueList() {
         viewModel.openIssueList.collect {
-            println(it)
             adapter.submitList(it)
         }
     }
 
-    private suspend fun loadFilterMenu(){
-        loadStateList()
-        loadUserList()
-        loadLabelList()
-        loadMileStoneList()
-    }
 
     private suspend fun loadStateList() {
         val stateList = mutableListOf<String>()
@@ -147,6 +194,7 @@ class IssueHomeFragment : Fragment() {
             it.forEach { user ->
                 userList.add(user.name)
             }
+            saveLoginInfo()
             setSpinner(userList, SpinnerType.WRITER)
         }
     }
@@ -179,20 +227,62 @@ class IssueHomeFragment : Fragment() {
             SpinnerType.MILESTONE -> binding.spinnerIssueMilestone
             else -> binding.spinnerIssueAssignee
         }
-        val adapter =
-            ArrayAdapter(requireContext(), R.layout.item_spinner_filter, R.id.tv_filter_value, list)
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_filter, R.id.tv_filter_value, list)
         spinner.adapter = adapter
         spinner.setSelection(0)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val text = view?.findViewById<TextView>(R.id.tv_filter_value)
                 text?.setTextColor(Color.WHITE)
                 view?.findViewById<View>(R.id.divider_filter_value)?.isVisible = false
+                when (type) {
+                    SpinnerType.STATE -> {
+                        when(position){
+                            0-> {
+                                viewModel.checkStateChanged(IssueState.OPEN)
+                                viewModel.selectState(IssueState.OPEN)
+                            }
+                            else-> {
+                                val state = sharedViewModel.getIssueState(spinner.adapter.getItem(position) as String)
+                                viewModel.checkStateChanged(state)
+                                viewModel.selectState(state)
+                            }
+                        }
+                    }
+                    SpinnerType.LABEL -> {
+                        when(position){
+                            0-> {viewModel.selectLabel(0) }
+                            else-> {
+                                val labelId = sharedViewModel.getLabelID(spinner.adapter.getItem(position) as String)
+                                viewModel.selectLabel(labelId)
+                            }
+
+                        }
+
+                    }
+                    SpinnerType.MILESTONE ->  {
+                        when(position){
+                            0->{ viewModel.selectMileStone(0)}
+                            else->{
+                                val mileStoneId = sharedViewModel.getMileStoneID(spinner.adapter.getItem(position) as String)
+                                viewModel.selectMileStone(mileStoneId)
+                            }
+                        }
+
+                    }
+                    else -> {
+                        when(position){
+                            0-> {viewModel.selectWriter(0)}
+                            else->{
+                                val writerId = sharedViewModel.getWriterID(spinner.adapter.getItem(position) as String)
+                                viewModel.selectWriter(writerId)
+                            }
+                        }
+
+                    }
+                }
+                viewModel.checkFilterChanged()
+                viewModel.checkInitialFlag()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -224,6 +314,7 @@ class IssueHomeFragment : Fragment() {
             binding.clIssueList.isVisible = false
             binding.clFilter.isVisible = true
             changeStatusBarSkyBLue()
+            viewModel.checkFilterChanged()
         }
     }
 

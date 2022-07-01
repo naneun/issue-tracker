@@ -9,6 +9,10 @@ import com.example.issue_tracker.data.remote.label.LabelRemoteDataSource
 import com.example.issue_tracker.data.remote.login.LoginApi
 import com.example.issue_tracker.data.remote.login.LoginDataSource
 import com.example.issue_tracker.data.remote.login.LoginRemoteDataSource
+import com.example.issue_tracker.data.remote.user.UserApi
+import com.example.issue_tracker.data.remote.user.UserDataSource
+import com.example.issue_tracker.data.remote.user.UserRemoteDataSource
+import com.example.issue_tracker.domain.model.User
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +39,11 @@ object DataSourceModule {
     @Singleton
     fun provideLabelDataSource(api: LabelApi): LabelDataSource {
         return LabelRemoteDataSource(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDataSource(api:UserApi) : UserDataSource{
+        return UserRemoteDataSource(api)
     }
 }

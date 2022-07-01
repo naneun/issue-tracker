@@ -38,7 +38,6 @@ class LabelFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadLabelList()
         adapter = LabelAdapter(
             switchEditMode = { switchToEditMode() },
             addCheckList = { addCheckList(it) },
@@ -137,5 +136,10 @@ class LabelFragment : Fragment() {
             Log.d("TEST", "${viewModel.labelEditMode.value}")
             Log.d("TEST", "${viewModel.labelList.value.size}")
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadLabelList()
     }
 }

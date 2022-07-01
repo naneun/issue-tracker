@@ -12,6 +12,10 @@ import com.example.issue_tracker.data.remote.login.LoginRemoteDataSource
 import com.example.issue_tracker.data.remote.milestone.MileStoneApi
 import com.example.issue_tracker.data.remote.milestone.MileStoneDataSource
 import com.example.issue_tracker.data.remote.milestone.MileStoneRemoteDataSource
+import com.example.issue_tracker.data.remote.user.UserApi
+import com.example.issue_tracker.data.remote.user.UserDataSource
+import com.example.issue_tracker.data.remote.user.UserRemoteDataSource
+import com.example.issue_tracker.domain.model.User
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,5 +48,11 @@ object DataSourceModule {
     @Singleton
     fun provideMilestoneDataSource(api: MileStoneApi): MileStoneDataSource {
         return MileStoneRemoteDataSource(api)
+
+    @Provides
+    @Singleton
+    fun provideUserDataSource(api:UserApi) : UserDataSource{
+        return UserRemoteDataSource(api)
+
     }
 }

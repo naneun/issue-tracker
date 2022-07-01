@@ -1,6 +1,8 @@
 package com.example.issue_tracker.ui
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.issue_tracker.domain.model.IssueState
@@ -9,8 +11,10 @@ import com.example.issue_tracker.domain.model.MileStone
 import com.example.issue_tracker.domain.model.User
 import com.example.issue_tracker.domain.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -35,22 +39,40 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     private val _stateList = MutableStateFlow<List<IssueState>>(listOf())
     val stateList: StateFlow<List<IssueState>> = _stateList
 
+    private val _loginUser = MutableLiveData<User>()
+    val loginUser:LiveData<User> = _loginUser
+
+    private val _loginMethod = MutableLiveData<String>()
+    val loginMethod:LiveData<String> = _loginMethod
+
+    private val coroutineExceptionHandler: CoroutineExceptionHandler =
+        CoroutineExceptionHandler { _, throwable ->
+            Log.e("Error", ": ${throwable.message}")
+        }
+
     init {
         loadLabelList()
         loadMileStoneList()
-        makeDummyUser()
+        loadUserList()
         initStateList()
     }
 
      fun loadLabelList(){
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _labelList.emit(repository.getLabelList().toMutableList())
         }
     }
 
+
     fun loadMileStoneList(){
         viewModelScope.launch {
             _mileStoneList.emit(repository.getMileStoneList())
+        }
+    }
+    
+    private fun loadUserList(){
+        viewModelScope.launch(coroutineExceptionHandler) {
+            _userList.emit(repository.getUserList())
         }
     }
 
@@ -63,13 +85,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
             IssueState.CLOSE
         )
     }
-
-    private fun makeDummyUser() {
-        val users = mutableListOf<User>()
-        for (i in 0..10) {
-            users.add(User(i, "User${i}", "https://images.unsplash.com/photo-1655057011043-158c48f3809d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDEyfHhqUFI0aGxrQkdBfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60")) }
-        _userList.value = users
-    }
+    
 
     fun clearCheckList() {
         _editCheckList.value.clear()
@@ -86,12 +102,11 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     }
 
     fun removeLabelList() {
-        for (i in 0 until _editCheckList.value.size) {
-            _labelList.value.removeIf {
-                it.id == _editCheckList.value[i]
-            }
-        }
         _labelEditMode.value = false
+        viewModelScope.launch {
+            repository.deleteLabels(editCheckList.value)
+            loadLabelList()
+        }
     }
 
     fun labelEditModeOn() {
@@ -100,5 +115,58 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
     fun labelEditModeOff() {
         _labelEditMode.value = false
+    }
+
+    fun saveLoginUser(id:Int){
+        println(id)
+        _userList.value.forEach {
+            if(it.id == id){
+                _loginUser.value = it
+            }
+        }
+    }
+
+    fun saveLoginMethod(method:String){
+        _loginMethod.value = method
+    }
+
+    fun checkLogin():Boolean{
+        return _loginUser.value!=null
+    }
+
+    fun getWriterID(name:String): Int {
+        _userList.value.forEach {
+            if(it.name==name){
+                return it.id
+            }
+        }
+        return 0
+    }
+
+    fun getLabelID(title:String):Int{
+        _labelList.value.forEach {
+            if(it.title==title){
+                return it.id
+            }
+        }
+        return 0
+    }
+
+    fun getMileStoneID(title:String): Int {
+        _mileStoneList.value.forEach {
+            if(it.title==title){
+                return it.id
+            }
+        }
+        return 0
+    }
+
+    fun getIssueState(title: String) : IssueState{
+        _stateList.value.forEach {
+            if(it.value == title){
+                return it
+            }
+        }
+        return IssueState.OPEN
     }
 }

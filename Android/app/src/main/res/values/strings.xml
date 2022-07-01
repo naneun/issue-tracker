@@ -86,4 +86,6 @@
     <string name="filter_apply_title">적용</string>
     <string name="filter_initalize_title">초기화</string>
     <string name="filter_title_value">필터</string>
+    <string name="string_login_without_mode">비로그인 모드</string>
+    <string name="issue_write_title_title">제목</string>
 </resources>

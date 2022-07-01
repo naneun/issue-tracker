@@ -1,6 +1,7 @@
 package com.example.issue_tracker.ui.login
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -15,6 +16,8 @@ import com.example.issue_tracker.R
 import com.example.issue_tracker.common.AccessToken
 import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.ActivityLogInBinding
+import com.example.issue_tracker.ui.common.LoginUser
+import com.example.issue_tracker.ui.common.SharedPreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import org.jsoup.Jsoup
@@ -26,11 +29,11 @@ class LogInActivity : AppCompatActivity() {
     private val viewModel:LoginViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        SharedPreferenceManager.initSharedPreferences(getSharedPreferences("LoginSharedPreference", AppCompatActivity.MODE_PRIVATE))
         binding = DataBindingUtil.setContentView(this, R.layout.activity_log_in)
         binding.lifecycleOwner = this
 
-        binding.tvLoginBtnTitle.setOnClickListener {
+        binding.tvWithoutLoginBtnTitle.setOnClickListener {
             moveToMain()
         }
         binding.btnGithubLogin.setOnClickListener {
@@ -79,7 +82,6 @@ class LogInActivity : AppCompatActivity() {
             if(!code.isNullOrEmpty()) {
                 AccessToken.code = code[0]
                 binding.wvLogin.loadUrl("javascript:window.HTMLOUT.showHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-                //viewModel.getAccessToken()
                 moveToMain()
             }
         }
@@ -93,8 +95,15 @@ class LogInActivity : AppCompatActivity() {
             val doc= Jsoup.parse(html)
             val data = doc.body().text()
             val json = JSONObject(data)
-            val token= json.get("jwtAccessToken")
-            AccessToken.token= token.toString()
+            val token= json.get("jwtAccessToken").toString()
+            val refreshToken= json.get("jwtRefreshToken").toString()
+            val useId= json.get("id").toString()
+            val loginMethod = json.get("resourceServer").toString()
+            LoginUser.id = useId
+            LoginUser.method= loginMethod
+            SharedPreferenceManager.putString(Constants.ACCESS_TOKEN_KEY, token)
+            SharedPreferenceManager.putString(Constants.ACCESS_REFRESH_KEY, refreshToken)
+            AccessToken.token= token
         }
     }
 }

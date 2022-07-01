@@ -12,4 +12,8 @@ class LabelRemoteDataSource(private val api:LabelApi):LabelDataSource {
     override suspend fun registerLabel(title: String, content: String, color: String) {
         return api.registerLabel(LabelRequestDto(color,content,title))
     }
+
+    override suspend fun deleteLabels(selectedList: List<Int>) {
+        return api.deleteLabels(selectedList)
+    }
 }

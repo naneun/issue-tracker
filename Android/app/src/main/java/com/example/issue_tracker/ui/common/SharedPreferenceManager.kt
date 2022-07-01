@@ -5,18 +5,22 @@ import android.content.SharedPreferences
 
 object SharedPreferenceManager {
 
-    lateinit var sharedPreferences: SharedPreferences
+     private var sharedPreferences: SharedPreferences?=null
 
     fun initSharedPreferences(sharedPreferences: SharedPreferences){
         this.sharedPreferences = sharedPreferences
     }
 
     fun putString(key:String, value:String){
-        sharedPreferences.edit().putString(key,value).apply()
+        sharedPreferences?.let{
+            it.edit().putString(key,value).apply()
+        }
     }
 
-    fun getString(key:String){
-        sharedPreferences.getString(key,null)
+    fun getString(key:String): String {
+        return sharedPreferences?.let{
+            it.getString(key,"")
+        }?:""
 
     }
 }

@@ -33,9 +33,10 @@ public class IssueResponse {
 			issue.getTitle(),
 			issue.getContent(),
 			issue.getState(),
-			LabelResponseOfIssue.from(issue.getLabel()),
-			MilestoneResponseOfIssue.from(issue.getMilestone()),
-			AssigneeResponseOfIssue.from(issue.getAssignee())
+			issue.getLabel() == null ? null : LabelResponseOfIssue.from(issue.getLabel()),
+			issue.getMilestone() == null ? null
+				: MilestoneResponseOfIssue.from(issue.getMilestone()),
+			issue.getAssignee() == null ? null : AssigneeResponseOfIssue.from(issue.getAssignee())
 		);
 	}
 

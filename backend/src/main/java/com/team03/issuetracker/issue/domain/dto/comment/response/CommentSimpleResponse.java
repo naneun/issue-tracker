@@ -13,40 +13,45 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class CommentSimpleResponse {
 
-    private WriterResponseOfSimpleComment writer;
-    private LocalDateTime createdAt;
-    private String content;
-    private EmojiResponseOfSimpleComment emoji;
+	private WriterResponseOfSimpleComment writer;
+	private LocalDateTime createdAt;
+	private String content;
+	private EmojiResponseOfSimpleComment emoji;
 
-    public static CommentSimpleResponse from(Comment comment) {
-        return new CommentSimpleResponse(WriterResponseOfSimpleComment.from(comment.getWriter()),
-            comment.getCreatedDate(), comment.getContent(),
-            EmojiResponseOfSimpleComment.from(comment.getEmoji()));
-    }
+	public static CommentSimpleResponse from(Comment comment) {
+		return new CommentSimpleResponse(
+			comment.getWriter() == null ? null
+				: WriterResponseOfSimpleComment.from(comment.getWriter()),
+			comment.getCreatedDate(), comment.getContent(),
+			comment.getEmoji() == null ? null
+				: EmojiResponseOfSimpleComment.from(comment.getEmoji()));
+	}
 
-    @Getter
-    @RequiredArgsConstructor
-    private static class WriterResponseOfSimpleComment {
+	@Getter
+	@RequiredArgsConstructor
+	private static class WriterResponseOfSimpleComment {
 
-        private final Long writerId;
-        private final String writerName;
+		private final Long writerId;
+		private final String writerName;
+		private final String writerProfileImage;
 
-        public static WriterResponseOfSimpleComment from(Member writer) {
-            return new WriterResponseOfSimpleComment(writer.getId(), writer.getName());
-        }
-    }
+		public static WriterResponseOfSimpleComment from(Member writer) {
+			return new WriterResponseOfSimpleComment(writer.getId(), writer.getName()
+			,writer.getProfileImage());
+		}
+	}
 
-    @Getter
-    @RequiredArgsConstructor
-    private static class EmojiResponseOfSimpleComment {
+	@Getter
+	@RequiredArgsConstructor
+	private static class EmojiResponseOfSimpleComment {
 
-        private final Long emojiId;
-        private final String unicode;
+		private final Long emojiId;
+		private final String unicode;
 
-        public static EmojiResponseOfSimpleComment from(Emoji emoji) {
-            return Objects.nonNull(emoji)
-                ? new EmojiResponseOfSimpleComment(emoji.getId(), emoji.getUnicode())
-                : null;
-        }
-    }
+		public static EmojiResponseOfSimpleComment from(Emoji emoji) {
+			return Objects.nonNull(emoji)
+				? new EmojiResponseOfSimpleComment(emoji.getId(), emoji.getUnicode())
+				: null;
+		}
+	}
 }

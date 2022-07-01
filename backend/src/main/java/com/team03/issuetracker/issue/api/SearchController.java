@@ -27,6 +27,7 @@ public class SearchController {
 	@GetMapping("/issues")
 	public ResponseEntity<List<IssueSimpleResponse>> findByState(
 		IssueSearchCondition searchCondition) {
+
 		return ResponseEntity.ok(issueService.findBySearchCondition(searchCondition));
 	}
 }

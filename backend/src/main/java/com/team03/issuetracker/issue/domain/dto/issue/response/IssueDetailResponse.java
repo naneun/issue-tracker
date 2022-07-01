@@ -14,76 +14,79 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class IssueDetailResponse {
 
-    private Long id;
-    private String title;
-    private String content;
-    private IssueState state;
-    private LocalDateTime createdAt;
+	private Long id;
+	private String title;
+	private String content;
+	private IssueState state;
+	private LocalDateTime createdAt;
 
-    private CreatorResponseOfDetailIssue creator;
-    private LabelResponseOfDetailIssue label;
-    private MilestoneResponseOfDetailIssue milestone;
-    private AssigneeResponseOfDetailIssue assignee;
+	private CreatorResponseOfDetailIssue creator;
+	private LabelResponseOfDetailIssue label;
+	private MilestoneResponseOfDetailIssue milestone;
+	private AssigneeResponseOfDetailIssue assignee;
 
-    public static IssueDetailResponse from(Issue issue) {
-        return new IssueDetailResponse(
-            issue.getId(),
-            issue.getTitle(),
-            issue.getContent(),
-            issue.getState(),
-            issue.getCreatedAt(),
-            CreatorResponseOfDetailIssue.from(issue.getCreator()),
-            LabelResponseOfDetailIssue.from(issue.getLabel()),
-            MilestoneResponseOfDetailIssue.from(issue.getMilestone()),
-            AssigneeResponseOfDetailIssue.from(issue.getAssignee())
-        );
-    }
+	public static IssueDetailResponse from(Issue issue) {
+		return new IssueDetailResponse(
+			issue.getId(),
+			issue.getTitle(),
+			issue.getContent(),
+			issue.getState(),
+			issue.getCreatedAt(),
+			issue.getCreator() == null ? null
+				: CreatorResponseOfDetailIssue.from(issue.getCreator()),
+			issue.getLabel() == null ? null : LabelResponseOfDetailIssue.from(issue.getLabel()),
+			issue.getMilestone() == null ? null
+				: MilestoneResponseOfDetailIssue.from(issue.getMilestone()),
+			issue.getAssignee() == null ? null
+				: AssigneeResponseOfDetailIssue.from(issue.getAssignee())
+		);
+	}
 
-    @Getter
-    @RequiredArgsConstructor
-    private static class CreatorResponseOfDetailIssue {
+	@Getter
+	@RequiredArgsConstructor
+	private static class CreatorResponseOfDetailIssue {
 
-        private final Long creatorId;
-        private final String creatorName;
+		private final Long creatorId;
+		private final String creatorName;
 
-        public static CreatorResponseOfDetailIssue from(Member member) {
-            return new CreatorResponseOfDetailIssue(member.getId(), member.getName());
-        }
-    }
+		public static CreatorResponseOfDetailIssue from(Member member) {
+			return new CreatorResponseOfDetailIssue(member.getId(), member.getName());
+		}
+	}
 
-    @Getter
-    @RequiredArgsConstructor
-    private static class LabelResponseOfDetailIssue {
+	@Getter
+	@RequiredArgsConstructor
+	private static class LabelResponseOfDetailIssue {
 
-        private final Long labelId;
-        private final String labelTitle;
+		private final Long labelId;
+		private final String labelTitle;
 
-        public static LabelResponseOfDetailIssue from(Label label) {
-            return new LabelResponseOfDetailIssue(label.getId(), label.getTitle());
-        }
-    }
+		public static LabelResponseOfDetailIssue from(Label label) {
+			return new LabelResponseOfDetailIssue(label.getId(), label.getTitle());
+		}
+	}
 
-    @Getter
-    @RequiredArgsConstructor
-    private static class MilestoneResponseOfDetailIssue {
+	@Getter
+	@RequiredArgsConstructor
+	private static class MilestoneResponseOfDetailIssue {
 
-        private final Long milestoneId;
-        private final String milestoneTitle;
+		private final Long milestoneId;
+		private final String milestoneTitle;
 
-        public static MilestoneResponseOfDetailIssue from(Milestone milestone) {
-            return new MilestoneResponseOfDetailIssue(milestone.getId(), milestone.getTitle());
-        }
-    }
+		public static MilestoneResponseOfDetailIssue from(Milestone milestone) {
+			return new MilestoneResponseOfDetailIssue(milestone.getId(), milestone.getTitle());
+		}
+	}
 
-    @Getter
-    @RequiredArgsConstructor
-    private static class AssigneeResponseOfDetailIssue {
+	@Getter
+	@RequiredArgsConstructor
+	private static class AssigneeResponseOfDetailIssue {
 
-        private final Long assigneeId;
-        private final String assigneeName;
+		private final Long assigneeId;
+		private final String assigneeName;
 
-        public static AssigneeResponseOfDetailIssue from(Member assignee) {
-            return new AssigneeResponseOfDetailIssue(assignee.getId(), assignee.getName());
-        }
-    }
+		public static AssigneeResponseOfDetailIssue from(Member assignee) {
+			return new AssigneeResponseOfDetailIssue(assignee.getId(), assignee.getName());
+		}
+	}
 }

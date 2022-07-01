@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface IssueRepository extends JpaRepository<Issue, Long>, IssueRepositoryCustom {
@@ -19,4 +21,7 @@ public interface IssueRepository extends JpaRepository<Issue, Long>, IssueReposi
 		"comments"})
 	List<Issue> findByState(@Param("state") IssueState state);
 
+	@Modifying
+	@Query("delete from Issue i where i.id in :ids")
+	void deleteAllById(List<Long> ids);
 }

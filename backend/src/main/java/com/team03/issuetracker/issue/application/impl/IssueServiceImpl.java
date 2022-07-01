@@ -1,7 +1,6 @@
 package com.team03.issuetracker.issue.application.impl;
 
 import com.team03.issuetracker.common.domain.Member;
-import com.team03.issuetracker.common.exception.MemberException;
 import com.team03.issuetracker.common.repository.MemberRepository;
 import com.team03.issuetracker.issue.application.IssueService;
 import com.team03.issuetracker.issue.domain.Issue;
@@ -16,11 +15,9 @@ import com.team03.issuetracker.issue.domain.dto.issue.response.IssueDetailRespon
 import com.team03.issuetracker.issue.domain.dto.issue.response.IssueResponse;
 import com.team03.issuetracker.issue.domain.dto.issue.response.IssueSimpleResponse;
 import com.team03.issuetracker.issue.exception.IssueException;
-import com.team03.issuetracker.issue.exception.LabelException;
 import com.team03.issuetracker.issue.repository.IssueRepository;
 import com.team03.issuetracker.issue.repository.LabelRepository;
 import com.team03.issuetracker.milestone.domain.Milestone;
-import com.team03.issuetracker.milestone.exception.MilestoneException;
 import com.team03.issuetracker.milestone.repository.MilestoneRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,14 +82,17 @@ public class IssueServiceImpl implements IssueService {
 	 * @return
 	 */
 	private Issue createIssue(IssueRequestDto issueRequestDto) {
-		Label label = labelRepository.findById(issueRequestDto.getLabelId())
-			.orElseThrow(LabelException::new);
+		Label label = labelRepository.findById(
+				issueRequestDto.getLabelId() == null ? 0 : issueRequestDto.getLabelId())
+			.orElse(null);
 
-		Milestone milestone = milestoneRepository.findById(issueRequestDto.getMilestoneId())
-			.orElseThrow(MilestoneException::new);
+		Milestone milestone = milestoneRepository.findById(
+				issueRequestDto.getMilestoneId() == null ? 0 : issueRequestDto.getMilestoneId())
+			.orElse(null);
 
-		Member assignee = memberRepository.findById(issueRequestDto.getAssigneeId())
-			.orElseThrow(MemberException::new);
+		Member assignee = memberRepository.findById(
+				issueRequestDto.getAssigneeId() == null ? 0 : issueRequestDto.getMilestoneId())
+			.orElse(null);
 
 		return issueRequestDto.toEntity(label, milestone, assignee);
 	}
@@ -111,7 +111,9 @@ public class IssueServiceImpl implements IssueService {
 	@Transactional
 	public List<Long> deleteById(List<Long> checkedIds) {
 		List<Issue> issues = issueRepository.findAllById(checkedIds);
-		issues.forEach(issue -> issue.getMilestone().removeIssue(issue));
+		issues.stream().filter(issue -> issue.getMilestone() != null)
+			.forEach(issue -> issue.getMilestone().removeIssue(issue));
+		issues.forEach(Issue::truncateComments);
 		issueRepository.deleteAllById(checkedIds);
 
 		return issues.stream().map(Issue::getId)

@@ -1,7 +1,6 @@
 package com.example.issue_tracker.ui.login
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -32,7 +31,6 @@ class LogInActivity : AppCompatActivity() {
         SharedPreferenceManager.initSharedPreferences(getSharedPreferences("LoginSharedPreference", AppCompatActivity.MODE_PRIVATE))
         binding = DataBindingUtil.setContentView(this, R.layout.activity_log_in)
         binding.lifecycleOwner = this
-
         binding.tvWithoutLoginBtnTitle.setOnClickListener {
             moveToMain()
         }
@@ -46,13 +44,12 @@ class LogInActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-
     private fun setWebView() {
         switchToLoginMode()
         binding.wvLogin.webViewClient = CustomWebViewClient()
         binding.wvLogin.settings.javaScriptEnabled = true
         binding.wvLogin.loadUrl(Constants.GITHUB_LOGIN)
-        binding.wvLogin.addJavascriptInterface(MyJavaScriptInterface(),"HTMLOUT");
+        binding.wvLogin.addJavascriptInterface(LoginJavaScriptInterface(),"HTMLOUT");
     }
 
     private fun switchToLoginMode() {
@@ -85,11 +82,8 @@ class LogInActivity : AppCompatActivity() {
                 moveToMain()
             }
         }
-
-
-
     }
-    internal class MyJavaScriptInterface {
+    internal class LoginJavaScriptInterface {
         @JavascriptInterface
         fun showHTML(html: String?) {
             val doc= Jsoup.parse(html)

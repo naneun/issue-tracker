@@ -90,19 +90,15 @@ class LabelFragment : Fragment() {
     }
 
     private fun addCheckList(itemId: Int) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.addCheckList(itemId)
-            viewModel.labelEditModeOn()
-            setSelectedIssueCount()
-        }
+        viewModel.addCheckList(itemId)
+        setSelectedIssueCount()
+
     }
 
     private fun deleteCheckList(itemId: Int) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.removeCheckList(itemId)
-            viewModel.labelEditModeOff()
-            setSelectedIssueCount()
-        }
+        viewModel.removeCheckList(itemId)
+        setSelectedIssueCount()
+
     }
 
     private fun switchCheckBox(view: CheckBox) {
@@ -141,5 +137,6 @@ class LabelFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.loadLabelList()
+
     }
 }

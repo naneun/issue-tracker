@@ -43,6 +43,10 @@ class IssueDetailFragment : Fragment() {
         adapter = IssueDetailAdapter()
         binding.id = issueID.toString()
         binding.rvIssueDetail.adapter = adapter
+        binding.writer = "SomeOne"
+        binding.time = "2022-07-01T02:33:15"
+        viewModel.loadDetail(issueID)
+        pageUpdate()
         loadDetail()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -56,21 +60,19 @@ class IssueDetailFragment : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 if (!recyclerView.canScrollVertically(1)) {
                     adapter.deleteLoading()
-                    pageUpdate()
                 }
             }
         })
     }
 
     private fun pageUpdate(){
-        viewModel.loadComments(id, page++)
+        viewModel.loadComments(issueID, page++)
     }
 
     private fun loadDetail(){
         viewModel.issueDetail.observe(viewLifecycleOwner){
-            println(it)
             binding.tvIssueDetailTitle.text = it.title
-            binding.writer = it.writer.name
+            binding.writer = it.writer.name?:"SomeOne"
             binding.time = it.time.toString()
             if (it.state) {
                 binding.btnIssueDetailOpenState.isVisible = true
@@ -85,10 +87,11 @@ class IssueDetailFragment : Fragment() {
 
 
     private suspend fun loadComments(){
-        viewModel.loadDetail(issueID)
-        pageUpdate()
         viewModel.comments.collect{
-            adapter.submitList(it)
+            if(it.isNotEmpty()) {
+                adapter.submitList(it)
+                adapter.notifyDataSetChanged()
+            }
        }
     }
 

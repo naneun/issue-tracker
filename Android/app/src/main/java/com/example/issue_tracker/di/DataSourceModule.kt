@@ -48,6 +48,7 @@ object DataSourceModule {
     @Singleton
     fun provideMilestoneDataSource(api: MileStoneApi): MileStoneDataSource {
         return MileStoneRemoteDataSource(api)
+    }
 
     @Provides
     @Singleton

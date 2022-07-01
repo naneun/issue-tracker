@@ -65,7 +65,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
 
     fun loadMileStoneList(){
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _mileStoneList.emit(repository.getMileStoneList())
         }
     }
@@ -93,17 +93,19 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
     fun addCheckList(itemId: Int) {
         _editCheckList.value.add(itemId)
+        labelEditModeOn()
     }
 
     fun removeCheckList(itemId: Int) {
         _editCheckList.value.removeIf {
             it == itemId
         }
+        labelEditModeOff()
     }
 
     fun removeLabelList() {
         _labelEditMode.value = false
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.deleteLabels(editCheckList.value)
             loadLabelList()
         }
@@ -118,7 +120,6 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     }
 
     fun saveLoginUser(id:Int){
-        println(id)
         _userList.value.forEach {
             if(it.id == id){
                 _loginUser.value = it

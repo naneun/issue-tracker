@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="account"
+            type="com.example.issue_tracker.domain.model.MyAccount" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="16dp"
+        tools:context=".ui.milestone.MileStoneFragment">
+
+        <TextView
+            android:id="@+id/tv_my_account_title"
+            style="@style/HeadLine6.Black.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="16dp"
+            android:text="@string/my_account_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/iv_my_account_profile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            imageUrl="@{account.profileImage}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_account_title" />
+
+        <TextView
+            android:id="@+id/tv_my_account_info_title"
+            style="@style/Subtitle1.Black.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/my_account_account_info"
+            app:layout_constraintStart_toEndOf="@id/iv_my_account_profile"
+            app:layout_constraintTop_toTopOf="@id/iv_my_account_profile" />
+
+        <TextView
+            android:id="@+id/tv_login_method"
+            style="@style/Subtitle1.Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_login_method_github"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="@{account.id}"
+            app:layout_constraintStart_toStartOf="@id/tv_my_account_info_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_account_info_title" />
+
+        <View
+            android:id="@+id/view_my_account_division"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/grey5"
+            app:layout_constraintTop_toBottomOf="@id/iv_my_account_profile" />
+
+        <TextView
+            android:id="@+id/tv_my_account_write_issue_count_title"
+            style="@style/Subtitle1.Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_account_write_issue_count_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_my_account_division" />
+
+        <TextView
+            style="@style/Subtitle1.Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            writeIssueCount="@{account.issueWriteCount}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_my_account_write_issue_count_title"/>
+
+        <View
+            android:id="@+id/view_my_account_division2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/grey5"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_account_write_issue_count_title" />
+
+        <TextView
+            android:id="@+id/tv_my_account_my_issue_count_title"
+            style="@style/Subtitle1.Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_account_assigned_issue_count_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_my_account_division2" />
+
+        <TextView
+            style="@style/Subtitle1.Black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            assignIssueCount="@{account.issueAssignCount}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_my_account_my_issue_count_title"/>
+
+        <View
+            android:id="@+id/view_my_account_division3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/grey5"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_account_my_issue_count_title" />
+
+        <TextView
+            android:id="@+id/tv_my_account_my_comment_count_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/view_my_account_division3"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            style="@style/Subtitle1.Black"
+            android:text="@string/my_account_comment_count_title"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_my_account_my_comment_count_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Subtitle1.Black"
+            writeCommentCount="@{account.commentCount}"
+            />
+
+        <View
+            android:id="@+id/view_my_account_division4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/grey5"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_account_my_comment_count_title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

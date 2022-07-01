@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.issue_tracker.ui.issue.home.IssueHomeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.issue.home.IssueHomeFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_issue_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_search">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_issue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tb_issues"
+                tools:listitem="@layout/item_issues" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tb_issues"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@color/white"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:visibility="visible"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/HeadLine6"
+                    android:layout_width="216dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:text="@string/tool_bar_title" />
+
+                <ImageButton
+                    android:id="@+id/btn_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/appbar_filter_icon"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_filter_list"
+                    app:tint="@color/skyBlue" />
+
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="16dp"
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/appbar_search_icon"
+                    android:padding="3dp"
+                    android:src="@drawable/ic_search"
+                    app:tint="@color/skyBlue" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <ImageButton
+                android:id="@+id/btn_plus_issue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/white"
+                android:padding="0dp"
+                android:src="@drawable/ic_baseline_add_circle_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:tint="@color/skyBlue" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/skyBlue"
+            android:paddingTop="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_filter_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/skyBlue"
+                android:src="@drawable/ic_close"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_filter_title"
+                style="@style/HeadLine6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/issue_home_filter_title"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/btn_filter_close"
+                app:layout_constraintStart_toEndOf="@id/btn_filter_close"
+                app:layout_constraintTop_toTopOf="@id/btn_filter_close" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_filter_reset"
+                android:background="@android:color/transparent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="@string/issue_home_init_title"
+                android:enabled="false"
+                android:textColor="@drawable/tv_selector"
+                android:clickable="false"
+                app:layout_constraintBottom_toBottomOf="@id/btn_filter_close"
+                app:layout_constraintEnd_toStartOf="@id/btn_filter_apply"
+                app:layout_constraintTop_toTopOf="@id/btn_filter_close"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_filter_apply"
+                android:background="@android:color/transparent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="@string/issue_home_apply_title"
+                android:enabled="false"
+                android:textColor="@drawable/tv_selector"
+                app:layout_constraintBottom_toBottomOf="@id/btn_filter_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btn_filter_close"
+                app:tint="@color/skyBlue" />
+
+
+            <TextView
+                android:id="@+id/tv_filter_state_title"
+                style="@style/Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="14dp"
+                android:paddingVertical="17dp"
+                android:text="@string/issue_home_state_title"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@id/btn_filter_close"
+                app:layout_constraintTop_toBottomOf="@id/btn_filter_close" />
+
+            <Spinner
+                android:id="@+id/spinner_issue_state"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:paddingStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/spinner_issue_milestone"
+                app:layout_constraintTop_toTopOf="@id/tv_filter_state_title" />
+
+            <TextView
+                android:id="@+id/tv_filter_assignee_title"
+                style="@style/Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="17dp"
+                android:text="@string/issue_home_filter_writer_title"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@id/tv_filter_state_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_filter_state_title" />
+
+            <Spinner
+                android:id="@+id/spinner_issue_assignee"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:paddingStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/spinner_issue_milestone"
+                app:layout_constraintTop_toTopOf="@id/tv_filter_assignee_title" />
+
+            <TextView
+                android:id="@+id/tv_filter_label_title"
+                style="@style/Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="17dp"
+                android:text="@string/issue_home_filter_label_title"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@id/tv_filter_state_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_filter_assignee_title" />
+
+            <Spinner
+                android:id="@+id/spinner_issue_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:paddingStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/spinner_issue_milestone"
+                app:layout_constraintTop_toTopOf="@id/tv_filter_label_title" />
+
+            <TextView
+                android:id="@+id/tv_filter_mileStone_title"
+                style="@style/Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="17dp"
+                android:paddingBottom="24dp"
+                android:text="@string/issue_home_filter_milestone_title"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@id/tv_filter_state_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_filter_label_title" />
+
+            <Spinner
+                android:id="@+id/spinner_issue_milestone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:paddingStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_filter_mileStone_title"
+                app:layout_constraintTop_toTopOf="@id/tv_filter_mileStone_title" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_issue_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/skyBlue"
+            android:paddingVertical="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_issue_edit_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:backgroundTint="@color/skyBlue"
+                android:padding="0dp"
+                android:src="@drawable/ic_close"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_issue_count"
+                style="@style/HeadLine6.White"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="72dp"
+                android:height="24dp"
+                android:text="0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btn_issue_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="63.25dp"
+                android:backgroundTint="@color/skyBlue"
+                android:padding="0dp"
+                android:src="@drawable/ic_trash"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/btn_issue_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:backgroundTint="@color/skyBlue"
+                android:padding="0dp"
+                android:src="@drawable/ic_issue_close"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/skyBlue"
+            android:paddingTop="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_search_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/skyBlue"
+                android:src="@drawable/ic_close"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_search_title"
+                style="@style/HeadLine6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/search_title_value"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/btn_search_close"
+                app:layout_constraintStart_toEndOf="@id/btn_search_close"
+                app:layout_constraintTop_toTopOf="@id/btn_search_close" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etl_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/transparent"
+                android:paddingBottom="8dp"
+                app:endIconDrawable="@drawable/ic_search"
+                app:endIconMode="custom"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_search_title">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/white"
+                    android:hint="@string/search_bar_hint"
+                    android:paddingVertical="16dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

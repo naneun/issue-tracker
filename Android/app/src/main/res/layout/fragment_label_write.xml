@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="labelRandomColor"
+            type="Integer"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.label.labelWriteFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_label_write"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/skyBlue"
+            android:paddingTop="32dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/iBtn_label_write_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/skyBlue"
+                android:src="@drawable/ic_back_white" />
+
+            <TextView
+                android:id="@+id/tv_label_write_title"
+                style="@style/HeadLine6.White"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:text="@string/label_write_title" />
+
+            <TextView
+                android:id="@+id/tv_label_write_save_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:text="@string/milestone_write_save_title" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tv_label_write_content_title"
+            style="@style/Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="16dp"
+            android:text="@string/milestone_write_title_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_label_write" />
+
+        <EditText
+            style="@style/Subtitle1"
+            android:id="@+id/et_label_write_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="@string/milestone_write_title_hint"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_write_content_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_label_write_content_title"
+            app:layout_constraintTop_toTopOf="@id/tv_label_write_content_title"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/tv_label_write_content"
+            style="@style/Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="16dp"
+            android:text="@string/milestone_write_content_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_write_content_title" />
+
+        <EditText
+            style="@style/Subtitle1"
+            android:id="@+id/et_label_write_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="@string/milestone_write_content_hint"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_write_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_label_write_content"
+            app:layout_constraintTop_toTopOf="@id/tv_label_write_content"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/tv_label_write_content_color"
+            style="@style/Subtitle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="20dp"
+            android:text="색깔"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_write_content" />
+
+        <EditText
+            android:id="@+id/et_label_write_color"
+            style="@style/Subtitle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="@string/label_wrtie_color_hint"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_write_content_color"
+            android:maxLength="10"
+            android:focusable="false"
+            android:clickable="false"
+            app:layout_constraintEnd_toStartOf="@id/iBtn_label_write_color_refresh"
+            app:layout_constraintStart_toEndOf="@id/tv_label_write_content_color"
+            app:layout_constraintTop_toTopOf="@id/tv_label_write_content_color"
+            android:inputType="date" />
+
+        <ImageButton
+            android:id="@+id/iBtn_label_write_color_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_refresh"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_label_write_content_color"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_write_content_color" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_write_content_color"
+            android:layout_marginVertical="16dp"
+            android:background="@color/grey5" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:backgroundTint="@color/grey5"
+            app:cardCornerRadius="20dp"
+            android:elevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_write_content_color"
+            >
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_label_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@{labelRandomColor}"
+                android:layout_gravity="center"
+                style="@style/Subtitle1.Black"
+                android:background="@drawable/btn_blue_radius" />
+
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

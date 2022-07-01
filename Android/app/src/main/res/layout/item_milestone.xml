@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="milestone"
+            type="com.example.issue_tracker.domain.model.MileStone" />
+
+        <variable
+            name="totalCount"
+            type="Integer" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_milestone"
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_milestone_item_title"
+            style="@style/Subtitle1.Black.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{milestone.title}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_milestone_item_progress"
+            style="@style/Subtitle1.Green.Bold"
+            finishCount="@{milestone.closeIssueCount}"
+            totalCount="@{totalCount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_milestone_item_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_milestone_item_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:maxLines="1"
+            android:text="@{milestone.content}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_milestone_item_title" />
+
+        <TextView
+            android:id="@+id/tv_milestone_item_complete_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_calendar_grey"
+            android:drawablePadding="8dp"
+            android:text="@{milestone.completeDay}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_milestone_item_content" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_milestone_item_open_issue"
+            style="@style/Subtitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_skyblue_radius"
+            android:drawableStart="@drawable/ic_issue_blue"
+            android:drawablePadding="6dp"
+            android:paddingHorizontal="15dp"
+            opeIssueCount="@{milestone.openIssueCount}"
+            android:textColor="@color/blue2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_milestone_item_complete_day" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/Subtitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_blue_radius"
+            android:drawableStart="@drawable/ic_close_blue"
+            android:drawablePadding="6dp"
+            android:paddingHorizontal="16dp"
+            android:layout_marginStart="8dp"
+            closedIssueCount="@{milestone.closeIssueCount}"
+            android:textColor="@color/blue1"
+            app:layout_constraintStart_toEndOf="@id/btn_milestone_item_open_issue"
+            app:layout_constraintTop_toBottomOf="@id/tv_milestone_item_complete_day" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_milestone_item_open_issue"
+            android:layout_marginVertical="16dp"
+            android:background="@color/grey5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

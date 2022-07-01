@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="16dp"
+        tools:context=".ui.login.LogInActivity">
+
+        <TextView
+            android:id="@+id/tv_login_title"
+            style="@style/HeadLine3.Black.Italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="84dp"
+            android:text="Issue Tracker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etl_login_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:hint="@string/label_login_id_hint"
+            app:hintTextAppearance="@style/Caption.Grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_login_title"
+            app:placeholderText="@string/label_login_id_placeholder">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_login_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:inputType="textEmailAddress"
+                android:textAppearance="@style/Subtitle2" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etl_login_pwd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/label_login_pwd_hint"
+            app:hintTextAppearance="@style/Caption.Grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etl_login_id"
+            app:passwordToggleEnabled="true"
+            app:placeholderText="@string/label_login_pwd_placeholder">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_login_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:inputType="textPassword"
+                android:textAppearance="@style/Subtitle2" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_login_btn_title"
+            style="@style/Subtitle2.Primary.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="99dp"
+            android:layout_marginTop="42dp"
+            android:text="@string/label_string_login_title"
+            app:layout_constraintStart_toStartOf="@id/etl_login_pwd"
+            app:layout_constraintTop_toBottomOf="@id/etl_login_pwd" />
+
+        <TextView
+            android:id="@+id/tv_withoutLogin_btn_title"
+            style="@style/Subtitle2.Primary.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="42dp"
+            android:text="@string/string_login_without_mode"
+            app:layout_constraintStart_toEndOf="@id/tv_login_btn_title"
+            app:layout_constraintTop_toBottomOf="@id/etl_login_pwd" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_github_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_withoutLogin_btn_title"
+            android:background="@drawable/btn_black_radius"
+            android:paddingHorizontal="16dp"
+            android:layout_marginTop="90dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/label_string_github_login_title"
+            android:drawableStart="@drawable/ic_github_login"
+            android:textColor="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_google_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/btn_github_login"
+            android:background="@drawable/btn_black_radius"
+            android:paddingHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/label_string_google_login_title"
+            android:drawableStart="@drawable/ic_google_login"
+            android:textColor="@color/white" />
+
+        <WebView
+            android:id="@+id/wv_login"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

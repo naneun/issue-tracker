@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.issue.write.IssueWriteFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_issue_write"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/skyBlue"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/iBtn_issue_write_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/skyBlue"
+                android:src="@drawable/ic_back_white" />
+
+            <TextView
+                android:id="@+id/tv_issue_write_title"
+                style="@style/HeadLine6.White"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="55dp"
+                android:text="@string/issue_wrtie_title" />
+
+            <TextView
+                android:id="@+id/tv_issue_preview_title"
+                style="@style/Subtitle2.White"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="100dp"
+                android:text="@string/issue_write_preview_title" />
+
+            <TextView
+                android:id="@+id/tv_issue_write_save_title"
+                style="@style/Subtitle2.Grey"
+                android:textColor="@drawable/tv_selector"
+                android:enabled="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:text="@string/milestone_write_save_title" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tv_issue_write_title_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tb_issue_write"
+            app:layout_constraintStart_toStartOf="parent"
+            android:padding="5dp"
+            style="@style/HeadLine6.Black"
+            android:text="@string/issue_write_title_title"
+            />
+
+        <EditText
+            android:id="@+id/et_issue_write_title_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/tv_issue_write_title_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="5dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="@id/tv_issue_write_title_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_issue_write_title_title"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey1"
+            app:layout_constraintTop_toBottomOf="@id/tv_issue_write_title_title"
+            />
+
+        <ScrollView
+            android:id="@+id/scroll_issue_write_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/cl_issue_write_tags"
+            app:layout_constraintTop_toBottomOf="@id/tv_issue_write_title_title">
+
+            <EditText
+                android:id="@+id/et_issue_write_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent" />
+
+        </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_issue_write_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/greyScale"
+            android:paddingStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/tv_issue_write_label_title"
+                style="@style/Subtitle2.Grey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="16dp"
+                android:text="@string/issue_write_label_option_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <Spinner
+                android:id="@+id/spinner_issue_write_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_issue_write_label_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_issue_write_label_title" />
+
+            <TextView
+                android:id="@+id/tv_issue_write_milestone_title"
+                style="@style/Subtitle2.Grey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="16dp"
+                android:text="@string/issue_write_milestone_option_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_write_label_title" />
+
+            <Spinner
+                android:id="@+id/spinner_issue_write_milestone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_issue_write_milestone_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_write_label_title" />
+
+            <TextView
+                android:id="@+id/tv_issue_write_assignee_title"
+                style="@style/Subtitle2.Grey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="16dp"
+                android:text="@string/issue_write_writer_opiton_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_write_milestone_title" />
+
+
+            <Spinner
+                android:id="@+id/spinner_issue_write_assignee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_write_milestone_title" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

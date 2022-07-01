@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="itemIssue"
+            type="com.example.issue_tracker.domain.model.Issue" />
+
+        <variable
+            name="labelColor"
+            type="Integer" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#eeeeee" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="#CCD4FF"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="0dp"
+                    android:src="@drawable/ic_issue_close" />
+
+                <TextView
+                    android:id="@+id/tv"
+                    style="@style/Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="닫기"
+                    android:textColor="@color/blue1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_swipe_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <CheckBox
+                android:id="@+id/cb_issue_selector"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:checked="false"
+                android:buttonTint="#D5D5DB"
+                android:layout_gravity="center_horizontal"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_issue_milestone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_milestone"
+                app:layout_constraintLeft_toRightOf="@id/cb_issue_selector"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/grey6" />
+
+            <TextView
+                android:id="@+id/tv_issue_milestone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="10dp"
+                android:text="@{itemIssue.milestone}"
+                android:textColor="@color/grey2"
+                app:layout_constraintLeft_toRightOf="@id/cb_issue_selector"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_issue_title"
+                style="@style/Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@{itemIssue.title}"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/cb_issue_selector"
+                app:layout_constraintTop_toBottomOf="@id/iv_issue_milestone" />
+
+            <TextView
+                android:id="@+id/tv_issue_description"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:text="@{itemIssue.description}"
+                android:textColor="@color/grey1"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toRightOf="@id/cb_issue_selector"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_title" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/tv_issue_label"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="17dp"
+                android:paddingHorizontal="10dp"
+                style="@style/Subtitle2.White"
+                android:background="@drawable/btn_black_radius"
+                android:backgroundTint="@{labelColor}"
+                android:text="@{itemIssue.label.title}"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/cb_issue_selector"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_description" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="16dp"
+                android:background="@color/grey5"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_label" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>

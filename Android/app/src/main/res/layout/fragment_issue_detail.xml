@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="writer"
+            type="String" />
+
+        <variable
+            name="id"
+            type="String" />
+
+        <variable
+            name="time"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.issue.detail.IssueDetailFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_issue_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/iBtn_issue_detail_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:src="@drawable/ic_back_white"
+                app:tint="@color/skyBlue" />
+
+            <ImageButton
+                android:id="@+id/iBtn_issue_detail_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:src="@drawable/ic_more" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tv_issue_detail_title"
+            style="@style/HeadLine5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/tb_issue_detail"
+            app:layout_constraintTop_toBottomOf="@id/tb_issue_detail" />
+
+
+        <TextView
+            android:id="@+id/tv_issue_detail_id"
+            style="@style/HeadLine5.Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#2"
+            app:layout_constraintStart_toEndOf="@id/tv_issue_detail_title"
+            app:layout_constraintTop_toTopOf="@id/tv_issue_detail_title" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_issue_detail_open_state"
+            style="@style/Subtitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_skyblue_radius"
+            android:drawableStart="@drawable/ic_issue_blue"
+            android:drawablePadding="6dp"
+            android:paddingHorizontal="12dp"
+            android:text="@string/issue_detail_open_state_title"
+            android:textColor="@color/blue2"
+            app:layout_constraintStart_toStartOf="@id/tv_issue_detail_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_issue_detail_title" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_issue_detail_close_state"
+            style="@style/Subtitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_blue_radius"
+            android:drawableStart="@drawable/ic_close_blue"
+            android:drawablePadding="6dp"
+            android:paddingHorizontal="12dp"
+            android:text="@string/issue_detail_close_state_title"
+            android:textColor="@color/blue1"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/tv_issue_detail_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_issue_detail_title" />
+
+        <TextView
+            android:id="@+id/tv_issue_detail_info"
+            time="@{time}"
+            userName="@{writer}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_issue_detail_open_state"
+            app:layout_constraintStart_toEndOf="@id/btn_issue_detail_open_state"
+            app:layout_constraintTop_toTopOf="@id/btn_issue_detail_open_state" />
+
+        <View
+            android:id="@+id/divider_issue_detail"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/grey3"
+            app:layout_constraintTop_toBottomOf="@id/tv_issue_detail_info" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_issue_detail"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_issue_detail"
+            app:layout_constraintVertical_bias="0.0"
+            tools:listitem="@layout/item_comment_myself" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

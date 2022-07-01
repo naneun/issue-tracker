@@ -1,5 +1,7 @@
 package com.example.issue_tracker.data.remote.issue
 
+import com.example.issue_tracker.data.dto.CommentDto
+import com.example.issue_tracker.data.dto.IssueDetailDto
 import com.example.issue_tracker.data.dto.IssueDto
 import com.example.issue_tracker.domain.model.IssueRequestDto
 import okhttp3.MultipartBody
@@ -21,4 +23,16 @@ interface IssueApi {
     @Multipart
     @POST("images")
     suspend fun loadImage(@Part image:MultipartBody.Part):ResponseBody
+
+    @DELETE("api/issues")
+    suspend fun deleteIssues(@Query("id") issues:List<Int>)
+
+    @PATCH("api/issues")
+    suspend fun closeIssues(@Query("id") issues: List<Int>)
+
+    @GET("api/issues/{id}")
+    suspend fun getIssueDetail(@Path("id") id:Int) : IssueDetailDto
+
+    @GET("api/issues/{issueId}/comments")
+    suspend fun getComments(@Path("issueId") id:Int , @Query("page") page:Int):CommentDto
 }

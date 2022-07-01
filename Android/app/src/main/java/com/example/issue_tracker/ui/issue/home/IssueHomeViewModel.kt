@@ -1,5 +1,6 @@
 package com.example.issue_tracker.ui.issue.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.example.issue_tracker.domain.model.Issue
 import com.example.issue_tracker.domain.model.IssueState
 import com.example.issue_tracker.domain.repository.IssueRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,12 +53,18 @@ class IssueHomeViewModel @Inject constructor(private val repository: IssueReposi
     private val _initialFlag =  MutableLiveData<Boolean>(false)
     val initialFlag:LiveData<Boolean> = _initialFlag
 
+    private val coroutineExceptionHandler: CoroutineExceptionHandler =
+        CoroutineExceptionHandler { _, throwable ->
+            Log.e("Error", ": ${throwable.message}")
+        }
+
+
     init {
         loadOpenIssueList()
     }
 
     fun loadOpenIssueList() {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _openIssueList.emit(repository.getIssueList().toMutableList())
         }
     }
@@ -76,22 +84,18 @@ class IssueHomeViewModel @Inject constructor(private val repository: IssueReposi
     }
 
     fun closeIssueList() {
-        for (i in 0 until _checkList.value.size) {
-            val str = _openIssueList.value.filter {
-                it.id == _checkList.value[i]
-            }
-            _openIssueList.value.removeIf {
-                it.id == checkList.value[i]
-            }
-            _closeIssueList.value.add(str[0])
+        viewModelScope.launch {
+            repository.closeIssues(_closeIssueList.value.map {
+                it.id
+            })
+            loadOpenIssueList()
         }
     }
 
     fun removeIssueList() {
-        for (i in 0 until _checkList.value.size) {
-            _openIssueList.value.removeIf {
-                it.id == _checkList.value[i]
-            }
+        viewModelScope.launch {
+            repository.deleteIssues(_checkList.value)
+            loadOpenIssueList()
         }
     }
 

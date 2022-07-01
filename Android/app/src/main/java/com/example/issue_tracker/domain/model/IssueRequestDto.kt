@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName
 
 data class IssueRequestDto(
     @SerializedName("assigneeId")
-    val assigneeId: Int,
+    val assigneeId: Int?=null,
     @SerializedName("content")
     val content: String,
     @SerializedName("labelId")
-    val labelId: Int,
+    val labelId: Int?=null,
     @SerializedName("milestoneId")
-    val milestoneId: Int,
+    val milestoneId: Int?=null,
     @SerializedName("title")
     val title: String
 )

@@ -32,7 +32,10 @@ class IssueWriteViewModel @Inject constructor(private val repository: IssueRepos
 
     fun registerIssue(title:String, content:String){
         viewModelScope.launch {
-            repository.registerIssue(IssueRequestDto(selectedWriter.value, content, selectedLabel.value, selectedMileStone.value, title))
+            val selectedLabel = if(selectedLabel.value==0) null else selectedLabel.value
+            val selectedMileStone = if(selectedMileStone.value==0) null else _selectedMileStone.value
+            val selectedAssignee = if(selectedWriter.value==0) null else selectedWriter.value
+            repository.registerIssue(IssueRequestDto(selectedAssignee, content, selectedLabel, selectedMileStone, title))
         }
     }
     fun selectLabel(id:Int){

@@ -1,5 +1,6 @@
 package com.example.issue_tracker.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.example.issue_tracker.domain.model.MileStone
 import com.example.issue_tracker.domain.model.User
 import com.example.issue_tracker.domain.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.forEach
@@ -43,6 +45,10 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     private val _loginMethod = MutableLiveData<String>()
     val loginMethod:LiveData<String> = _loginMethod
 
+    private val coroutineExceptionHandler: CoroutineExceptionHandler =
+        CoroutineExceptionHandler { _, throwable ->
+            Log.e("Error", ": ${throwable.message}")
+        }
 
     init {
         loadLabelList()
@@ -52,13 +58,13 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     }
 
      fun loadLabelList(){
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _labelList.emit(repository.getLabelList().toMutableList())
         }
     }
 
     private fun loadUserList(){
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _userList.emit(repository.getUserList())
         }
     }
@@ -126,7 +132,6 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     }
 
     fun checkLogin():Boolean{
-        println(_loginUser.value)
         return _loginUser.value!=null
     }
 

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="comment"
-            type="com.example.issue_tracker.domain.model.Comment" />
+            type="com.example.issue_tracker.domain.model.CommentItem.Comment" />
 
         <variable
             name="logTime"
@@ -23,9 +23,10 @@
             android:layout_height="45dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
+            imageUrl="@{comment.writer.profileImage}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/skyBlue" />
+            />
 
         <TextView
             android:id="@+id/tv_comment_writer_name"

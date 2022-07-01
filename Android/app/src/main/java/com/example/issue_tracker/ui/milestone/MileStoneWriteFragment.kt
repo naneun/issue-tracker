@@ -8,17 +8,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentMileStoneWriteBinding
+import com.example.issue_tracker.ui.label.LabelWriteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 
+@AndroidEntryPoint
 class MileStoneWriteFragment : Fragment() {
     private lateinit var binding: FragmentMileStoneWriteBinding
     private lateinit var navigator: NavController
     private var completeDayFlag: Boolean = true
     private var titleFlag: Boolean = false
+    private val viewModel: MileStoneWriteViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,7 +76,11 @@ class MileStoneWriteFragment : Fragment() {
     private fun setSaveMilestoneBtn() {
         binding.tvMilestoneWriteSaveTitle.setOnClickListener {
             if (titleFlag) {
-                //To DO: save MileStone
+                viewModel.loadDescription(binding.etMilestoneWriteContent.text.toString())
+                viewModel.loadDueDate(binding.etMilestoneWriteCompleteDay.text.toString())
+                viewModel.loadTitle(binding.etMilestoneWriteTitle.text.toString())
+                viewModel.registerMileStone()
+                navigator.navigate(R.id.action_mileStoneWriteFragment_to_navigation_milestone)
             }
         }
     }

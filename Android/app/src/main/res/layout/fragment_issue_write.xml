@@ -49,6 +49,8 @@
             <TextView
                 android:id="@+id/tv_issue_write_save_title"
                 style="@style/Subtitle2.Grey"
+                android:textColor="@drawable/tv_selector"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -57,12 +59,42 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+        <TextView
+            android:id="@+id/tv_issue_write_title_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tb_issue_write"
+            app:layout_constraintStart_toStartOf="parent"
+            android:padding="5dp"
+            style="@style/HeadLine6.Black"
+            android:text="@string/issue_write_title_title"
+            />
+
+        <EditText
+            android:id="@+id/et_issue_write_title_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/tv_issue_write_title_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="5dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="@id/tv_issue_write_title_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_issue_write_title_title"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey1"
+            app:layout_constraintTop_toBottomOf="@id/tv_issue_write_title_title"
+            />
+
         <ScrollView
             android:id="@+id/scroll_issue_write_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/cl_issue_write_tags"
-            app:layout_constraintTop_toBottomOf="@id/tb_issue_write">
+            app:layout_constraintTop_toBottomOf="@id/tv_issue_write_title_title">
 
             <EditText
                 android:id="@+id/et_issue_write_content"

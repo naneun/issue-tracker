@@ -8,9 +8,13 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.ActivityMainBinding
 import com.example.issue_tracker.ui.HomeViewModel
+import com.example.issue_tracker.ui.common.SharedPreferenceManager
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: HomeViewModel by viewModels()
@@ -22,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupNav()
     }
+
 
     private fun setupNav() {
         val navController =

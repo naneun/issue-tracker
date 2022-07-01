@@ -435,4 +435,9 @@ class IssueHomeFragment : Fragment() {
         initEditMode()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadOpenIssueList()
+    }
+
 }

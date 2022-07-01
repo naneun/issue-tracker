@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,13 @@ class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
                 binding.cbIssueSelector.isChecked = false
             }
 
+            if(itemIssue.label.title==""){
+                binding.tvIssueLabel.isVisible = false
+            }
+
+            if(itemIssue.milestone==""){
+                binding.tvIssueMilestone.isVisible=false
+            }
 
             binding.clSwipeView.setOnClickListener {
                 itemClick.invoke(itemIssue.id)

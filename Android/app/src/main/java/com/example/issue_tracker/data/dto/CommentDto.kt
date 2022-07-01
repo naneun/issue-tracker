@@ -36,7 +36,7 @@ data class Content(
     @SerializedName("content")
     val content: String,
     @SerializedName("createdAt")
-    val createdAt: String,
+    val createdAt: String?,
     @SerializedName("emoji")
     val emoji: Emoji,
     @SerializedName("writer")
@@ -57,7 +57,7 @@ data class Pageable(
     @SerializedName("size")
     val size: Int,
     @SerializedName("sort")
-    val sort: List<String>
+    val sort: Any?
 )
 
 
@@ -74,9 +74,11 @@ data class Writer(
     @SerializedName("writerId")
     val writerId: Int,
     @SerializedName("writerName")
-    val writerName: String
+    val writerName: String,
+    @SerializedName("writerProfileImage")
+    val writerImage:String?
 )
 
 fun Content.toComment():CommentItem.Comment{
-    return CommentItem.Comment(User(writer.writerId, writer.writerName, Constants.DEFAULT_PROFILE_IMAGE), createdAt, LoginUser.id==writer.writerName, content )
+    return CommentItem.Comment(User(writer.writerId, writer.writerName, writer.writerImage?:Constants.DEFAULT_PROFILE_IMAGE), createdAt?:"2022-07-01T02:33:15", LoginUser.id==writer.writerName, content )
 }

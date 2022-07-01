@@ -14,9 +14,9 @@ data class IssueDtoItem(
     @SerializedName("content")
     val content: String,
     @SerializedName("label")
-    val label:IssueLabel,
+    val label:IssueLabel?,
     @SerializedName("milestone")
-    val milestone: Milestone,
+    val milestone: Milestone?,
     @SerializedName("title")
     val title: String
 )
@@ -33,4 +33,6 @@ data class Milestone(
     val title: String
 )
 
-fun IssueDtoItem.toIssue():Issue= Issue(id, milestone.title,title,content, Label(0, label.title,"",label.backgroundColor))
+fun IssueDtoItem.toIssue():Issue{
+    return Issue(id, milestone?.title?:"",title,content, Label(0, label?.title?:"","",label?.backgroundColor?:""))
+}

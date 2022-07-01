@@ -64,7 +64,7 @@ class IssueHomeViewModel @Inject constructor(private val repository: IssueReposi
     }
 
     fun loadOpenIssueList() {
-        viewModelScope.launch(coroutineExceptionHandler) {
+        viewModelScope.launch {
             _openIssueList.emit(repository.getIssueList().toMutableList())
         }
     }
@@ -143,7 +143,7 @@ class IssueHomeViewModel @Inject constructor(private val repository: IssueReposi
         val labelId = if (_selectedLabel.value == 0) null else _selectedLabel.value
         val writerId = if (_selectedWriter.value == 0) null else _selectedWriter.value
         val mileStoneId = if (_selectedMileStone.value == 0) null else _selectedMileStone.value
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             _openIssueList.emit(repository.filterIssueList(_selectedState.value, writerId, labelId, mileStoneId).toMutableList())
 
         }

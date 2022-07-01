@@ -118,7 +118,6 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
     }
 
     fun saveLoginUser(id:Int){
-        println(id)
         _userList.value.forEach {
             if(it.id == id){
                 _loginUser.value = it

@@ -14,7 +14,7 @@ data class IssueDetailDto(
     @SerializedName("content")
     val content: String,
     @SerializedName("createdAt")
-    val createdAt: String,
+    val createdAt: String?,
     @SerializedName("creator")
     val creator: Creator,
     @SerializedName("id")
@@ -59,5 +59,5 @@ data class MilestoneInfo(
 
 fun IssueDetailDto.toIssueDetail():IssueDetail {
     val state = state=="OPEN"
-    return IssueDetail(id, title, state, transformStringToTime(createdAt), User(creator.creatorId, creator.creatorName?:"Anonymous", Constants.DEFAULT_PROFILE_IMAGE), label.labelTitle, milestone.milestoneTitle, assignee.assigneeName )
+    return IssueDetail(id, title, state, transformStringToTime(createdAt?:"2022-07-01T02:33:15"), User(creator.creatorId, creator.creatorName?:"Anonymous", Constants.DEFAULT_PROFILE_IMAGE), label.labelTitle, milestone.milestoneTitle, assignee.assigneeName )
 }

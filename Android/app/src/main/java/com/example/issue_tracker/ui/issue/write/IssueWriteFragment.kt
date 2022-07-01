@@ -122,6 +122,7 @@ class IssueWriteFragment : Fragment() {
                 val title = binding.etIssueWriteTitleValue.text.toString()
                 val content = binding.etIssueWriteContent.text.toString()
                 viewModel.registerIssue(title, content)
+                navigator.navigateUp()
             }
         }
     }

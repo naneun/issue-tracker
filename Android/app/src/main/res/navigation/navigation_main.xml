@@ -44,7 +44,11 @@
         android:id="@+id/mileStoneWriteFragment"
         android:name="com.example.issue_tracker.ui.milestone.MileStoneWriteFragment"
         android:label="fragment_mile_stone_write"
-        tools:layout="@layout/fragment_mile_stone_write" />
+        tools:layout="@layout/fragment_mile_stone_write" >
+        <action
+            android:id="@+id/action_mileStoneWriteFragment_to_navigation_milestone"
+            app:destination="@id/navigation_milestone" />
+    </fragment>
     <fragment
         android:id="@+id/labelWriteFragment"
         android:name="com.example.issue_tracker.ui.label.LabelWriteFragment"

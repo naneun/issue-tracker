@@ -1,5 +1,6 @@
 package com.example.issue_tracker.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.issue_tracker.domain.model.IssueState
@@ -36,7 +37,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
     init {
         loadLabelList()
-        makeDummyMileStones()
+        loadMileStoneList()
         makeDummyUser()
         initStateList()
     }
@@ -44,6 +45,12 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
      fun loadLabelList(){
         viewModelScope.launch {
             _labelList.emit(repository.getLabelList().toMutableList())
+        }
+    }
+
+    fun loadMileStoneList(){
+        viewModelScope.launch {
+            _mileStoneList.emit(repository.getMileStoneList())
         }
     }
 
@@ -62,29 +69,6 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
         for (i in 0..10) {
             users.add(User(i, "User${i}", "https://images.unsplash.com/photo-1655057011043-158c48f3809d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDEyfHhqUFI0aGxrQkdBfHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60")) }
         _userList.value = users
-    }
-
-    private fun randomHexColor(): String {
-        val redValue = Random.nextInt(256).toString(16)
-        val greenValue = Random.nextInt(256).toString(16)
-        val blueValue = Random.nextInt(256).toString(16)
-        return "FF${checkHexLength(redValue)}${checkHexLength(greenValue)}${checkHexLength(blueValue)}"
-    }
-
-    private fun checkHexLength(RGBValue: String): String {
-        return if (RGBValue.length < 2) {
-            "0${RGBValue}"
-        } else {
-            RGBValue
-        }
-    }
-
-    private fun makeDummyMileStones() {
-        val milestones = mutableListOf<MileStone>()
-        for (i in 0..10) {
-            milestones.add(MileStone(i, "마일스톤 제목${i}", "마일스톤 더미 콘테츠", "06-14", 2, 2))
-        }
-        _mileStoneList.value = milestones
     }
 
     fun clearCheckList() {

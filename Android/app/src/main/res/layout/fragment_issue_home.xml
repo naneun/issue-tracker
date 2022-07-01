@@ -25,10 +25,9 @@
                 android:id="@+id/rv_issue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tb_issues"
                 tools:listitem="@layout/item_issues" />
 
             <androidx.appcompat.widget.Toolbar
@@ -119,30 +118,30 @@
                 app:layout_constraintTop_toTopOf="@id/btn_filter_close" />
 
 
-            <TextView
-                android:id="@+id/tv_filter_reset"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_filter_reset"
+                android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:backgroundTint="@color/white"
-                android:contentDescription="@string/appbar_search_icon"
-                android:src="@drawable/ic_search"
                 android:text="@string/issue_home_init_title"
-                android:textColor="@color/white"
+                android:enabled="false"
+                android:textColor="@drawable/tv_selector"
+                android:clickable="false"
                 app:layout_constraintBottom_toBottomOf="@id/btn_filter_close"
-                app:layout_constraintEnd_toStartOf="@id/tv_filter_apply"
+                app:layout_constraintEnd_toStartOf="@id/btn_filter_apply"
                 app:layout_constraintTop_toTopOf="@id/btn_filter_close"
-                app:tint="@color/skyBlue" />
+                />
 
-            <TextView
-                android:id="@+id/tv_filter_apply"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_filter_apply"
+                android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:contentDescription="@string/appbar_search_icon"
-                android:src="@drawable/ic_search"
                 android:text="@string/issue_home_apply_title"
-                android:textColor="@color/white"
+                android:enabled="false"
+                android:textColor="@drawable/tv_selector"
                 app:layout_constraintBottom_toBottomOf="@id/btn_filter_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/btn_filter_close"
@@ -244,8 +243,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/skyBlue"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingVertical="16dp"
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent">
 

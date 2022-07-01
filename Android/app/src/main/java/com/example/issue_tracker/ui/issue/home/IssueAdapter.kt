@@ -10,42 +10,36 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.issue_tracker.databinding.ItemIssuesBinding
 import com.example.issue_tracker.domain.model.Issue
 
-class IssueAdapter(
-    private val itemClick: (selectedIssueID: Int) -> Unit
-) :
+class IssueAdapter(private val itemClick: (selectedIssueID: Int) -> Unit) :
     ListAdapter<Issue, IssueAdapter.ViewHolder>(IssueDiffUtil) {
     var issueAdapterEventListener: IssueAdapterEventListener? = null
-    var isEditMode = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssueAdapter.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(
-            ItemIssuesBinding.inflate(inflater, parent, false)
-        )
+        return ViewHolder(ItemIssuesBinding.inflate(inflater, parent, false))
     }
 
-    inner class ViewHolder(
-        private val binding: ItemIssuesBinding
-        ) : RecyclerView.ViewHolder(binding.root)
-    {
-        fun bind(
-            itemIssue: Issue,
-            itemClick: (selectedIssueID: Int) -> Unit
-        ) {
-            if (isEditMode) {
+
+    inner class ViewHolder(private val binding: ItemIssuesBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(itemIssue: Issue, itemClick: (selectedIssueID: Int) -> Unit) {
+
+            if (itemIssue.editable) {
                 binding.cbIssueSelector.visibility = View.VISIBLE
-                binding.cbIssueSelector.isChecked = false
             } else {
                 binding.cbIssueSelector.visibility = View.GONE
+                binding.cbIssueSelector.isChecked = false
             }
+
 
             binding.clSwipeView.setOnClickListener {
                 itemClick.invoke(itemIssue.id)
             }
             binding.itemIssue = itemIssue
-
+            binding.labelColor= "FF${itemIssue.label.backgroundColor.replace("#","")}".toLong(16).toInt()
             binding.clSwipeView.setOnLongClickListener {
                 issueAdapterEventListener?.switchToEditMode(itemIssue.id)
+                issueAdapterEventListener
                 true
             }
 
@@ -53,15 +47,18 @@ class IssueAdapter(
                 if (isChecked) {
                     issueAdapterEventListener?.addInCheckList(itemIssue.id)
                     binding.cbIssueSelector.setBackgroundColor(0xffF2F2F7.toInt())
+                    binding.clSwipeView.setBackgroundColor(0xffF2F2F7.toInt())
                     binding.cbIssueSelector.buttonTintList = ColorStateList.valueOf(0xff007AFF.toInt())
                 } else {
                     issueAdapterEventListener?.deleteInCheckList(itemIssue.id)
                     binding.cbIssueSelector.setBackgroundColor(0xffffffff.toInt())
+                    binding.clSwipeView.setBackgroundColor(0xffffffff.toInt())
                     binding.cbIssueSelector.buttonTintList = ColorStateList.valueOf(0xffD5D5DB.toInt())
                 }
             }
         }
     }
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), itemClick)

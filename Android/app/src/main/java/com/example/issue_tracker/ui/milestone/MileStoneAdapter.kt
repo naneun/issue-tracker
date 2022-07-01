@@ -21,12 +21,16 @@ class MilestoneAdapter() : ListAdapter<MileStone, MilestoneAdapter.ViewHolder>(M
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemMilestoneBinding) :
+    inner class ViewHolder(private val binding: ItemMilestoneBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MileStone) {
             binding.milestone = item
             binding.totalCount = item.closeIssueCount + item.openIssueCount
+
+            binding.clMilestone.setOnClickListener {
+
+            }
         }
     }
 

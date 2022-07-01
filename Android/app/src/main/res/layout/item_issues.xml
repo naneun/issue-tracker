@@ -8,6 +8,9 @@
             name="itemIssue"
             type="com.example.issue_tracker.domain.model.Issue" />
 
+        <variable
+            name="labelColor"
+            type="Integer" />
     </data>
 
     <FrameLayout
@@ -116,16 +119,19 @@
                 app:layout_constraintLeft_toRightOf="@id/cb_issue_selector"
                 app:layout_constraintTop_toBottomOf="@id/tv_issue_title" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/tv_issue_label"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="17dp"
-                android:background="@drawable/bg_label"
+                android:paddingHorizontal="10dp"
+                style="@style/Subtitle2.White"
+                android:background="@drawable/btn_black_radius"
+                android:backgroundTint="@{labelColor}"
+                android:text="@{itemIssue.label.title}"
                 android:gravity="center"
-                android:text="@{itemIssue.label}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/cb_issue_selector"
                 app:layout_constraintTop_toBottomOf="@id/tv_issue_description" />

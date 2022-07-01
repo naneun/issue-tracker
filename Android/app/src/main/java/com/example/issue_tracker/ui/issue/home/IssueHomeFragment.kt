@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -25,12 +26,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.issue_tracker.R
 import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.databinding.FragmentIssueHomeBinding
-import com.example.issue_tracker.domain.model.Issue
+import com.example.issue_tracker.domain.model.IssueState
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
+import com.example.issue_tracker.ui.common.LoginUser
+import com.example.issue_tracker.ui.common.SharedPreferenceManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class IssueHomeFragment : Fragment() {
 
     private lateinit var adapter: IssueAdapter
@@ -70,13 +75,18 @@ class IssueHomeFragment : Fragment() {
         closeEditMode()
         removeIssue()
         closeIssueList()
+        setEditMode()
+        enableApply()
+        enableInitialize()
+        setInitialize()
+        setFilterApply()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                async { loadStateList() }
-                async { loadLabelList() }
-                async { loadMileStoneList() }
-                async { loadUserList() }
-                async { loadIssueList() }
+                launch { loadUserList()}
+                launch { loadStateList() }
+                launch { loadLabelList() }
+                launch { loadMileStoneList() }
+                launch { loadIssueList() }
             }
         }
 
@@ -85,7 +95,67 @@ class IssueHomeFragment : Fragment() {
         }
     }
 
-    private fun setDefaultFilterMenu(){
+    private fun setInitialize(){
+        binding.btnFilterReset.setOnClickListener {
+            if(it.isEnabled){
+                setDefaultFilterSelection()
+                viewModel.checkFilterChanged()
+                viewModel.checkInitialFlag()
+                viewModel.loadOpenIssueList()
+            }
+        }
+    }
+
+    private fun setFilterApply(){
+        binding.btnFilterApply.setOnClickListener {
+            if(it.isEnabled){
+                viewModel.applyFilter()
+                viewModel.setStateFlagFalse()
+                binding.clIssueList.isVisible = true
+                binding.clFilter.isVisible = false
+                changeStatusBarWhite()
+            }
+        }
+    }
+
+    private fun enableInitialize(){
+        viewModel.initialFlag.observe(viewLifecycleOwner){
+            binding.btnFilterReset.isEnabled = !it
+        }
+    }
+
+    private fun enableApply(){
+        viewModel.changeFlag.observe(viewLifecycleOwner){
+            binding.btnFilterApply.isEnabled = it
+        }
+    }
+
+
+    private fun saveLoginInfo(){
+        if(LoginUser.id!=""){
+            sharedViewModel.saveLoginUser(LoginUser.id.toInt())
+        }
+        if(LoginUser.method !=""){
+            sharedViewModel.saveLoginMethod(LoginUser.method)
+        }
+    }
+    private fun setEditMode(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.editMode.collect {editable->
+                adapter.currentList.forEach {
+                    it.editable = editable
+                }
+            }
+        }
+    }
+
+    private fun initEditMode(){
+        adapter.currentList.forEach {
+            it.editable=false
+        }
+    }
+
+    private fun setDefaultFilterMenu() {
         val menuList = mutableListOf(getString(R.string.spinner_default))
         setSpinner(menuList, SpinnerType.STATE)
         setSpinner(menuList, SpinnerType.WRITER)
@@ -93,7 +163,7 @@ class IssueHomeFragment : Fragment() {
         setSpinner(menuList, SpinnerType.MILESTONE)
     }
 
-    private fun setDefaultFilterSelection(){
+    private fun setDefaultFilterSelection() {
         binding.spinnerIssueState.setSelection(0)
         binding.spinnerIssueMilestone.setSelection(0)
         binding.spinnerIssueAssignee.setSelection(0)
@@ -101,14 +171,15 @@ class IssueHomeFragment : Fragment() {
     }
 
     private suspend fun loadIssueList() {
-        viewModel.issueList.collect {
+        viewModel.openIssueList.collect {
             adapter.submitList(it)
         }
     }
 
+
     private suspend fun loadStateList() {
         val stateList = mutableListOf<String>()
-        viewModel.stateList.collect {
+        sharedViewModel.stateList.collect {
             it.forEach { state ->
                 stateList.add(state.value)
             }
@@ -116,12 +187,14 @@ class IssueHomeFragment : Fragment() {
         }
 
     }
+
     private suspend fun loadUserList() {
         val userList = mutableListOf(getString(R.string.spinner_default))
         sharedViewModel.userList.collect {
             it.forEach { user ->
                 userList.add(user.name)
             }
+            saveLoginInfo()
             setSpinner(userList, SpinnerType.WRITER)
         }
     }
@@ -154,25 +227,62 @@ class IssueHomeFragment : Fragment() {
             SpinnerType.MILESTONE -> binding.spinnerIssueMilestone
             else -> binding.spinnerIssueAssignee
         }
-        val adapter =
-            ArrayAdapter(
-                requireContext(),
-                R.layout.item_spinner_filter,
-                R.id.tv_filter_value,
-                list
-            )
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_spinner_filter, R.id.tv_filter_value, list)
         spinner.adapter = adapter
         spinner.setSelection(0)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val text = view?.findViewById<TextView>(R.id.tv_filter_value)
                 text?.setTextColor(Color.WHITE)
                 view?.findViewById<View>(R.id.divider_filter_value)?.isVisible = false
+                when (type) {
+                    SpinnerType.STATE -> {
+                        when(position){
+                            0-> {
+                                viewModel.checkStateChanged(IssueState.OPEN)
+                                viewModel.selectState(IssueState.OPEN)
+                            }
+                            else-> {
+                                val state = sharedViewModel.getIssueState(spinner.adapter.getItem(position) as String)
+                                viewModel.checkStateChanged(state)
+                                viewModel.selectState(state)
+                            }
+                        }
+                    }
+                    SpinnerType.LABEL -> {
+                        when(position){
+                            0-> {viewModel.selectLabel(0) }
+                            else-> {
+                                val labelId = sharedViewModel.getLabelID(spinner.adapter.getItem(position) as String)
+                                viewModel.selectLabel(labelId)
+                            }
+
+                        }
+
+                    }
+                    SpinnerType.MILESTONE ->  {
+                        when(position){
+                            0->{ viewModel.selectMileStone(0)}
+                            else->{
+                                val mileStoneId = sharedViewModel.getMileStoneID(spinner.adapter.getItem(position) as String)
+                                viewModel.selectMileStone(mileStoneId)
+                            }
+                        }
+
+                    }
+                    else -> {
+                        when(position){
+                            0-> {viewModel.selectWriter(0)}
+                            else->{
+                                val writerId = sharedViewModel.getWriterID(spinner.adapter.getItem(position) as String)
+                                viewModel.selectWriter(writerId)
+                            }
+                        }
+
+                    }
+                }
+                viewModel.checkFilterChanged()
+                viewModel.checkInitialFlag()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -204,6 +314,7 @@ class IssueHomeFragment : Fragment() {
             binding.clIssueList.isVisible = false
             binding.clFilter.isVisible = true
             changeStatusBarSkyBLue()
+            viewModel.checkFilterChanged()
         }
     }
 
@@ -225,17 +336,12 @@ class IssueHomeFragment : Fragment() {
     private fun settingRecyclerview() {
         adapter.issueAdapterEventListener = object : IssueAdapterEventListener {
 
-            override fun updateIssueState(itemId: Int, boolean: Boolean) {
-//                viewLifecycleOwner.lifecycleScope.launch {
-//                    IssueHomeViewModel.updateIssueSate(itemId, boolean)
-//                }
-            }
-
             override fun switchToEditMode(itemId: Int) {
                 viewModel.clearCheckList()
-                adapter.isEditMode = true
+                viewModel.turnOnEditMode()
                 binding.tbIssues.visibility = View.GONE
                 binding.clIssueEdit.visibility = View.VISIBLE
+                binding.rvIssue.setPadding(0, 200, 0, 0)
                 adapter.notifyDataSetChanged()
                 Log.d("TEST", "체크박스 사이즈${viewModel.checkList.value.size}")
             }
@@ -255,10 +361,6 @@ class IssueHomeFragment : Fragment() {
                     Log.d("TEST", "체크박스해제${viewModel.checkList.value.size}")
                 }
             }
-
-            override fun getIntoDetail(issue: Issue) {
-                TODO("Not yet implemented")
-            }
         }
     }
 
@@ -274,9 +376,10 @@ class IssueHomeFragment : Fragment() {
 
     private fun closeEditMode() {
         binding.btnIssueEditClose.setOnClickListener {
-            adapter.isEditMode = false
+            viewModel.turnOffEditMode()
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
+            binding.rvIssue.setPadding(0, 0, 0, 0)
             adapter.notifyDataSetChanged()
         }
     }
@@ -286,11 +389,12 @@ class IssueHomeFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.removeIssueList()
             }
-            adapter.isEditMode = false
+            binding.rvIssue.setPadding(0, 0, 0, 0)
+            viewModel.turnOffEditMode()
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
-            Log.d("TEST", "삭제후 이슈리스트 사이즈${viewModel.issueList.value.size}")
+            Log.d("TEST", "삭제후 이슈리스트 사이즈${viewModel.openIssueList.value.size}")
         }
     }
 
@@ -299,7 +403,8 @@ class IssueHomeFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.closeIssueList()
             }
-            adapter.isEditMode = false
+            binding.rvIssue.setPadding(0, 0, 0, 0)
+            viewModel.turnOffEditMode()
             binding.tbIssues.visibility = View.VISIBLE
             binding.clIssueEdit.visibility = View.GONE
             adapter.notifyDataSetChanged()
@@ -327,6 +432,7 @@ class IssueHomeFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         changeStatusBarWhite()
+        initEditMode()
     }
 
 }

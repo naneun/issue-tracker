@@ -5,8 +5,11 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
@@ -19,9 +22,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -32,17 +37,22 @@ import com.example.issue_tracker.databinding.FragmentIssueWriteBinding
 import com.example.issue_tracker.domain.model.SpinnerType
 import com.example.issue_tracker.ui.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.MarkwonPlugin
 import io.noties.markwon.image.ImagesPlugin
 import io.noties.markwon.image.file.FileSchemeHandler
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
-
+@AndroidEntryPoint
 class IssueWriteFragment : Fragment() {
     private var markDownFlag = false
     private val sharedViewModel: HomeViewModel by activityViewModels()
+    private val viewModel: IssueWriteViewModel by viewModels()
     private lateinit var popupWindow: PopupWindow
     private var beforeChangedText = ""
     private var copyText = ""
@@ -78,11 +88,40 @@ class IssueWriteFragment : Fragment() {
         displayMarkDownPreview()
         setLongClickPopupWindow(view)
         setUpBackButton()
+        checkInputContent()
+        checkInputTitle()
+        setSaveBtn()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { loadLabelList() }
                 launch { loadMileStoneList() }
                 launch { loadUserList() }
+            }
+        }
+    }
+
+    private fun setSaveIssueBtn(){
+        binding.tvIssueWriteSaveTitle.isEnabled = binding.etIssueWriteContent.text.isNotEmpty() && binding.etIssueWriteTitleValue.text.isNotEmpty()
+    }
+
+    private fun checkInputTitle(){
+        binding.etIssueWriteTitleValue.doAfterTextChanged {
+            setSaveIssueBtn()
+        }
+    }
+
+    private fun checkInputContent(){
+        binding.etIssueWriteContent.doAfterTextChanged {
+            setSaveIssueBtn()
+        }
+    }
+
+    private fun setSaveBtn(){
+        binding.tvIssueWriteSaveTitle.setOnClickListener {
+            if(it.isEnabled) {
+                val title = binding.etIssueWriteTitleValue.text.toString()
+                val content = binding.etIssueWriteContent.text.toString()
+                viewModel.registerIssue(title, content)
             }
         }
     }
@@ -127,15 +166,25 @@ class IssueWriteFragment : Fragment() {
         spinner.adapter = adapter
         spinner.setSelection(0)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
                 when (position) {
                     0 -> (view as TextView).setTextColor(Color.GRAY)
                     else -> (view as TextView).setTextColor(Color.BLACK)
+                }
+                when(type){
+                    SpinnerType.LABEL-> {
+                        val labelId= sharedViewModel.getLabelID(binding.spinnerIssueWriteLabel.adapter.getItem(position) as String)
+                        viewModel.selectLabel(labelId)
+                    }
+                    SpinnerType.MILESTONE->{
+                        val mileStoneId= sharedViewModel.getMileStoneID(binding.spinnerIssueWriteMilestone.adapter.getItem(position) as String)
+                        viewModel.selectMileStone(mileStoneId)
+                    }
+                    SpinnerType.WRITER->{
+                        val writerId= sharedViewModel.getWriterID(binding.spinnerIssueWriteAssignee.adapter.getItem(position) as String)
+                        viewModel.selectWriter(writerId)
+                    }
                 }
             }
 
@@ -299,16 +348,26 @@ class IssueWriteFragment : Fragment() {
     }
 
     private val getPhoto: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
             if (it.resultCode == RESULT_OK && it.data != null) {
                 val currentImageUri = it.data?.data
-                println(currentImageUri)
+
                 try {
                     currentImageUri?.let { uri ->
-                        binding.etIssueWriteContent.append(
-                            "![alt](file://${getFullPathFromUri(requireContext(), uri)})"
-                        )
+                        val image = File("${getFullPathFromUri(requireContext(), uri)}")
+                        viewModel.loadImage(image)
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                                viewModel.imageUrl.collect{imageurl->
+                                    if(imageurl.isNotEmpty()) {
+                                        binding.etIssueWriteContent.append("![alt]($imageurl)")
+                                    }
+                                }
+                            }
+                        }
+
                     }
+
 
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -354,6 +413,7 @@ class IssueWriteFragment : Fragment() {
         }
         return fullPath
     }
+
 
     companion object {
         private val REQUIRED_PERMISSIONS = arrayOf(

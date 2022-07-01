@@ -8,15 +8,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.issue_tracker.R
 import com.example.issue_tracker.databinding.FragmentLabelWriteBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
-
+@AndroidEntryPoint
 class LabelWriteFragment : Fragment() {
 
+    private val viewModel:LabelWriteViewModel by viewModels()
     private lateinit var binding: FragmentLabelWriteBinding
     private var titleFlag = false
     private var colorFlag = false
@@ -38,6 +41,19 @@ class LabelWriteFragment : Fragment() {
         validateLabelTitle()
         validateLabelColor()
         setUpBackButton()
+        setLabelSaveButton()
+    }
+
+    private fun setLabelSaveButton(){
+        binding.tvLabelWriteSaveTitle.setOnClickListener {
+            if(colorFlag&&titleFlag){
+                viewModel.loadColor(binding.etLabelWriteColor.text.toString())
+                viewModel.loadTitle(binding.etLabelWriteTitle.text.toString())
+                viewModel.loadContent(binding.etLabelWriteContent.text.toString())
+                viewModel.registerLabel()
+                navigator.navigate(R.id.action_labelWriteFragment_to_navigation_label)
+            }
+        }
     }
 
     private fun initColor() {

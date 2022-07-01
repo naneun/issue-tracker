@@ -65,7 +65,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
 
     fun loadMileStoneList(){
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _mileStoneList.emit(repository.getMileStoneList())
         }
     }
@@ -103,7 +103,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
     fun removeLabelList() {
         _labelEditMode.value = false
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.deleteLabels(editCheckList.value)
             loadLabelList()
         }

@@ -64,7 +64,7 @@ class IssueHomeViewModel @Inject constructor(private val repository: IssueReposi
     }
 
     fun loadOpenIssueList() {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             _openIssueList.emit(repository.getIssueList().toMutableList())
         }
     }

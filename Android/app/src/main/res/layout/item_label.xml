@@ -13,9 +13,6 @@
             name="labelColor"
             type="Integer" />
 
-        <variable
-            name="viewModel"
-            type="com.example.issue_tracker.ui.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

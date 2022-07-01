@@ -3,6 +3,7 @@ package com.example.issue_tracker.di
 import com.example.issue_tracker.data.remote.issue.IssueDataSource
 import com.example.issue_tracker.data.remote.label.LabelDataSource
 import com.example.issue_tracker.data.remote.login.LoginDataSource
+import com.example.issue_tracker.data.remote.milestone.MileStoneDataSource
 import com.example.issue_tracker.data.remote.user.UserDataSource
 import com.example.issue_tracker.data.repository.HomeRepositoryImpl
 import com.example.issue_tracker.data.repository.IssueRepositoryImpl
@@ -34,7 +35,7 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideHomeRepository(labelDataSource: LabelDataSource, userDataSource: UserDataSource): HomeRepository {
-        return HomeRepositoryImpl(labelDataSource, userDataSource)
+    fun provideHomeRepository(labelDataSource: LabelDataSource, userDataSource: UserDataSource, mileStoneDataSource: MileStoneDataSource): HomeRepository {
+        return HomeRepositoryImpl(labelDataSource, userDataSource,mileStoneDataSource)
     }
 }

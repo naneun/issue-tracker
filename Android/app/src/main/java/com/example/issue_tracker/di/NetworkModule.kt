@@ -5,6 +5,7 @@ import com.example.issue_tracker.common.Constants
 import com.example.issue_tracker.data.remote.issue.IssueApi
 import com.example.issue_tracker.data.remote.label.LabelApi
 import com.example.issue_tracker.data.remote.login.LoginApi
+import com.example.issue_tracker.data.remote.milestone.MileStoneApi
 import com.example.issue_tracker.data.remote.user.UserApi
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -80,5 +81,11 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    fun milestoneService(@IssueRetrofit retrofit: Retrofit): MileStoneApi = retrofit.create(MileStoneApi::class.java)
+
+
+    @Singleton
+    @Provides
     fun userService(@IssueRetrofit retrofit: Retrofit):UserApi = retrofit.create(UserApi::class.java)
+
 }

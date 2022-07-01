@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
     init {
         loadLabelList()
-        makeDummyMileStones()
+        loadMileStoneList()
         loadUserList()
         initStateList()
     }
@@ -63,6 +63,13 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
         }
     }
 
+
+    fun loadMileStoneList(){
+        viewModelScope.launch {
+            _mileStoneList.emit(repository.getMileStoneList())
+        }
+    }
+    
     private fun loadUserList(){
         viewModelScope.launch(coroutineExceptionHandler) {
             _userList.emit(repository.getUserList())
@@ -78,15 +85,7 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
             IssueState.CLOSE
         )
     }
-
-
-    private fun makeDummyMileStones() {
-        val milestones = mutableListOf<MileStone>()
-        for (i in 0..10) {
-            milestones.add(MileStone(i, "마일스톤 제목${i}", "마일스톤 더미 콘테츠", "06-14", 2, 2))
-        }
-        _mileStoneList.value = milestones
-    }
+    
 
     fun clearCheckList() {
         _editCheckList.value.clear()

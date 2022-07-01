@@ -93,12 +93,14 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
 
     fun addCheckList(itemId: Int) {
         _editCheckList.value.add(itemId)
+        labelEditModeOn()
     }
 
     fun removeCheckList(itemId: Int) {
         _editCheckList.value.removeIf {
             it == itemId
         }
+        labelEditModeOff()
     }
 
     fun removeLabelList() {

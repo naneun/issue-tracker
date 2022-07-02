@@ -1,17 +1,17 @@
 package com.team03.issuetracker.issue.domain.dto.issue.request;
 
 import com.team03.issuetracker.issue.domain.IssueState;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class IssueSearchCondition {
 
-    private IssueState state;
-    private Long creatorId;
-    private Long labelId;
-    private Long milestoneId;
+    private final IssueState state;
+    private final Long creatorId;
+    private final Long labelId;
+    private final Long milestoneId;
 
     public static IssueSearchCondition of(IssueState state, Long creatorId, Long labelId,
         Long milestoneId) {

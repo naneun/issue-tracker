@@ -39,132 +39,139 @@ import org.springframework.data.annotation.LastModifiedBy;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Issue extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @NotBlank
-    @Column
-    private String title;
+	@NotBlank
+	@Column
+	private String title;
 
-    @NotBlank
-    @Column
-    private String content;
+	@NotBlank
+	@Column
+	private String content;
 
-    @Enumerated(EnumType.STRING)
-    private IssueState state;
+	@Enumerated(EnumType.STRING)
+	private IssueState state;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Label label;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn
+	private Label label;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    @ToString.Exclude
-    private Milestone milestone;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn
+	@ToString.Exclude
+	private Milestone milestone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Member assignee;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn
+	private Member assignee;
 
-    @CreatedBy
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false)
-    private Member creator;
+	@CreatedBy
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(updatable = false)
+	private Member creator;
 
-    @LastModifiedBy
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Member modifier;
+	@LastModifiedBy
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn
+	private Member modifier;
 
-    @OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private final List<Comment> comments = new ArrayList<>();
+	@OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = {
+		CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
 
-    /********************************************************************/
+	private final List<Comment> comments = new ArrayList<>();
 
-    @Builder
-    private Issue(Long id, String title, String content, Label label, Milestone milestone,
-        Member assignee, List<Comment> comments) {
+	/********************************************************************/
 
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.state = OPEN;
-        this.label = label;
-        this.milestone = milestone;
-        this.assignee = assignee;
-        if (Objects.nonNull(comments)) {
-            this.comments.addAll(comments);
-        }
-    }
+	@Builder
+	private Issue(Long id, String title, String content, Label label, Milestone milestone,
+		Member assignee, List<Comment> comments) {
 
-    public static Issue of(Long id, String title, String content, Label label, Milestone milestone,
-        Member assignee, List<Comment> comments) {
-        return Issue.builder()
-            .id(id)
-            .title(title)
-            .content(content)
-            .label(label)
-            .milestone(milestone)
-            .assignee(assignee)
-            .comments(comments)
-            .build();
-    }
+		this.id = id;
+		this.title = title;
+		this.content = content;
+		this.state = OPEN;
+		this.label = label;
+		this.milestone = milestone;
+		this.assignee = assignee;
+		if (Objects.nonNull(comments)) {
+			this.comments.addAll(comments);
+		}
+	}
 
-    /********************************************************************/
+	public static Issue of(Long id, String title, String content, Label label, Milestone milestone,
+		Member assignee, List<Comment> comments) {
+		return Issue.builder()
+			.id(id)
+			.title(title)
+			.content(content)
+			.label(label)
+			.milestone(milestone)
+			.assignee(assignee)
+			.comments(comments)
+			.build();
+	}
 
-    public void changeTitle(String title) {
-        this.title = title;
-    }
+	/********************************************************************/
 
-    public void changeContent(String content) {
-        this.content = content;
-    }
+	public void changeTitle(String title) {
+		this.title = title;
+	}
 
-    public void changeState() {
-        this.state = nextState(this.state);
-    }
+	public void changeContent(String content) {
+		this.content = content;
+	}
 
-    public void setState(IssueState state) {
-        this.state = state;
-    }
+	public void changeState() {
+		this.state = nextState(this.state);
+	}
 
-    public void changeLabel(Label label) {
-        this.label = label;
-    }
+	public void setState(IssueState state) {
+		this.state = state;
+	}
 
-    public void changeMilestone(Milestone milestone) {
-        if (this.milestone != null && this.milestone.hasIssue(this)) {
-            this.milestone.removeIssue(this);
-        }
-        if (milestone != null) {
-            milestone.addIssue(this);
-        }
-        this.milestone = milestone;
-    }
+	public void changeLabel(Label label) {
+		this.label = label;
+	}
 
-    public void changeAssignee(Member assignee) {
-        this.assignee = assignee;
-    }
+	public void changeMilestone(Milestone milestone) {
+		if (this.milestone != null && this.milestone.hasIssue(this)) {
+			this.milestone.removeIssue(this);
+		}
+		if (milestone != null) {
+			milestone.addIssue(this);
+		}
+		this.milestone = milestone;
+	}
 
-    /********************************************************************/
+	public void changeAssignee(Member assignee) {
+		this.assignee = assignee;
+	}
 
-    public Issue merge(Issue updated) {
-        if (Strings.isNotBlank(updated.title)) {
-            title = updated.title;
-        }
-        if (Strings.isNotBlank(updated.content)) {
-            content = updated.content;
-        }
-        if (Objects.nonNull(updated.label)) {
-            label = updated.label;
-        }
-        if (Objects.nonNull(updated.milestone)) {
-            milestone = updated.milestone;
-        }
-        if (Objects.nonNull(updated.assignee)) {
-            assignee = updated.assignee;
-        }
-        return this;
-    }
+	public void truncateComments() {
+		this.comments.forEach(comment -> comment.fixIssue(null));
+		this.comments.clear();
+	}
+
+	/********************************************************************/
+
+	public Issue merge(Issue updated) {
+		if (Strings.isNotBlank(updated.title)) {
+			title = updated.title;
+		}
+		if (Strings.isNotBlank(updated.content)) {
+			content = updated.content;
+		}
+		if (Objects.nonNull(updated.label)) {
+			label = updated.label;
+		}
+		if (Objects.nonNull(updated.milestone)) {
+			milestone = updated.milestone;
+		}
+		if (Objects.nonNull(updated.assignee)) {
+			assignee = updated.assignee;
+		}
+		return this;
+	}
 }

@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final OpenEntityManagerInViewInterceptor openEntityManagerInViewInterceptor;
 
-    private final AuthInterceptor loginInterceptor;
+    private final AuthInterceptor authInterceptor;
     private final AccessTokenResolver accessTokenResolver;
     private final RefreshTokenResolver refreshTokenResolver;
     private final LoginUserResolver loginMemberResolver;
@@ -41,9 +41,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addWebRequestInterceptor(openEntityManagerInViewInterceptor);
 
-        registry.addInterceptor(loginInterceptor)
-            .addPathPatterns("/skip/**");
-//            .addPathPatterns("/api/**");
+        registry.addInterceptor(authInterceptor)
+            .addPathPatterns("/api/**");
     }
 
     @Override

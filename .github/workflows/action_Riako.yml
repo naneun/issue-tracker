@@ -81,9 +81,7 @@ jobs:
     needs: job2
     name: 3. Deploy to AWS EC2
     runs-on: ubuntu-latest
-
     steps:
-
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
@@ -91,7 +89,33 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PUBLIC_EC2_SSH_KEY_RIAKO }}
           script: |
+            CURRENT_PORT=$(curl -s http://localhost/port)
+            
+            if [[ $CURRENT_PORT == 8080 ]]
+            then
+            IDLE_PORT=8081
+            elif [[ $CURRENT_PORT == 8081 ]]
+            then
+            IDLE_PORT=8080
+            else
+            echo "> 기본 포트 8080을 할당합니다."
+            IDLE_PORT=8080
+            fi
+            
+            RUNNING_CONTAINER=$(sudo docker ps -a -q)
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME_RIAKO }}/issue_tracker:latest
-            sudo docker stop $(sudo docker ps -a -q) || true
+            CONTAINER_ID=$(sudo docker run -d -p "$IDLE_PORT":"$IDLE_PORT" -e PORT="$IDLE_PORT" -e PROFILE=prod ${{ secrets.DOCKERHUB_USERNAME_RIAKO }}/issue_tracker:latest)
+            
+            TIMER=10
+            while [[ $(sudo docker logs $CONTAINER_ID | grep "Started IssueTrackerApplication") == "" && TIMER -gt 0 ]];
+            do
+              sleep 5
+              echo "Waiting for Spring Boot.."
+              let "TIMER--"
+            done
+            
+            echo "set \$service_url http://127.0.0.1:$IDLE_PORT;" | sudo tee /etc/nginx/conf.d/service-url.inc
+            sudo systemctl reload nginx
+            
+            sudo docker stop $RUNNING_CONTAINER || true
             sudo docker system prune -f
-            sudo docker run -d -p 80:8080 -e PROFILE=prod ${{ secrets.DOCKERHUB_USERNAME_RIAKO }}/issue_tracker

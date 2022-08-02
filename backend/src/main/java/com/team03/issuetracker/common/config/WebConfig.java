@@ -20,35 +20,35 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final OpenEntityManagerInViewInterceptor openEntityManagerInViewInterceptor;
+	private final OpenEntityManagerInViewInterceptor openEntityManagerInViewInterceptor;
 
-    private final AuthInterceptor authInterceptor;
-    private final AccessTokenResolver accessTokenResolver;
-    private final RefreshTokenResolver refreshTokenResolver;
-    private final LoginUserResolver loginMemberResolver;
-    private final LoginFilter loginFilter;
+	private final AuthInterceptor authInterceptor;
+	private final AccessTokenResolver accessTokenResolver;
+	private final RefreshTokenResolver refreshTokenResolver;
+	private final LoginUserResolver loginMemberResolver;
+	private final LoginFilter loginFilter;
 
-    @Bean
-    public FilterRegistrationBean<Filter> setFilterRegistration() {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(loginFilter);
-        filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/login/github", "/login/google");
-        return filterRegistrationBean;
-    }
+	@Bean
+	public FilterRegistrationBean<Filter> setFilterRegistration() {
+		FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+		filterRegistrationBean.setFilter(loginFilter);
+		filterRegistrationBean.setOrder(1);
+		filterRegistrationBean.addUrlPatterns("/login/github", "/login/google");
+		return filterRegistrationBean; /* 왜 필터도 쓰고 인터셉터도 썼지? */
+	}
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addWebRequestInterceptor(openEntityManagerInViewInterceptor);
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addWebRequestInterceptor(openEntityManagerInViewInterceptor); /* ??? */
 
-        registry.addInterceptor(authInterceptor)
-            .addPathPatterns("/api/**");
-    }
+		registry.addInterceptor(authInterceptor)
+			.addPathPatterns("/api/**");
+	}
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(accessTokenResolver);
-        argumentResolvers.add(refreshTokenResolver);
-        argumentResolvers.add(loginMemberResolver);
-    }
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+		argumentResolvers.add(accessTokenResolver);
+		argumentResolvers.add(refreshTokenResolver);
+		argumentResolvers.add(loginMemberResolver);
+	}
 }

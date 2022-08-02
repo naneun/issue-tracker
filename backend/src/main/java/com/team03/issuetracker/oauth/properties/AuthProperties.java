@@ -12,9 +12,9 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConfigurationProperties(prefix = "oauth")
 public class AuthProperties {
 
-    private final Map<String, VendorProperties> vendors;
+	private final Map<String, VendorProperties> vendors;
 
-    public VendorProperties getVendorProperties(String vendor) {
-        return vendors.get(vendor);
-    }
+	public VendorProperties getVendorProperties(String vendor) {
+		return vendors.get(vendor);
+	}
 }

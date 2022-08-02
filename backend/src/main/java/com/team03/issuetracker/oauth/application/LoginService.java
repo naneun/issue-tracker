@@ -15,32 +15,32 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final MemberRepository memberRepository;
-    private final LoginMember loginMember;
+	private final MemberRepository memberRepository;
+	private final LoginMember loginMember;
 
-    @Transactional
-    public Member save(OAuthUser oAuthUser) {
-        String serialNumber = oAuthUser.getSerialNumber();
-        ResourceServer resourceServer = oAuthUser.getResourceServer();
+	@Transactional
+	public Member save(OAuthUser oAuthUser) {
+		String serialNumber = oAuthUser.getSerialNumber();
+		ResourceServer resourceServer = oAuthUser.getResourceServer();
 
-        Member loginMember = oAuthUser.toEntity();
+		Member loginMember = oAuthUser.toEntity();
 
-        return memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
-            .map(member -> member.updateLoginInfo(loginMember))
-            .orElseGet(() -> memberRepository.save(loginMember));
-    }
+		return memberRepository.findBySerialNumberAndResourceServer(serialNumber, resourceServer)
+			.map(member -> member.updateLoginInfo(loginMember))
+			.orElseGet(() -> memberRepository.save(loginMember));
+	}
 
-    @Transactional(readOnly = true)
-    public void updateLoginMemberById(Long id) {
-        Member member = memberRepository.findById(id)
-            .orElseThrow(MemberException::new);
+	@Transactional(readOnly = true)
+	public void updateLoginMemberById(Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(MemberException::new);
 
-        loginMember.update(member);
-    }
+		loginMember.update(member); /* member를 update 치는게 아니고 Bean으로 등록된 LoginMember 필드를 현재 member의 정보로 채움*/
+	}
 
-    @Transactional(readOnly = true)
-    public Member findById(Long memberId) {
-        return memberRepository.findById(memberId)
-            .orElseThrow(LoginException::new);
-    }
+	@Transactional(readOnly = true)
+	public Member findById(Long memberId) {
+		return memberRepository.findById(memberId)
+			.orElseThrow(LoginException::new);
+	}
 }

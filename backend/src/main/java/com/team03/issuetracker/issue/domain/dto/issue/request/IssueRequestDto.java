@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IssueRequestDto {
 
+	/* final 앲애고 기본 생성자 만들면 작동하는데, 이 방법이 맞나..? */
 	private final String title;
 	private final String content;
 

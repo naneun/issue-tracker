@@ -28,6 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
 	private final LoginUserResolver loginMemberResolver;
 	private final LoginFilter loginFilter;
 
+	/* Filter 설정 */
 	@Bean
 	public FilterRegistrationBean<Filter> setFilterRegistration() {
 		FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
@@ -37,14 +38,17 @@ public class WebConfig implements WebMvcConfigurer {
 		return filterRegistrationBean; /* 왜 필터도 쓰고 인터셉터도 썼지? */
 	}
 
+	/* Interceptor 설정 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addWebRequestInterceptor(openEntityManagerInViewInterceptor); /* ??? */
 
 		registry.addInterceptor(authInterceptor)
-			.addPathPatterns("/api/**");
+			.addPathPatterns("/api/**")
+			.addPathPatterns("/login/update/jwt-access-token");
 	}
 
+	/* ArgumentResolver 설정 */
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
 		argumentResolvers.add(accessTokenResolver);

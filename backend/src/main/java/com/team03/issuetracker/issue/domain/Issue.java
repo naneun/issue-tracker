@@ -9,25 +9,9 @@ import com.team03.issuetracker.milestone.domain.Milestone;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -79,19 +63,21 @@ public class Issue extends BaseTimeEntity {
 
 	@OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = {
 		CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true)
-
 	private final List<Comment> comments = new ArrayList<>();
 
 	/********************************************************************/
 
 	@Builder
+	/* 클래스에 하면 모든 필드에 대한 빌더메서드가 만들어지지만,
+	메서드나 생성자에 붙이면 인자들에 대해서만 빌더 메서드가 만들어진다.
+	즉, 여기서는 인자에 없는 state, creator, modifier가 빠지게 된다 */
 	private Issue(Long id, String title, String content, Label label, Milestone milestone,
 		Member assignee, List<Comment> comments) {
 
 		this.id = id;
 		this.title = title;
 		this.content = content;
-		this.state = OPEN;
+		this.state = OPEN; /* state이 여기는 있지만 인자에는 없어서 빌더 메서드가 안 생긴다 */
 		this.label = label;
 		this.milestone = milestone;
 		this.assignee = assignee;
@@ -102,6 +88,10 @@ public class Issue extends BaseTimeEntity {
 
 	public static Issue of(Long id, String title, String content, Label label, Milestone milestone,
 		Member assignee, List<Comment> comments) {
+		/* 기본 정적 팩토리 메서드에서는 여기에서 new를 이용해 생성자를 호출하여 반환한다 (아래 주석처리 부분)*/
+		/* 하지만 이때 생성자에서 인자의 순서가 바뀐다면(ex:같은 String 타입인 content<->title) 컴파일 에러로 잡아내지 못하는 문제가 있다 */
+		/* 그래서 builder를 사용한다. 생성자 시그니처에서 content, title 위치가 바뀌어도 content는 content()에, title은 title()에 들어간다 */
+		//		return new Issue(id,title, content, label, milestone, assignee, comments);
 		return Issue.builder()
 			.id(id)
 			.title(title)

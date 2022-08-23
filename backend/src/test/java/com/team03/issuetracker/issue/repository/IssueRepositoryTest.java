@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.Rollback;
 
 @Import(DataJpaConfig.class)
 @DataJpaTest
@@ -212,7 +211,6 @@ class IssueRepositoryTest {
 	/**
 	 * @implNote - 클라이언트가 체크한 모든 이슈들을 일괄적으로 삭제합니다.
 	 */
-	@Rollback(value = false)
 	@Test
 	void 리스트로_주어진_ID에_해당하는_이슈들을_일괄적으로_삭제한다() {
 
@@ -222,29 +220,41 @@ class IssueRepositoryTest {
 		List<Issue> foundIssues = issueRepository.findAll();
 
 		/* 1번 */
-		//		foundIssues.forEach(Issue::truncateComments);
-		//		List<Long> issueIds = foundIssues.stream()
-		//			.map(Issue::getId)
-		//			.collect(Collectors.toList());
-		//		System.out.println("=========flush=================");
-		//		entityManager.flush();
-		//		System.out.println("=========flush=================");
-
-		/* 2번 + @OnDelete */
+		foundIssues.forEach(Issue::truncateComments);
 		List<Long> issueIds = foundIssues.stream()
 			.map(Issue::getId)
 			.collect(Collectors.toList());
+		System.out.println("=========flush=================");
+		//		entityManager.flush();
+		System.out.println("=========flush=================");
+
+		/* 2번 + @OnDelete */
+		//		List<Long> issueIds = foundIssues.stream()
+		//			.map(Issue::getId)
+		//			.collect(Collectors.toList());
 
 		// when
-
 		issueRepository.deleteAllById(issueIds);
-		//		issueRepository.deleteAllByIdInBatch(issueIds);
 
 		// then
 		assertAll(
 			() -> assertThat(foundIssues).isNotEmpty(),
 			() -> assertThat(issueRepository.findAll()).isEmpty()
 		);
+	}
+
+	/* Cascade, orphanRemoval 옵션만으로 잘 작동한다 */
+	@Test
+	void 이슈_하나_삭제한다() {
+
+		// given
+		long id = 1L;
+
+		// when
+		issueRepository.deleteById(id);
+
+		// then
+		assertThat(issueRepository.findById(id)).isEmpty();
 	}
 
 	/**

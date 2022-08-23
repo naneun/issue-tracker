@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: local
+    include: 8888
+
+  #SpringBoot 2.6 이상 springfox-swagger3.0 적용 시 필요한 듯
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+    hiddenmethod:
+      filter:
+        enabled: true

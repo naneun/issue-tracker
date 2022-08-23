@@ -4,20 +4,23 @@ import com.team03.issuetracker.common.domain.Member;
 import com.team03.issuetracker.issue.domain.Issue;
 import com.team03.issuetracker.issue.domain.Label;
 import com.team03.issuetracker.milestone.domain.Milestone;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class IssueRequestDto {
 
 	/* final 앲애고 기본 생성자 만들면 작동하는데, 이 방법이 맞나..? */
-	private final String title;
-	private final String content;
+	private String title;
+	private String content;
 
-	private final Long labelId;
-	private final Long milestoneId;
-	private final Long assigneeId;
+	private Long labelId;
+	private Long milestoneId;
+	private Long assigneeId;
 
 	public Issue toEntity(Label label, Milestone milestone, Member assignee) {
 		return Issue.builder()

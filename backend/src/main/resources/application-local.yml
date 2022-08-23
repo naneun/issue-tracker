@@ -10,7 +10,7 @@ spring:
 
   sql:
     init:
-      mode: never
+      mode: always
 
   redis:
     host: localhost
@@ -18,7 +18,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
 
     properties:
       hibernate:

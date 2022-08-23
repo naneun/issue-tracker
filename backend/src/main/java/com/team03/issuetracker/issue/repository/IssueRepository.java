@@ -23,5 +23,5 @@ public interface IssueRepository extends JpaRepository<Issue, Long>, IssueReposi
 
 	@Modifying
 	@Query("delete from Issue i where i.id in :ids")
-	void deleteAllById(List<Long> ids);
+	void deleteAllById(@Param("ids") List<Long> ids);
 }
